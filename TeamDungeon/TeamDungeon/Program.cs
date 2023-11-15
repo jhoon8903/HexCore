@@ -1,3 +1,30 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 
-Console.WriteLine("Hello, World!");
+namespace TeamDungeon
+{
+    internal class Program
+    {
+        private static Player player;
+        static void Main(string[] args)
+        {
+            DisplayTitle();
+            
+        }
+
+        static void DisplayTitle()
+        {
+            LoginScene();
+        }
+
+        static void LoginScene()
+        {
+            player = new Player();
+            Console.WriteLine("안농");
+        }
+    }
+}

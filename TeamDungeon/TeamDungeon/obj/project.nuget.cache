@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Buefy7as0WyItP5TKLoQZliNAeQqxB8B+sjoDWY6RHpd7yQIzj6FqWTQ/pfH3eGjPFEqSzo4VftuCdymjCksxg==",
+  "dgSpecHash": "PWZSlkdRHkKDcEqEvoRLFUB6EvLGbwfLa/F5i3U+T5fim6CFK9cgWeiKPVg3O6kdXFuzMMl9pQD5DK8ywhzlow==",
   "success": true,
-  "projectFilePath": "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/TeamDungeon/TeamDungeon.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\shstc\\OneDrive\\Desktop\\git\\HexCore\\TeamDungeon\\TeamDungeon\\TeamDungeon.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\shstc\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
   "logs": []
 }
