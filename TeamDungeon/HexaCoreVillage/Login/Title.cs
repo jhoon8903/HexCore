@@ -1,4 +1,4 @@
-namespace TeamDungeon;
+namespace HexaCoreVillage.Login;
 
 public static class Title
 {
