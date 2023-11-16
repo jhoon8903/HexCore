@@ -1,5 +1,4 @@
 using HexaCoreVillage.Utility;
-using HexaCoreVillage.Framework;
 using Newtonsoft.Json;
 using NAudio.Wave;
 using TeamDungeon.Utility;
@@ -8,7 +7,7 @@ namespace HexaCoreVillage.Login;
 
 public class Login : Scene
 {
-    public override SCENE_NAME SceneName => throw new NotImplementedException();
+    public override SCENE_NAME SceneName => SCENE_NAME.LOGIN;
 
     static AudioFileReader startBGM = new AudioFileReader("C:\\Users\\shstc\\OneDrive\\Desktop\\git\\HexCore\\TeamDungeon\\HexaCoreVillage\\startBGM.wav");
     static LoopStream startLoop = new LoopStream(startBGM);
@@ -18,6 +17,18 @@ public class Login : Scene
     public static Player? player = null;
     static string userID = "";
     static string CurrentDirectory = Directory.GetCurrentDirectory();
+
+
+    public override void Start()
+    {
+
+    }
+
+    public override void Update()
+    {
+
+    }
+
     public static void LoginScene()
     {
         audioMgr.Init(startLoop);
@@ -337,17 +348,6 @@ public class Login : Scene
         //string dungeonData =                  //던전 정보도 저장할 예정.
         
     }
-    
-    public override void Start()
-    {
-        throw new NotImplementedException();
-    }
-
-    public override void Update()
-    {
-        throw new NotImplementedException();
-    }
-
 }
 
 
