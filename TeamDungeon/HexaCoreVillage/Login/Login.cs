@@ -1,16 +1,27 @@
 using HexaCoreVillage.Utility;
-using HexaCoreVillage.Framework;
 using Newtonsoft.Json;
 
 namespace HexaCoreVillage.Login;
 
 public class Login : Scene
 {
-    public override SCENE_NAME SceneName => throw new NotImplementedException();
+    public override SCENE_NAME SceneName => SCENE_NAME.LOGIN;
 
     public static Player? player = null;
     static string userID = "";
     static string CurrentDirectory = Directory.GetCurrentDirectory();
+
+
+    public override void Start()
+    {
+
+    }
+
+    public override void Update()
+    {
+
+    }
+
     public static void LoginScene()
     {
         
@@ -176,17 +187,6 @@ public class Login : Scene
         //string dungeonData =                  //던전 정보도 저장할 예정.
         
     }
-    
-    public override void Start()
-    {
-        throw new NotImplementedException();
-    }
-
-    public override void Update()
-    {
-        throw new NotImplementedException();
-    }
-
 }
 
 

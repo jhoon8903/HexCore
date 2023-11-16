@@ -1,8 +1,17 @@
 
-using HexaCoreVillage.Framework;
 namespace HexaCoreVillage.Dungeon;
 
-public class Battle
+public class Battle : Scene
 {
-    // 안녕하세요ㅕ 
+    public override SCENE_NAME SceneName => throw new NotImplementedException();
+
+    public override void Start()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void Update()
+    {
+        throw new NotImplementedException();
+    }
 }

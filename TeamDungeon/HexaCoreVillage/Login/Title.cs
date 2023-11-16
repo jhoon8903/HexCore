@@ -1,5 +1,4 @@
 
-using HexaCoreVillage.Framework;
 namespace HexaCoreVillage.Login;
 
 public class Title : Scene
@@ -14,12 +13,6 @@ public class Title : Scene
 
     public override void Update()
     {
-        // 로직이 될 내용 작성
-        this.WriteConsole();
-    }
-
-    private void WriteConsole()
-    {
-        //Console.Write("안녕");
+        
     }
 }

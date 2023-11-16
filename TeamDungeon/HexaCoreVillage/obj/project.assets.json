@@ -55,19 +55,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\shstc\\.nuget\\packages\\": {}
+    "C:\\Users\\iamde\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\shstc\\OneDrive\\Desktop\\git\\HexCore\\TeamDungeon\\HexaCoreVillage\\HexaCoreVillage.csproj",
+      "projectUniqueName": "D:\\BootCamp Git\\HexCore\\TeamDungeon\\HexaCoreVillage\\HexaCoreVillage.csproj",
       "projectName": "HexaCoreVillage",
-      "projectPath": "C:\\Users\\shstc\\OneDrive\\Desktop\\git\\HexCore\\TeamDungeon\\HexaCoreVillage\\HexaCoreVillage.csproj",
-      "packagesPath": "C:\\Users\\shstc\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\shstc\\OneDrive\\Desktop\\git\\HexCore\\TeamDungeon\\HexaCoreVillage\\obj\\",
+      "projectPath": "D:\\BootCamp Git\\HexCore\\TeamDungeon\\HexaCoreVillage\\HexaCoreVillage.csproj",
+      "packagesPath": "C:\\Users\\iamde\\.nuget\\packages\\",
+      "outputPath": "D:\\BootCamp Git\\HexCore\\TeamDungeon\\HexaCoreVillage\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\shstc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\iamde\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -114,7 +114,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.404\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
       }
     }
   }
