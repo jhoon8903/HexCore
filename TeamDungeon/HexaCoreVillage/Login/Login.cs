@@ -9,9 +9,18 @@ public class Login : Scene
 {
     public override SCENE_NAME SceneName => SCENE_NAME.LOGIN;
 
-    static AudioFileReader startBGM = new AudioFileReader("C:\\Users\\shstc\\OneDrive\\Desktop\\git\\HexCore\\TeamDungeon\\HexaCoreVillage\\startBGM.wav");
+    // by 정훈
+    // 다른 PC에서는 절대경로 설정시 File을 찾을 수 없어 상대경로 표시를 위한 변수를 별도로 작성했습니다.
+    // 하지만 맥에서는 작동하지 않습니다.
+    //  'winmm.dll' 의존성이 문제 입니다. 
+    static string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+    static string relativePathToAudio = Path.GetFullPath(Path.Combine(baseDirectory, "..", "..", "..", "..", "..", "TeamDungeon", "HexaCoreVillage"));
+    static string startBGMPath = Path.Combine(relativePathToAudio, "startBGM.wav");
+    static string newWorldBGMPath = Path.Combine(relativePathToAudio, "newWorldBGM.wav");
+
+    static AudioFileReader startBGM = new AudioFileReader(startBGMPath);
     static LoopStream startLoop = new LoopStream(startBGM);
-    static AudioFileReader newWorldBGM = new AudioFileReader("C:\\Users\\shstc\\OneDrive\\Desktop\\git\\HexCore\\TeamDungeon\\HexaCoreVillage\\newWorldBGM.wav");
+    static AudioFileReader newWorldBGM = new AudioFileReader(newWorldBGMPath);
     static LoopStream newWorldLoop = new LoopStream(newWorldBGM);
     static WaveOutEvent audioMgr = new WaveOutEvent();
     public static Player? player = null;

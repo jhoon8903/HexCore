@@ -1,11 +1,13 @@
 
+namespace HexaCoreVillage;
+
 public static class MainProcedure
 {
     /* Main */
-    private static void Main()
+    public static void Main()
     {
         // Title Scene Load.
-        Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
+        Managers.Scene.LoadScene(SCENE_NAME.BATTLE);
 
         Run();
     }

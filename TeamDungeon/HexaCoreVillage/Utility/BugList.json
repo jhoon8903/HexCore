@@ -1,0 +1,62 @@
+[
+  {
+    "bugName": "NullRef",
+    "bugType": "Critical",
+    "bugDifficulty": 90,
+    "bugComplexity": 85
+  },
+  {
+    "bugName": "MemLeak",
+    "bugType": "Major",
+    "bugDifficulty": 80,
+    "bugComplexity": 75
+  },
+  {
+    "bugName": "InfiniteLoop",
+    "bugType": "Critical",
+    "bugDifficulty": 95,
+    "bugComplexity": 80
+  },
+  {
+    "bugName": "MissingAssets",
+    "bugType": "Minor",
+    "bugDifficulty": 60,
+    "bugComplexity": 50
+  },
+  {
+    "bugName": "UnresponsiveUI",
+    "bugType": "Major",
+    "bugDifficulty": 70,
+    "bugComplexity": 65
+  },
+  {
+    "bugName": "Misaligned",
+    "bugType": "Trivial",
+    "bugDifficulty": 30,
+    "bugComplexity": 20
+  },
+  {
+    "bugName": "NPCError",
+    "bugType": "Major",
+    "bugDifficulty": 75,
+    "bugComplexity": 70
+  },
+  {
+    "bugName": "AudioError",
+    "bugType": "Minor",
+    "bugDifficulty": 55,
+    "bugComplexity": 45
+  },
+  {
+    "bugName": "CollisionIssue",
+    "bugType": "Critical",
+    "bugDifficulty": 85,
+    "bugComplexity": 80
+  },
+  {
+    "bugName": "NewSkinReq",
+    "bugType": "Enhancement",
+    "bugDifficulty": 40,
+    "bugComplexity": 30
+  }
+]

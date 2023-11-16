@@ -1,20 +1,20 @@
 {
   "version": 2,
-  "dgSpecHash": "VQ2e10ipU67/oSJzENhBHuVc/wRQv5tBGJqOy2xq6qA1NrPAew0STqqm0YWMv+c8CzYNsHusoh5h8x/D1i9hKQ==",
+  "dgSpecHash": "2W/Y6Uhl0/DyfOkrBEEM9QSW15Biao6nLhvGU8PqAWu3Io7aDBRpy6hi4hj1Gbn/iCM4/VUBk31NLBJopIzYmQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\shstc\\OneDrive\\Desktop\\git\\HexCore\\TeamDungeon\\HexaCoreVillage\\HexaCoreVillage.csproj",
+  "projectFilePath": "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/HexaCoreVillage/HexaCoreVillage.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\shstc\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
-    "C:\\Users\\shstc\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
-    "C:\\Users\\shstc\\.nuget\\packages\\naudio\\2.2.1\\naudio.2.2.1.nupkg.sha512",
-    "C:\\Users\\shstc\\.nuget\\packages\\naudio.asio\\2.2.1\\naudio.asio.2.2.1.nupkg.sha512",
-    "C:\\Users\\shstc\\.nuget\\packages\\naudio.core\\2.2.1\\naudio.core.2.2.1.nupkg.sha512",
-    "C:\\Users\\shstc\\.nuget\\packages\\naudio.midi\\2.2.1\\naudio.midi.2.2.1.nupkg.sha512",
-    "C:\\Users\\shstc\\.nuget\\packages\\naudio.wasapi\\2.2.1\\naudio.wasapi.2.2.1.nupkg.sha512",
-    "C:\\Users\\shstc\\.nuget\\packages\\naudio.winmm\\2.2.1\\naudio.winmm.2.2.1.nupkg.sha512",
-    "C:\\Users\\shstc\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
-    "C:\\Users\\shstc\\.nuget\\packages\\system.security.accesscontrol\\4.7.0\\system.security.accesscontrol.4.7.0.nupkg.sha512",
-    "C:\\Users\\shstc\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512"
+    "/Users/daniel/.nuget/packages/microsoft.netcore.platforms/3.1.0/microsoft.netcore.platforms.3.1.0.nupkg.sha512",
+    "/Users/daniel/.nuget/packages/microsoft.win32.registry/4.7.0/microsoft.win32.registry.4.7.0.nupkg.sha512",
+    "/Users/daniel/.nuget/packages/naudio/2.2.1/naudio.2.2.1.nupkg.sha512",
+    "/Users/daniel/.nuget/packages/naudio.asio/2.2.1/naudio.asio.2.2.1.nupkg.sha512",
+    "/Users/daniel/.nuget/packages/naudio.core/2.2.1/naudio.core.2.2.1.nupkg.sha512",
+    "/Users/daniel/.nuget/packages/naudio.midi/2.2.1/naudio.midi.2.2.1.nupkg.sha512",
+    "/Users/daniel/.nuget/packages/naudio.wasapi/2.2.1/naudio.wasapi.2.2.1.nupkg.sha512",
+    "/Users/daniel/.nuget/packages/naudio.winmm/2.2.1/naudio.winmm.2.2.1.nupkg.sha512",
+    "/Users/daniel/.nuget/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512",
+    "/Users/daniel/.nuget/packages/system.security.accesscontrol/4.7.0/system.security.accesscontrol.4.7.0.nupkg.sha512",
+    "/Users/daniel/.nuget/packages/system.security.principal.windows/4.7.0/system.security.principal.windows.4.7.0.nupkg.sha512"
   ],
   "logs": []
 }

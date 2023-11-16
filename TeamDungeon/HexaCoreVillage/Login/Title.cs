@@ -1,4 +1,3 @@
-
 namespace HexaCoreVillage.Login;
 
 public class Title : Scene
