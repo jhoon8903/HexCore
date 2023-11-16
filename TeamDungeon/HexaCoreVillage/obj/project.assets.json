@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/TeamDungeon/TeamDungeon.csproj",
-      "projectName": "TeamDungeon",
-      "projectPath": "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/TeamDungeon/TeamDungeon.csproj",
+      "projectUniqueName": "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/HexaCoreVillage/HexaCoreVillage.csproj",
+      "projectName": "HexaCoreVillage",
+      "projectPath": "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/HexaCoreVillage/HexaCoreVillage.csproj",
       "packagesPath": "/Users/daniel/.nuget/packages/",
-      "outputPath": "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/TeamDungeon/obj/",
+      "outputPath": "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/HexaCoreVillage/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/daniel/.nuget/NuGet/NuGet.Config"
