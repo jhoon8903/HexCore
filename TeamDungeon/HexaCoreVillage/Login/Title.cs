@@ -8,17 +8,17 @@ public class Title : Scene
 
     public override void Start()
     {
-        // ÃÊ±âÈ­
+        // ì´ˆê¸°í™”
     }
 
     public override void Update()
     {
-        // ·ÎÁ÷ÀÌ µÉ ³»¿ë ÀÛ¼º
+        // ë¡œì§ì´ ë  ë‚´ìš© ì‘ì„±
         this.WriteConsole();
     }
 
     private void WriteConsole()
     {
-        Console.Write("¾È³ç");
+        //Console.Write("ì•ˆë…•");
     }
 }
