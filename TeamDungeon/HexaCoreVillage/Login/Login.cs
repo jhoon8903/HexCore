@@ -1,10 +1,13 @@
 using HexaCoreVillage.Utility;
+using HexaCoreVillage.Framework;
 using Newtonsoft.Json;
 
 namespace HexaCoreVillage.Login;
 
-static class Login
+static class Login : Scene
 {
+    public override SCENE_NAME SceneName => throw new NotImplementedException();
+
     public static Player? player = null;
     static string userID = "";
     static string CurrentDirectory = Directory.GetCurrentDirectory();
@@ -12,18 +15,18 @@ static class Login
     {
         
         int selectedOption = 0;
-        string[] options = { "»õ·Î ½ÃÀÛÇÏ±â", "ÀÌÀü ÀúÀå ºÒ·¯¿À±â", "°ÔÀÓ Á¾·áÇÏ±â" };
+        string[] options = { "ìƒˆë¡œ ì‹œì‘í•˜ê¸°", "ì´ì „ ì €ì¥ ë¶ˆëŸ¬ì˜¤ê¸°", "ê²Œì„ ì¢…ë£Œí•˜ê¸°" };
 
         while (true)
         {
             Console.Clear();
             Console.SetCursorPosition(0, 25);
-            // ¼±ÅÃÁö Ãâ·Â
+            // ì„ íƒì§€ ì¶œë ¥
             for (int i = 0; i < options.Length; i++)
             {
                 if (i == selectedOption)
                 {
-                    Console.ForegroundColor = ConsoleColor.Blue; // ¼±ÅÃµÈ ¿É¼ÇÀº ÆÄ¶õ»öÀ¸·Î
+                    Console.ForegroundColor = ConsoleColor.Blue; // ì„ íƒëœ ì˜µì…˜ì€ íŒŒë€ìƒ‰ìœ¼ë¡œ
                     Console.WriteLine("-> " + options[i]);
                     Console.ResetColor();
                 }
@@ -33,7 +36,7 @@ static class Login
                 }
             }
 
-            // Å°º¸µå ÀÔ·Â Ã³¸®
+            // í‚¤ë³´ë“œ ì…ë ¥ ì²˜ë¦¬
             ConsoleKeyInfo keyInfo = Console.ReadKey();
             if (keyInfo.Key == ConsoleKey.UpArrow)
             {
@@ -45,7 +48,7 @@ static class Login
             }
             else if (keyInfo.Key == ConsoleKey.Enter)
             {
-                break; // ¼±ÅÃ ¿Ï·á ½Ã ·çÇÁ Á¾·á
+                break; // ì„ íƒ ì™„ë£Œ ì‹œ ë£¨í”„ ì¢…ë£Œ
             }
         }
 
@@ -60,7 +63,7 @@ static class Login
                 break;
 
             case LoginSelectOption.Exit:
-                Environment.Exit(0);    //Á¾·á
+                Environment.Exit(0);    //ì¢…ë£Œ
                 break;
         }
     }
@@ -73,27 +76,27 @@ static class Login
         string userName;
 
         Console.Clear();
-        Console.WriteLine("»ç¿ëÇÒ ¾ÆÀÌµğ¸¦ ÀÔ·ÂÇØ ÁÖ¼¼¿ä.");
+        Console.WriteLine("ì‚¬ìš©í•  ì•„ì´ë””ë¥¼ ì…ë ¥í•´ ì£¼ì„¸ìš”.");
         Console.SetCursorPosition(0, 25);
         userID = Console.ReadLine();
 
         Console.Clear();
-        Console.WriteLine("»ç¿ëÇÒ ÀÌ¸§À» ÀÔ·ÂÇØ ÁÖ¼¼¿ä.");
+        Console.WriteLine("ì‚¬ìš©í•  ì´ë¦„ì„ ì…ë ¥í•´ ì£¼ì„¸ìš”.");
         Console.SetCursorPosition(0, 25);
         userName = Console.ReadLine();
-        //ÇÑ¹ø ´õ ¹°¾îº¸±â?
+        //í•œë²ˆ ë” ë¬¼ì–´ë³´ê¸°?
 
         while (true)
         {
             Console.Clear();
-            Console.WriteLine("´ç½ÅÀÇ Á÷¾÷Àº ¹«¾ùÀÎ°¡¿ä?");
+            Console.WriteLine("ë‹¹ì‹ ì˜ ì§ì—…ì€ ë¬´ì—‡ì¸ê°€ìš”?");
 
-            // ¼±ÅÃÁö Ãâ·Â
+            // ì„ íƒì§€ ì¶œë ¥
             for (int i = 0; i < options.Length; i++)
             {
                 if (i == selectedOption)
                 {
-                    Console.ForegroundColor = ConsoleColor.Blue; // ¼±ÅÃµÈ ¿É¼ÇÀº ÆÄ¶õ»öÀ¸·Î
+                    Console.ForegroundColor = ConsoleColor.Blue; // ì„ íƒëœ ì˜µì…˜ì€ íŒŒë€ìƒ‰ìœ¼ë¡œ
                     Console.WriteLine("-> " + options[i]);
                     Console.ResetColor();
                 }
@@ -103,7 +106,7 @@ static class Login
                 }
             }
 
-            // Å°º¸µå ÀÔ·Â Ã³¸®
+            // í‚¤ë³´ë“œ ì…ë ¥ ì²˜ë¦¬
             ConsoleKeyInfo keyInfo = Console.ReadKey();
             if (keyInfo.Key == ConsoleKey.UpArrow)
             {
@@ -115,7 +118,7 @@ static class Login
             }
             else if (keyInfo.Key == ConsoleKey.Enter)
             {
-                break; // ¼±ÅÃ ¿Ï·á ½Ã ·çÇÁ Á¾·á
+                break; // ì„ íƒ ì™„ë£Œ ì‹œ ë£¨í”„ ì¢…ë£Œ
             }
         }
         userJob = (Job)selectedOption;
@@ -125,17 +128,27 @@ static class Login
 
     private static void LoadGame()
     {
-        string loadData = File.ReadAllText(CurrentDirectory + "\\savePlayer.json");         //ºÒ·¯¿À±â ±â´É
+        string loadData = File.ReadAllText(CurrentDirectory + "\\savePlayer.json");         //ë¶ˆëŸ¬ì˜¤ê¸° ê¸°ëŠ¥
         player = JsonConvert.DeserializeObject<Player>(loadData);
     }
 
-    public static void SaveData()          //µ¥ÀÌÅÍ ÀúÀå
+    public static void SaveData()          //ë°ì´í„° ì €ì¥
     {
-        string playerData = JsonConvert.SerializeObject(player, Formatting.Indented);        //ÇÃ·¹ÀÌ¾î Á¤º¸
+        string playerData = JsonConvert.SerializeObject(player, Formatting.Indented);        //í”Œë ˆì´ì–´ ì •ë³´
         File.WriteAllText(CurrentDirectory + ".\\savePlayer.json", playerData);
 
-        //string dungeonData =                  //´øÀü Á¤º¸µµ ÀúÀå ¿¹Á¤
+        //string dungeonData =                  //ë˜ì „ ì •ë³´ë„ ì €ì¥ ì˜ˆì •
         
+    }
+    
+    public override void Start()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void Update()
+    {
+        throw new NotImplementedException();
     }
 
 }
@@ -148,4 +161,3 @@ enum LoginSelectOption
     LoadGame,
     Exit
 }
-

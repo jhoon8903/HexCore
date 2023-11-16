@@ -6,7 +6,7 @@ namespace HexaCoreVillage;
 
 public static class MainProcedure
 {
-    static void Main()
+    private static void Main()
     {
         Title titleScene = new Title();
         titleScene.Start();
@@ -18,6 +18,14 @@ public static class MainProcedure
         while(true)
         {
             currentScene.Update();
+        }
+    }
+
+    private void Run()
+    {
+        while(true)
+        {
+
         }
     }
 }
