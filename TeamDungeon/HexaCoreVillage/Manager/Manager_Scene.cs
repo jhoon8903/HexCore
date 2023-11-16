@@ -1,4 +1,4 @@
-﻿
+
 using HexaCoreVillage.Framework;
 using HexaCoreVillage.Login;
 using Login = HexaCoreVillage.Login.Login;
@@ -21,7 +21,7 @@ public class Manager_Scene
         _currentScene = sceneKey switch
         {
             SCENE_NAME.TITLE => new Title(),
-            SCENE_NAME.LOGIN => new Login(),
+            //SCENE_NAME.LOGIN => new Login(),    // 뭔지 잘 모르겠음
 
         };
     }
