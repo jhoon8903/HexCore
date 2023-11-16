@@ -9,6 +9,7 @@ public abstract class Scene
 {
     public abstract SCENE_NAME SceneName { get; }
 
+    // Initalize Method
     public abstract void Start();
     public abstract void Update();
 }
