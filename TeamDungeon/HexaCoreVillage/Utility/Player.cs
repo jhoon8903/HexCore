@@ -1,4 +1,4 @@
-﻿namespace HexaCoreVillage.Utility
+namespace HexaCoreVillage.Utility
 {
     public class Player
     {
@@ -7,8 +7,8 @@
         public Job Job {  get; set; }
         public int Level { get; set; }
        public  int Exp {  get; set; }
-       public int TypingSpeed {  get; set; }
-       public  int C {  get; set; }
+       public int TypingSpeed {  get; set; }    //DMG
+       public  int C {  get; set; }             //DEF
        public  int BonusDmg { get; set; }
        public  int BonusDef {  get; set; }
        public  int HP {  get; set; }
@@ -31,7 +31,8 @@
             BonusDef = 10;
             HP = 100;
             CurrentHp = 100;
-            Mental = 10;
+            Mental = 100;
+            CurrentMental = 100;
             Gold = 1000;
         }
 
@@ -48,7 +49,8 @@
             BonusDef = 10;
             HP = 100;
             CurrentHp = 100;
-            Mental = 10;
+            Mental = 100;
+            CurrentMental = 100;
             Gold = 1000;
         }
     }   
