@@ -1,12 +1,12 @@
 ﻿namespace HexaCoreVillage.Utility
 {
     internal class Item
-    {
-        string ItemName {  get; set; }
-        ItemType Type {  get; set; }
-        string Desc {  get; set; }
-        int Price {  get; set; }
-        int ItemOption {  get; set; }
+    { 
+        public string ItemName {  get; set; }
+        public ItemType Type {  get; set; }
+        public string Desc {  get; set; }
+        public int Price {  get; set; }
+        public int ItemOption {  get; set; }
 
         public Item()
         {
@@ -18,7 +18,7 @@
         }
     }
 
-    enum ItemType
+    public enum ItemType
     {
         Keyboard,
         Mouse,
@@ -28,19 +28,18 @@
         EnergyDrink
     }
 
-    class InvenItem
+    public class InventoryItem
     {
-        string ItemName { get; set; }
-        bool isEquipment { get; set; }
-        bool isBuying { get; set; }
-        int Quantity {  get; set; }
-        public InvenItem() { }
-        public InvenItem(string _itemName, bool _isEquip, bool _isBuying, int _quantity)
+        public string ItemName { get; set; }
+        public bool IsEquipment { get; set; }
+        public bool IsBuying { get; set; }
+        public int Quantity {  get; set; }
+        public InventoryItem(string itemName, bool isEquip, bool isBuying, int quantity)
         {
-            ItemName= _itemName;
-            isEquipment= _isEquip;
-            isBuying= _isBuying;
-            Quantity= _quantity;
+            ItemName= itemName;
+            IsEquipment= isEquip;
+            IsBuying= isBuying;
+            Quantity= quantity;
         }
     }
 }
