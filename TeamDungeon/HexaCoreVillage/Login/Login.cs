@@ -1,5 +1,7 @@
 using HexaCoreVillage.Utility;
 using Newtonsoft.Json;
+using NAudio.Wave;
+using TeamDungeon.Utility;
 
 namespace HexaCoreVillage.Login;
 
@@ -7,6 +9,11 @@ public class Login : Scene
 {
     public override SCENE_NAME SceneName => SCENE_NAME.LOGIN;
 
+    static AudioFileReader startBGM = new AudioFileReader("C:\\Users\\shstc\\OneDrive\\Desktop\\git\\HexCore\\TeamDungeon\\HexaCoreVillage\\startBGM.wav");
+    static LoopStream startLoop = new LoopStream(startBGM);
+    static AudioFileReader newWorldBGM = new AudioFileReader("C:\\Users\\shstc\\OneDrive\\Desktop\\git\\HexCore\\TeamDungeon\\HexaCoreVillage\\newWorldBGM.wav");
+    static LoopStream newWorldLoop = new LoopStream(newWorldBGM);
+    static WaveOutEvent audioMgr = new WaveOutEvent();
     public static Player? player = null;
     static string userID = "";
     static string CurrentDirectory = Directory.GetCurrentDirectory();
@@ -24,7 +31,8 @@ public class Login : Scene
 
     public static void LoginScene()
     {
-        
+        audioMgr.Init(startLoop);
+        audioMgr.Play();
         int selectedOption = 0;
         string[] options = { "새 게임 시작", "이전 게임 불러오기", "게임 종료하기" };
 
@@ -37,7 +45,7 @@ public class Login : Scene
             {
                 if (i == selectedOption)
                 {
-                    Console.ForegroundColor = ConsoleColor.Blue; // ���õ� �ɼ��� �Ķ�������
+                    Console.ForegroundColor = ConsoleColor.Blue; 
                     Console.WriteLine("-> " + options[i]);
                     Console.ResetColor();
                 }
@@ -59,21 +67,21 @@ public class Login : Scene
             }
             else if (keyInfo.Key == ConsoleKey.Enter)
             {
-                break; // ���� �Ϸ� �� ���� ����
+                break; 
             }
         }
 
-        switch ((LoginSelectOption)selectedOption)
+        switch ((JobSelectOption)selectedOption)
         {
-            case LoginSelectOption.NewGame:
+            case JobSelectOption.NewGame:
                 NewGame();
                 break;
 
-            case LoginSelectOption.LoadGame:
+            case JobSelectOption.LoadGame:
                 LoadGame();
                 break;
 
-            case LoginSelectOption.Exit:
+            case JobSelectOption.Exit:
                 Environment.Exit(0);    
                 break;
         }
@@ -82,10 +90,23 @@ public class Login : Scene
     private static void NewGame()
     {
         int selectedOption = 0;
-        string[] jobOptions = { "Unity", "Unreal", "AI", "PM", "QA"};
-        string[] backgroundOptions = { "Unity", "Unreal", "AI", "PM", "QA" };
+        string[] jobOptions = { "Unity 개발자", "Unreal 개발자", "AI 개발자", "PM(Product manager)", "QA(Quality Assurance)" };
+        string[] backgroundOptions = { "언제는 하루 종일 코딩만 한 적이 있어요. 그래서인지 하루 12시간 정도는 전혀 지치치 않죠."     //HP
+        ,"저는 초등학교 때 이미 선생님의 타자 속도를 넘었어요. 이제 영타까지 섭렵한 저에게 긴 문장이란 없습니다."                   //DMG
+        ,"전 컴퓨터공학과를 나왔으며, C언어에 대한 탄탄한 지식을 소유하고 있습니다."                                                 //DEF
+        ,"버그 하나에 일주일동안 시달려 본 적 있어서, 이제 웬만한 버그에는 눈도 깜박하지 않습니다."                                        //Mental
+        ,"비싼 의자, 비싼 마우스, 비싼 모니터와 키보드. 제가 보기엔 코딩도 아이템이 무척 중요하다고 생각합니다."};                            //Gold
+        string[] weakOptions = { "최근 계속 앉아만 있다보니 걸어다니면 무릎이 좀 아프고, 체력이 약해지는 게 느껴져요."          //HP
+        ,"요즘 너무 컴퓨터를 오래 사용했는지 무리하면 손목이 좀 아프더라고요."         //DMG
+        ,"다른 일을 하다가 개발을 시작해서 사실 기초는 잘 모르고 느낌대로 하고 있어요."         //DEF
+        ,"저는 다 좋은데 화가 좀 많다고 하더라고요. 그런가? 어떤 새끼들이 그렇게 말하고 다니는 걸까."         //Mental
+        ,"제가 컴퓨터가 좀 느린데 괜찮겠죠?? 빌드에 5분정도는 다 걸리는거 맞죠..?"};       //Gold
+        
+
         Job userJob;
         string userName;
+
+        Prologue();
 
         Console.Clear();
         Console.WriteLine("사용할 아이디를 입력해 주세요.");
@@ -93,16 +114,17 @@ public class Login : Scene
         userID = Console.ReadLine();
 
         Console.Clear();
-        Console.WriteLine("불리고 싶은 이름을 정해주세요.");
+        Console.WriteLine("당신은 이 헥사코어 안에서 새로운 코드명으로 불리게 될 것입니다.");
+        Console.WriteLine("당신을 드러낼 코드네임을 정해주세요.");
         Console.SetCursorPosition(0, 25);
         userName = Console.ReadLine();
 
         while (true)
         {
             Console.Clear();
-            Console.WriteLine("직업을 선택해주세요.");
+            Console.WriteLine("당신은 어떤 일을 하고 있나요?");
+            Console.SetCursorPosition(0, 5);
 
-            
             for (int i = 0; i < jobOptions.Length; i++)
             {
                 if (i == selectedOption)
@@ -115,6 +137,7 @@ public class Login : Scene
                 {
                     Console.WriteLine("   " + jobOptions[i]);
                 }
+                Console.WriteLine();
             }
 
             
@@ -139,7 +162,8 @@ public class Login : Scene
         while (true)                //배경 설정
         {
             Console.Clear();
-            Console.WriteLine("어떻게 살아왔는지 알려주세요.");
+            Console.WriteLine("지금까지 어떻게 살아왔는지 알려주세요.");
+            Console.SetCursorPosition(0, 5);
 
             for (int i = 0; i < backgroundOptions.Length; i++)
             {
@@ -153,8 +177,8 @@ public class Login : Scene
                 {
                     Console.WriteLine("   " + backgroundOptions[i]);
                 }
+                Console.WriteLine();
             }
-
 
             ConsoleKeyInfo keyInfo = Console.ReadKey();
             if (keyInfo.Key == ConsoleKey.UpArrow)
@@ -170,13 +194,150 @@ public class Login : Scene
                 break; // 엔터 누르면 루프 탈출
             }
         }
+        switch((BackgroundSelectOption)selectedOption)
+        {
+            case BackgroundSelectOption.HPup:
+                player.HP += 50;
+                player.CurrentHp += 50;
+                break;
 
+            case BackgroundSelectOption.DMGup:
+                player.TypingSpeed += 5;
+                break;
+
+            case BackgroundSelectOption.DEFup:
+                player.C += 5;
+                break;
+
+            case BackgroundSelectOption.Mentalup:
+                player.Mental += 50;
+                player.CurrentMental += 50;
+                break;
+
+            case BackgroundSelectOption.Goldup:
+                player.Gold += 500;
+                break;
+        }
+
+
+        while (true)                //배경 설정
+        {
+            Console.Clear();
+            Console.WriteLine("항상 좋은 일만 있는 건 아니었잖아요. 그렇죠?");
+            Console.SetCursorPosition(0, 5);
+
+            for (int i = 0; i < weakOptions.Length; i++)
+            {
+                if (i == selectedOption)
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue; // 선택중인 옵션
+                    Console.WriteLine("-> " + weakOptions[i]);
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.WriteLine("   " + weakOptions[i]);
+                }
+                Console.WriteLine();
+            }
+
+            ConsoleKeyInfo keyInfo = Console.ReadKey();
+            if (keyInfo.Key == ConsoleKey.UpArrow)
+            {
+                selectedOption = (selectedOption == 0) ? weakOptions.Length - 1 : selectedOption - 1;
+            }
+            else if (keyInfo.Key == ConsoleKey.DownArrow)
+            {
+                selectedOption = (selectedOption == weakOptions.Length - 1) ? 0 : selectedOption + 1;
+            }
+            else if (keyInfo.Key == ConsoleKey.Enter)
+            {
+                break; // 엔터 누르면 루프 탈출
+            }
+        }
+        switch ((WeakSelectOption)selectedOption)
+        {
+            case WeakSelectOption.HPdown:
+                player.HP -= 30;
+                player.CurrentHp -= 30;
+                break;
+
+            case WeakSelectOption.DMGdown:
+                player.TypingSpeed -= 3;
+                break;
+
+            case WeakSelectOption.DEFdown:
+                player.C -= 3;
+                break;
+
+            case WeakSelectOption.Mentaldown:
+                player.Mental -= 30;
+                player.CurrentMental -= 30;
+                break;
+
+            case WeakSelectOption.Golddown:
+                player.Gold -= 300;
+                break;
+        }
+
+        //로비 씬으로 이동!
     }
 
     private static void LoadGame()
     {
         string loadData = File.ReadAllText(CurrentDirectory + "\\savePlayer.json");         //캐릭터 정보 불러오기
         player = JsonConvert.DeserializeObject<Player>(loadData);
+    }
+
+    private static void Prologue()
+    {
+        Console.Clear();
+        Console.SetCursorPosition(0, 25);
+        Console.WriteLine("오늘따라 옛날 생각이 난다.");
+        Thread.Sleep(1000);
+        Console.WriteLine("언제였더라? 돌아보면 시간이 이렇게도 빠르다.");
+        Thread.Sleep(3000);
+
+        Console.Clear();
+        Console.SetCursorPosition(0, 25);
+        Console.WriteLine("동기들과 내배캠을 수료할 때만 해도 이런저런 걱정이 많았었는데");
+        Thread.Sleep(1000);
+        Console.WriteLine("금방 이렇게 번듯한 회사에 취업하게 될 줄이야..");
+        Thread.Sleep(3000);
+
+        Console.Clear();
+        Console.SetCursorPosition(0, 25);
+        Console.WriteLine("어라..? 근데 왜 이렇게 어지럽....");
+        Thread.Sleep(3000);
+        audioMgr.Stop();
+        audioMgr.Init(newWorldLoop);
+        audioMgr.Play();
+        //사운드 변환
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.Clear();
+        Console.SetCursorPosition(0, 25);
+        Console.WriteLine("잘 살아가던 당신은 알 수 없는 이유로 이상한 세계로 이동해버렸다!");
+        Thread.Sleep(3000);
+
+        Console.Clear();
+        Console.SetCursorPosition(0, 25);
+        Console.WriteLine("이곳은 놀랍게도 몬스터가 존재하는 세상.");
+        Thread.Sleep(1000);
+        Console.WriteLine("몬스터를 쓰러트리기 위해서는 코딩으로만 공격할 수 있다고 한다?!");
+        Thread.Sleep(3000);
+
+        Console.Clear();
+        Console.SetCursorPosition(0, 25);
+        Console.WriteLine("승리를 위한 코딩!");
+        Thread.Sleep(1000);
+        Console.WriteLine("생존을 위한 디버깅!");
+        Thread.Sleep(3000);
+
+        Console.Clear();
+        Console.SetCursorPosition(0, 25);
+        Console.WriteLine("이 험난한 세상에서, 당신은 살아갈 수 있을 것인가...");
+        Thread.Sleep(3000);
+        Console.ResetColor();
     }
 
     public static void SaveData()          
@@ -191,9 +352,27 @@ public class Login : Scene
 
 
 
-enum LoginSelectOption
+enum JobSelectOption
 {
     NewGame,
     LoadGame,
     Exit
+}
+
+enum BackgroundSelectOption
+{
+    HPup,
+    DMGup,
+    DEFup,
+    Mentalup,
+    Goldup
+}
+
+enum WeakSelectOption
+{
+    HPdown,
+    DMGdown,
+    DEFdown,
+    Mentaldown,
+    Golddown
 }
