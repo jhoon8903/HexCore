@@ -3,12 +3,14 @@ using Newtonsoft.Json;
 using NAudio.Wave;
 using TeamDungeon.Utility;
 
+using HexaCoreVillage.Manager;
+
 namespace HexaCoreVillage.Login;
 
 public class Login : Scene
 {
     public override SCENE_NAME SceneName => SCENE_NAME.LOGIN;
-
+    
     // by 정훈
     // 다른 PC에서는 절대경로 설정시 File을 찾을 수 없어 상대경로 표시를 위한 변수를 별도로 작성했습니다.
     // 하지만 맥에서는 작동하지 않습니다.
@@ -23,22 +25,20 @@ public class Login : Scene
     static AudioFileReader newWorldBGM = new AudioFileReader(newWorldBGMPath);
     static LoopStream newWorldLoop = new LoopStream(newWorldBGM);
     static WaveOutEvent audioMgr = new WaveOutEvent();
+
     public static Player? player = null;
-    static string userID = "";
-    static string CurrentDirectory = Directory.GetCurrentDirectory();
-
-
+    string CurrentDirectory = Directory.GetCurrentDirectory();
     public override void Start()
     {
-
+        
     }
 
     public override void Update()
     {
-
+        LoginScene();
     }
 
-    public static void LoginScene()
+    public void LoginScene()
     {
         audioMgr.Init(startLoop);
         audioMgr.Play();
@@ -47,25 +47,25 @@ public class Login : Scene
 
         while (true)
         {
-            Console.Clear();
-            Console.SetCursorPosition(0, 25);
+            Clear();
+            SetCursorPosition(0, 25);
             
             for (int i = 0; i < options.Length; i++)
             {
                 if (i == selectedOption)
                 {
-                    Console.ForegroundColor = ConsoleColor.Blue; 
-                    Console.WriteLine("-> " + options[i]);
-                    Console.ResetColor();
+                    ForegroundColor = ConsoleColor.Blue; 
+                    WriteLine("-> " + options[i]);
+                    ResetColor();
                 }
                 else
                 {
-                    Console.WriteLine("   " + options[i]);
+                    WriteLine("   " + options[i]);
                 }
             }
 
             
-            ConsoleKeyInfo keyInfo = Console.ReadKey();
+            ConsoleKeyInfo keyInfo = ReadKey();
             if (keyInfo.Key == ConsoleKey.UpArrow)
             {
                 selectedOption = (selectedOption == 0) ? options.Length - 1 : selectedOption - 1;
@@ -96,8 +96,9 @@ public class Login : Scene
         }
     }
 
-    private static void NewGame()
+    private void NewGame()
     {
+        string userID = "";
         int selectedOption = 0;
         string[] jobOptions = { "Unity 개발자", "Unreal 개발자", "AI 개발자", "PM(Product manager)", "QA(Quality Assurance)" };
         string[] backgroundOptions = { "언제는 하루 종일 코딩만 한 적이 있어요. 그래서인지 하루 12시간 정도는 전혀 지치치 않죠."     //HP
@@ -113,44 +114,44 @@ public class Login : Scene
         
 
         Job userJob;
-        string userName;
+        string? userName;
 
         Prologue();
 
-        Console.Clear();
-        Console.WriteLine("사용할 아이디를 입력해 주세요.");
-        Console.SetCursorPosition(0, 25);
-        userID = Console.ReadLine();
+        Clear();
+        WriteLine("사용할 아이디를 입력해 주세요.");
+        SetCursorPosition(0, 25);
+        userID = ReadLine();
 
-        Console.Clear();
-        Console.WriteLine("당신은 이 헥사코어 안에서 새로운 코드명으로 불리게 될 것입니다.");
-        Console.WriteLine("당신을 드러낼 코드네임을 정해주세요.");
-        Console.SetCursorPosition(0, 25);
-        userName = Console.ReadLine();
+        Clear();
+        WriteLine("당신은 이 헥사코어 안에서 새로운 코드명으로 불리게 될 것입니다.");
+        WriteLine("당신을 드러낼 코드네임을 정해주세요.");
+        SetCursorPosition(0, 25);
+        userName = ReadLine();
 
         while (true)
         {
-            Console.Clear();
-            Console.WriteLine("당신은 어떤 일을 하고 있나요?");
-            Console.SetCursorPosition(0, 5);
+            Clear();
+            WriteLine("당신은 어떤 일을 하고 있나요?");
+            SetCursorPosition(0, 5);
 
             for (int i = 0; i < jobOptions.Length; i++)
             {
                 if (i == selectedOption)
                 {
-                    Console.ForegroundColor = ConsoleColor.Blue; // 선택중인 옵션
-                    Console.WriteLine("-> " + jobOptions[i]);
-                    Console.ResetColor();
+                    ForegroundColor = ConsoleColor.Blue; // 선택중인 옵션
+                    WriteLine("-> " + jobOptions[i]);
+                    ResetColor();
                 }
                 else
                 {
-                    Console.WriteLine("   " + jobOptions[i]);
+                    WriteLine("   " + jobOptions[i]);
                 }
-                Console.WriteLine();
+                WriteLine();
             }
 
             
-            ConsoleKeyInfo keyInfo = Console.ReadKey();
+            ConsoleKeyInfo keyInfo = ReadKey();
             if (keyInfo.Key == ConsoleKey.UpArrow)
             {
                 selectedOption = (selectedOption == 0) ? jobOptions.Length - 1 : selectedOption - 1;
@@ -170,26 +171,26 @@ public class Login : Scene
 
         while (true)                //배경 설정
         {
-            Console.Clear();
-            Console.WriteLine("지금까지 어떻게 살아왔는지 알려주세요.");
-            Console.SetCursorPosition(0, 5);
+            Clear();
+            WriteLine("지금까지 어떻게 살아왔는지 알려주세요.");
+            SetCursorPosition(0, 5);
 
             for (int i = 0; i < backgroundOptions.Length; i++)
             {
                 if (i == selectedOption)
                 {
-                    Console.ForegroundColor = ConsoleColor.Blue; // 선택중인 옵션
-                    Console.WriteLine("-> " + backgroundOptions[i]);
-                    Console.ResetColor();
+                    ForegroundColor = ConsoleColor.Blue; // 선택중인 옵션
+                    WriteLine("-> " + backgroundOptions[i]);
+                    ResetColor();
                 }
                 else
                 {
-                    Console.WriteLine("   " + backgroundOptions[i]);
+                    WriteLine("   " + backgroundOptions[i]);
                 }
-                Console.WriteLine();
+                WriteLine();
             }
 
-            ConsoleKeyInfo keyInfo = Console.ReadKey();
+            ConsoleKeyInfo keyInfo = ReadKey();
             if (keyInfo.Key == ConsoleKey.UpArrow)
             {
                 selectedOption = (selectedOption == 0) ? backgroundOptions.Length - 1 : selectedOption - 1;
@@ -231,26 +232,26 @@ public class Login : Scene
 
         while (true)                //배경 설정
         {
-            Console.Clear();
-            Console.WriteLine("항상 좋은 일만 있는 건 아니었잖아요. 그렇죠?");
-            Console.SetCursorPosition(0, 5);
+            Clear();
+            WriteLine("항상 좋은 일만 있는 건 아니었잖아요. 그렇죠?");
+            SetCursorPosition(0, 5);
 
             for (int i = 0; i < weakOptions.Length; i++)
             {
                 if (i == selectedOption)
                 {
-                    Console.ForegroundColor = ConsoleColor.Blue; // 선택중인 옵션
-                    Console.WriteLine("-> " + weakOptions[i]);
-                    Console.ResetColor();
+                    ForegroundColor = ConsoleColor.Blue; // 선택중인 옵션
+                    WriteLine("-> " + weakOptions[i]);
+                    ResetColor();
                 }
                 else
                 {
-                    Console.WriteLine("   " + weakOptions[i]);
+                    WriteLine("   " + weakOptions[i]);
                 }
-                Console.WriteLine();
+                WriteLine();
             }
 
-            ConsoleKeyInfo keyInfo = Console.ReadKey();
+            ConsoleKeyInfo keyInfo = ReadKey();
             if (keyInfo.Key == ConsoleKey.UpArrow)
             {
                 selectedOption = (selectedOption == 0) ? weakOptions.Length - 1 : selectedOption - 1;
@@ -289,73 +290,97 @@ public class Login : Scene
                 break;
         }
 
-        //로비 씬으로 이동!
+        SaveData();
+        Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
     }
 
-    private static void LoadGame()
+    private void LoadGame()
     {
         string loadData = File.ReadAllText(CurrentDirectory + "\\savePlayer.json");         //캐릭터 정보 불러오기
         player = JsonConvert.DeserializeObject<Player>(loadData);
+        
+        while(true)
+        {
+            Clear();
+            WriteLine("사용하던 아이디를 입력해 주세요.");
+            SetCursorPosition(0, 25);
+            if (player.ID == ReadLine())
+            {
+                ForegroundColor = ConsoleColor.Blue;
+                WriteLine("사용자를 확인하였습니다.");
+                ResetColor();
+                Thread.Sleep(1000);
+                break;
+            }
+            ForegroundColor = ConsoleColor.Blue;
+            WriteLine("데이터가 일치하지 않습니다.");
+            ResetColor();
+            Thread.Sleep(1000);
+        }
+        audioMgr.Stop();
+        audioMgr.Init(newWorldLoop);
+        audioMgr.Play();
+        Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
+
     }
 
-    private static void Prologue()
+    private void Prologue()
     {
-        Console.Clear();
-        Console.SetCursorPosition(0, 25);
-        Console.WriteLine("오늘따라 옛날 생각이 난다.");
+        Clear();
+        SetCursorPosition(0, 25);
+        WriteLine("오늘따라 옛날 생각이 난다.");
         Thread.Sleep(1000);
-        Console.WriteLine("언제였더라? 돌아보면 시간이 이렇게도 빠르다.");
+        WriteLine("언제였더라? 돌아보면 시간이 이렇게도 빠르다.");
         Thread.Sleep(3000);
 
-        Console.Clear();
-        Console.SetCursorPosition(0, 25);
-        Console.WriteLine("동기들과 내배캠을 수료할 때만 해도 이런저런 걱정이 많았었는데");
+        Clear();
+        SetCursorPosition(0, 25);
+        WriteLine("동기들과 내배캠을 수료할 때만 해도 이런저런 걱정이 많았었는데");
         Thread.Sleep(1000);
-        Console.WriteLine("금방 이렇게 번듯한 회사에 취업하게 될 줄이야..");
+        WriteLine("금방 이렇게 번듯한 회사에 취업하게 될 줄이야..");
         Thread.Sleep(3000);
 
-        Console.Clear();
-        Console.SetCursorPosition(0, 25);
-        Console.WriteLine("어라..? 근데 왜 이렇게 어지럽....");
+        Clear();
+        SetCursorPosition(0, 25);
+        WriteLine("어라..? 근데 왜 이렇게 어지럽....");
         Thread.Sleep(3000);
         audioMgr.Stop();
         audioMgr.Init(newWorldLoop);
         audioMgr.Play();
         //사운드 변환
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.Clear();
-        Console.SetCursorPosition(0, 25);
-        Console.WriteLine("잘 살아가던 당신은 알 수 없는 이유로 이상한 세계로 이동해버렸다!");
+        ForegroundColor = ConsoleColor.Red;
+        Clear();
+        SetCursorPosition(0, 25);
+        WriteLine("잘 살아가던 당신은 알 수 없는 이유로 이상한 세계로 이동해버렸다!");
         Thread.Sleep(3000);
 
-        Console.Clear();
-        Console.SetCursorPosition(0, 25);
-        Console.WriteLine("이곳은 놀랍게도 몬스터가 존재하는 세상.");
+        Clear();
+        SetCursorPosition(0, 25);
+        WriteLine("이곳은 놀랍게도 몬스터가 존재하는 세상.");
         Thread.Sleep(1000);
-        Console.WriteLine("몬스터를 쓰러트리기 위해서는 코딩으로만 공격할 수 있다고 한다?!");
+        WriteLine("몬스터를 쓰러트리기 위해서는 코딩으로만 공격할 수 있다고 한다?!");
         Thread.Sleep(3000);
 
-        Console.Clear();
-        Console.SetCursorPosition(0, 25);
-        Console.WriteLine("승리를 위한 코딩!");
+        Clear();
+        SetCursorPosition(0, 25);
+        WriteLine("승리를 위한 코딩!");
         Thread.Sleep(1000);
-        Console.WriteLine("생존을 위한 디버깅!");
+        WriteLine("생존을 위한 디버깅!");
         Thread.Sleep(3000);
 
-        Console.Clear();
-        Console.SetCursorPosition(0, 25);
-        Console.WriteLine("이 험난한 세상에서, 당신은 살아갈 수 있을 것인가...");
+        Clear();
+        SetCursorPosition(0, 25);
+        WriteLine("이 험난한 세상에서, 당신은 살아갈 수 있을 것인가...");
         Thread.Sleep(3000);
-        Console.ResetColor();
+        ResetColor();
     }
 
-    public static void SaveData()          
+    private void SaveData()
     {
         string playerData = JsonConvert.SerializeObject(player, Formatting.Indented);        //캐릭터 정보 저장
         File.WriteAllText(CurrentDirectory + ".\\savePlayer.json", playerData);
 
         //string dungeonData =                  //던전 정보도 저장할 예정.
-        
     }
 }
 

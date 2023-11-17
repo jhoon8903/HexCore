@@ -150,6 +150,15 @@
           }
         }
       },
+      "portaudio/0.19.1": {
+        "type": "package",
+        "dependencies": {
+          "portaudio.redist": "0.19.1"
+        }
+      },
+      "portaudio.redist/0.19.1": {
+        "type": "package"
+      },
       "System.Security.AccessControl/4.7.0": {
         "type": "package",
         "dependencies": {
@@ -387,6 +396,55 @@
         "packageIcon.png"
       ]
     },
+    "portaudio/0.19.1": {
+      "sha512": "FRKVJAT6TuV/M7xvLeL4AaLe6Tvq/dfNET7uYBkrgEDNM5ztt6muTsOTGN2ozlIrgXvZsa6QV3gSi2Dap5Pf4A==",
+      "type": "package",
+      "path": "portaudio/0.19.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/configurations.autopkg",
+        "build/native/default-propertiesui.xml",
+        "build/native/docs/README.txt",
+        "build/native/include/pa_asio.h",
+        "build/native/include/pa_jack.h",
+        "build/native/include/pa_linux_alsa.h",
+        "build/native/include/pa_mac_core.h",
+        "build/native/include/pa_win_ds.h",
+        "build/native/include/pa_win_wasapi.h",
+        "build/native/include/pa_win_waveformat.h",
+        "build/native/include/pa_win_wdmks.h",
+        "build/native/include/pa_win_wmme.h",
+        "build/native/include/portaudio.h",
+        "build/native/lib/Win32/v120/Debug/portaudio_x86.lib",
+        "build/native/lib/Win32/v120/Release/portaudio_x86.lib",
+        "build/native/lib/x64/v120/Debug/portaudio_x64.lib",
+        "build/native/lib/x64/v120/Release/portaudio_x64.lib",
+        "build/native/portaudio.targets",
+        "build/publisher-info.txt",
+        "portaudio.0.19.1.nupkg.sha512",
+        "portaudio.nuspec"
+      ]
+    },
+    "portaudio.redist/0.19.1": {
+      "sha512": "xVeTHgtXYxDWYVeTPJZz4tmTV+7xCRfYUmZLfqee3egxrx1jABx/3qovudkynpTDNNc4YSfSaKz7UQAW7OgX7A==",
+      "type": "package",
+      "path": "portaudio.redist/0.19.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/configurations.autopkg",
+        "build/native/bin/Win32/v120/Debug/portaudio_x86.dll",
+        "build/native/bin/Win32/v120/Release/portaudio_x86.dll",
+        "build/native/bin/x64/v120/Debug/portaudio_x64.dll",
+        "build/native/bin/x64/v120/Release/portaudio_x64.dll",
+        "build/native/default-propertiesui.xml",
+        "build/native/portaudio.redist.targets",
+        "build/publisher-info.txt",
+        "portaudio.redist.0.19.1.nupkg.sha512",
+        "portaudio.redist.nuspec"
+      ]
+    },
     "System.Security.AccessControl/4.7.0": {
       "sha512": "JECvTt5aFF3WT3gHpfofL2MNNP6v84sxtXxpqhLBCcDRzqsPBmHhQ6shv4DwwN2tRlzsUxtb3G9M3763rbXKDg==",
       "type": "package",
@@ -491,28 +549,31 @@
   "projectFileDependencyGroups": {
     "net7.0": [
       "NAudio >= 2.2.1",
-      "Newtonsoft.Json >= 13.0.3"
+      "Newtonsoft.Json >= 13.0.3",
+      "portaudio >= 0.19.1"
     ]
   },
   "packageFolders": {
-    "/Users/daniel/.nuget/packages/": {}
+    "C:\\Users\\shstc\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/HexaCoreVillage/HexaCoreVillage.csproj",
+      "projectUniqueName": "C:\\Users\\shstc\\OneDrive\\Desktop\\git\\HexCore\\TeamDungeon\\HexaCoreVillage\\HexaCoreVillage.csproj",
       "projectName": "HexaCoreVillage",
-      "projectPath": "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/HexaCoreVillage/HexaCoreVillage.csproj",
-      "packagesPath": "/Users/daniel/.nuget/packages/",
-      "outputPath": "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/HexaCoreVillage/obj/",
+      "projectPath": "C:\\Users\\shstc\\OneDrive\\Desktop\\git\\HexCore\\TeamDungeon\\HexaCoreVillage\\HexaCoreVillage.csproj",
+      "packagesPath": "C:\\Users\\shstc\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\shstc\\OneDrive\\Desktop\\git\\HexCore\\TeamDungeon\\HexaCoreVillage\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/daniel/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\shstc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -538,6 +599,10 @@
           "Newtonsoft.Json": {
             "target": "Package",
             "version": "[13.0.3, )"
+          },
+          "portaudio": {
+            "target": "Package",
+            "version": "[0.19.1, )"
           }
         },
         "imports": [
@@ -556,7 +621,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.302/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.404\\RuntimeIdentifierGraph.json"
       }
     }
   }
