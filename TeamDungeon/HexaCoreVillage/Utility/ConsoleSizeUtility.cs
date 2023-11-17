@@ -3,7 +3,7 @@ namespace HexaCoreVillage.Utility
     public static class ConsoleSizeUtility
     {
         private const int FixedRows = 30;
-        private const int FixedColumns = 180;
+        private const int FixedColumns = 120;
 
         public static void RedrawBorder()
         {

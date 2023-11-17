@@ -1,21 +1,23 @@
+using System.Text.Json.Serialization;
+
 namespace HexaCoreVillage.Utility;
 
 internal class Item
-{ 
-    public string ItemName {  get; set; }
-    public ItemType Type {  get; set; }
-    public string Desc {  get; set; }
-    public int Price {  get; set; }
-    public int ItemOption {  get; set; }
+{
+    [JsonPropertyName("ItemName")] public string? ItemName {  get; set; }
+    [JsonPropertyName("Type")] public ItemType Type {  get; set; }
+    [JsonPropertyName("Desc")] public string? Desc {  get; set; }
+    [JsonPropertyName("Price")] public int Price {  get; set; }
+    [JsonPropertyName("ItemOption")] public int ItemOption {  get; set; }
 
-    public Item()
-    {
-        ItemName = "로지텍 마우스";
-        Type = ItemType.Mouse;
-        Desc = "나쁘지 않은 마우스이다.";
-        Price = 500;
-        ItemOption = 5;
-    }
+    //public Item()
+    //{
+    //    ItemName = "로지텍 마우스";
+    //    Type = ItemType.Mouse;
+    //    Desc = "나쁘지 않은 마우스이다.";
+    //    Price = 500;
+    //    ItemOption = 5;
+    //}
 }
 
 public enum ItemType
