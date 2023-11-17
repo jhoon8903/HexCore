@@ -1,3 +1,4 @@
+using HexaCoreVillage.Dungeon;
 using System.Text.Json.Serialization;
 
 namespace HexaCoreVillage.Utility
@@ -6,11 +7,12 @@ namespace HexaCoreVillage.Utility
     {
         // 버그 이름
         [JsonPropertyName("bugName")] public string? BugName { get; set; }
-        // 버그 치명도
-        public enum BugTypes { Critical, Major, Minor, Trivial, Enhancement }
+
+        // 버그 설명
+        [JsonPropertyName("bugDesc")] public string? BugDesc { get; set; }
         
-        // 버그 치명도
-        [JsonPropertyName("bugType")] public BugTypes BugType { get; set; }
+        // 버그 타입 (플레이어 주는 피해에 추가 영향을 줌)
+        [JsonPropertyName("bugSolution")]public Debugging.SolutionTypes SolutionType { get; set; }
         
         // 버그 난이도 (Defence)
         [JsonPropertyName("bugDifficulty")] public int BugDifficulty{ get; set; }

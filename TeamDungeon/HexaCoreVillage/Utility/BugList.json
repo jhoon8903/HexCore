@@ -1,62 +1,177 @@
 [
   {
-    "bugName": "NullRef",
-    "bugType": "Critical",
-    "bugDifficulty": 90,
-    "bugComplexity": 85
+    "bugName": "Incorrect Value Assignment",
+    "bugDesc": "A variable is assigned a value outside its expected range, causing logic errors.",
+    "bugSolution": "ModifyVariables",
+    "bugDifficulty": 7,
+    "bugComplexity": 6
   },
   {
-    "bugName": "MemLeak",
-    "bugType": "Major",
-    "bugDifficulty": 80,
-    "bugComplexity": 75
+    "bugName": "Uninitialized Variable",
+    "bugDesc": "A variable is used without being initialized, leading to unpredictable behavior.",
+    "bugSolution": "ModifyVariables",
+    "bugDifficulty": 5,
+    "bugComplexity": 4
   },
   {
-    "bugName": "InfiniteLoop",
-    "bugType": "Critical",
-    "bugDifficulty": 95,
-    "bugComplexity": 80
+    "bugName": "Global Variable Overuse",
+    "bugDesc": "Overreliance on global variables leads to complex interdependencies and hard-to-track bugs.",
+    "bugSolution": "ModifyVariables",
+    "bugDifficulty": 8,
+    "bugComplexity": 7
   },
   {
-    "bugName": "MissingAssets",
-    "bugType": "Minor",
-    "bugDifficulty": 60,
-    "bugComplexity": 50
+    "bugName": "Variable Scope Error",
+    "bugDesc": "A variable is declared in the wrong scope, causing access issues or unintended value changes.",
+    "bugSolution": "ModifyVariables",
+    "bugDifficulty": 6,
+    "bugComplexity": 5
   },
   {
-    "bugName": "UnresponsiveUI",
-    "bugType": "Major",
-    "bugDifficulty": 70,
-    "bugComplexity": 65
+    "bugName": "Type Mismatch",
+    "bugDesc": "Assigning a value of the wrong type to a variable, resulting in type conversion errors or exceptions.",
+    "bugSolution": "ModifyVariables",
+    "bugDifficulty": 7,
+    "bugComplexity": 6
   },
   {
-    "bugName": "Misaligned",
-    "bugType": "Trivial",
-    "bugDifficulty": 30,
-    "bugComplexity": 20
+    "bugName": "Method Name Typo",
+    "bugDesc": "A typo in a method name causing a missing method exception.",
+    "bugSolution": "FixTypos",
+    "bugDifficulty": 4,
+    "bugComplexity": 3
   },
   {
-    "bugName": "NPCError",
-    "bugType": "Major",
-    "bugDifficulty": 75,
-    "bugComplexity": 70
+    "bugName": "Variable Name Mistake",
+    "bugDesc": "Incorrect variable names leading to compilation errors or unintended behavior.",
+    "bugSolution": "FixTypos",
+    "bugDifficulty": 3,
+    "bugComplexity": 2
   },
   {
-    "bugName": "AudioError",
-    "bugType": "Minor",
-    "bugDifficulty": 55,
-    "bugComplexity": 45
+    "bugName": "String Literal Errors",
+    "bugDesc": "Typos in string literals, causing incorrect output or failed string comparisons.",
+    "bugSolution": "FixTypos",
+    "bugDifficulty": 4,
+    "bugComplexity": 3
   },
   {
-    "bugName": "CollisionIssue",
-    "bugType": "Critical",
-    "bugDifficulty": 85,
-    "bugComplexity": 80
+    "bugName": "Incorrect Syntax",
+    "bugDesc": "Syntax errors due to typos, preventing code from compiling.",
+    "bugSolution": "FixTypos",
+    "bugDifficulty": 5,
+    "bugComplexity": 4
   },
   {
-    "bugName": "NewSkinReq",
-    "bugType": "Enhancement",
-    "bugDifficulty": 40,
-    "bugComplexity": 30
+    "bugName": "Wrong Keywords",
+    "bugDesc": "Using a wrong keyword (like 'public' instead of 'private'), leading to access level issues.",
+    "bugSolution": "FixTypos",
+    "bugDifficulty": 6,
+    "bugComplexity": 5
+  },
+  {
+    "bugName": "Local Variable Shadowing",
+    "bugDesc": "A local variable in a method shadows a global variable, causing unexpected behavior.",
+    "bugSolution": "ModifyScope",
+    "bugDifficulty": 6,
+    "bugComplexity": 5
+  },
+  {
+    "bugName": "Access Modifier Misuse",
+    "bugDesc": "Incorrect use of access modifiers (like 'public', 'private'), leading to security issues or access errors.",
+    "bugSolution": "ModifyScope",
+    "bugDifficulty": 7,
+    "bugComplexity": 6
+  },
+  {
+    "bugName": "Nested Scope Confusion",
+    "bugDesc": "Variables in nested scopes causing confusion or errors due to mismanagement.",
+    "bugSolution": "ModifyScope",
+    "bugDifficulty": 8,
+    "bugComplexity": 7
+  },
+  {
+    "bugName": "Class/Method Visibility Issues",
+    "bugDesc": "Methods or classes not accessible where they're needed due to restrictive scoping.",
+    "bugSolution": "ModifyScope",
+    "bugDifficulty": 7,
+    "bugComplexity": 6
+  },
+  {
+    "bugName": "Block Scope Overlooked",
+    "bugDesc": "Variables declared in a block (like in 'if', 'for') incorrectly accessed outside their scope.",
+    "bugSolution": "ModifyScope",
+    "bugDifficulty": 5,
+    "bugComplexity": 4
+  },
+  {
+    "bugName": "Incorrect File Path",
+    "bugDesc": "File paths incorrectly specified, leading to file not found errors.",
+    "bugSolution": "EditPath",
+    "bugDifficulty": 5,
+    "bugComplexity": 4
+  },
+  {
+    "bugName": "Resource Path Error",
+    "bugDesc": "Paths to resources (like textures, sounds) in Unity are wrong, causing missing resources.",
+    "bugSolution": "EditPath",
+    "bugDifficulty": 6,
+    "bugComplexity": 5
+  },
+  {
+    "bugName": "URL Mistyping",
+    "bugDesc": "Incorrectly formatted or mistyped URLs causing network requests to fail.",
+    "bugSolution": "EditPath",
+    "bugDifficulty": 4,
+    "bugComplexity": 3
+  },
+  {
+    "bugName": "Relative vs Absolute Path Confusion",
+    "bugDesc": "Misuse of relative and absolute paths, leading to resources not being located.",
+    "bugSolution": "EditPath",
+    "bugDifficulty": 7,
+    "bugComplexity": 6
+  },
+  {
+    "bugName": "Path Separator Issues",
+    "bugDesc": "Incorrect use of path separators (like '/', '\\'), causing cross-platform compatibility issues.",
+    "bugSolution": "EditPath",
+    "bugDifficulty": 3,
+    "bugComplexity": 2
+  },
+  {
+    "bugName": "Memory Leak",
+    "bugDesc": "Unreleased memory causing the application to consume increasing amounts of memory over time.",
+    "bugSolution": "CheckMemory",
+    "bugDifficulty": 9,
+    "bugComplexity": 8
+  },
+  {
+    "bugName": "Garbage Collection Overhead",
+    "bugDesc": "Inefficient use of objects leading to frequent garbage collection and performance degradation.",
+    "bugSolution": "CheckMemory",
+    "bugDifficulty": 8,
+    "bugComplexity": 7
+  },
+  {
+    "bugName": "Null Reference Exception",
+    "bugDesc": "Accessing objects or variables that have not been instantiated, leading to runtime errors.",
+    "bugSolution": "CheckMemory",
+    "bugDifficulty": 7,
+    "bugComplexity": 6
+  },
+  {
+    "bugName": "Buffer Overflow",
+    "bugDesc": "Writing data beyond the allocated memory buffer, potentially causing crashes or security vulnerabilities.",
+    "bugSolution": "CheckMemory",
+    "bugDifficulty": 10,
+    "bugComplexity": 9
+  },
+  {
+    "bugName": "Excessive Memory Allocation",
+    "bugDesc": "Allocating more memory than necessary, leading to inefficient use of resources and potential slowdowns.",
+    "bugSolution": "CheckMemory",
+    "bugDifficulty": 6,
+    "bugComplexity": 5
   }
 ]

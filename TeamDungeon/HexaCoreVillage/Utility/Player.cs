@@ -16,6 +16,7 @@ namespace HexaCoreVillage.Utility
        public int Mental {  get; set; }
        public int CurrentMental {  get; set; }
        public  int Gold {  get; set; }
+       public int BugPercentage { get; set; }
        public  List<InventoryItem> Inventory = new List<InventoryItem>();
 
         public Player()
