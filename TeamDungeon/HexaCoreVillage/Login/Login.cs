@@ -2,8 +2,8 @@ using HexaCoreVillage.Utility;
 using Newtonsoft.Json;
 using NAudio.Wave;
 using TeamDungeon.Utility;
-
 using HexaCoreVillage.Manager;
+using System.Text;
 
 namespace HexaCoreVillage.Login;
 
@@ -26,6 +26,7 @@ public class Login : Scene
     static LoopStream newWorldLoop = new LoopStream(newWorldBGM);
     static WaveOutEvent audioMgr = new WaveOutEvent();
 
+    public static List<Item> ItemBox  = new List<Item>();
     public static Player? player = null;
     string CurrentDirectory = Directory.GetCurrentDirectory();
     public override void Start()
@@ -48,6 +49,7 @@ public class Login : Scene
         while (true)
         {
             Clear();
+            SetItemBox();
             SetCursorPosition(0, 25);
             
             for (int i = 0; i < options.Length; i++)
@@ -289,7 +291,7 @@ public class Login : Scene
                 player.Gold -= 300;
                 break;
         }
-
+        SetInvenItem();
         SaveData();
         Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
     }
@@ -381,6 +383,22 @@ public class Login : Scene
         File.WriteAllText(CurrentDirectory + ".\\savePlayer.json", playerData);
 
         //string dungeonData =                  //던전 정보도 저장할 예정.
+    }
+
+    private void SetItemBox()
+    {       
+        using StreamReader json = new(CurrentDirectory + "\\ItemData.json", Encoding.UTF8);     //버그 저장한거 보고 따라함;
+        string file = json.ReadToEnd();
+        ItemBox = JsonConvert.DeserializeObject<List<Item>>(file);
+    }
+
+    private void SetInvenItem()
+    {
+        player.Inventory.Add(new InventoryItem(ItemBox[0].ItemName, false, false, 1));
+        player.Inventory.Add(new InventoryItem(ItemBox[5].ItemName, false, false, 1));
+        player.Inventory.Add(new InventoryItem(ItemBox[10].ItemName, false, false, 1));
+        player.Inventory.Add(new InventoryItem(ItemBox[15].ItemName, false, false, 1));
+        player.Inventory.Add(new InventoryItem(ItemBox[20].ItemName, false, false, 1));
     }
 }
 

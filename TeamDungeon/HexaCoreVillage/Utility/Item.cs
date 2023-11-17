@@ -1,6 +1,6 @@
 namespace HexaCoreVillage.Utility;
 
-internal class Item
+public class Item
 { 
     public string ItemName {  get; set; }
     public ItemType Type {  get; set; }
