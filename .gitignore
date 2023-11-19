@@ -458,3 +458,9 @@ Thumbs.db
 *.exe
 *.jsproj
 *.winmd
+*.nuget.cache
+*.assets.json
+*.g.props
+*.dgspec.json
+*.editorconfig
+
