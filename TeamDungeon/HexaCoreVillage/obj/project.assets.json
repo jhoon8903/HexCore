@@ -554,26 +554,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\shstc\\.nuget\\packages\\": {}
+    "/Users/daniel/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\shstc\\OneDrive\\Desktop\\git\\HexCore\\TeamDungeon\\HexaCoreVillage\\HexaCoreVillage.csproj",
+      "projectUniqueName": "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/HexaCoreVillage/HexaCoreVillage.csproj",
       "projectName": "HexaCoreVillage",
-      "projectPath": "C:\\Users\\shstc\\OneDrive\\Desktop\\git\\HexCore\\TeamDungeon\\HexaCoreVillage\\HexaCoreVillage.csproj",
-      "packagesPath": "C:\\Users\\shstc\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\shstc\\OneDrive\\Desktop\\git\\HexCore\\TeamDungeon\\HexaCoreVillage\\obj\\",
+      "projectPath": "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/HexaCoreVillage/HexaCoreVillage.csproj",
+      "packagesPath": "/Users/daniel/.nuget/packages/",
+      "outputPath": "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/HexaCoreVillage/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\shstc\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/daniel/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -621,7 +619,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.404\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.302/RuntimeIdentifierGraph.json"
       }
     }
   }
