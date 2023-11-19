@@ -1,21 +1,14 @@
-using System.Runtime.InteropServices;
 namespace HexaCoreVillage.Utility
 {
     public static class ConsoleSizeUtility
     {
-        [DllImport ("libc")] private static extern int system (string exec);
-        public const int FixedRows = 40;
-        public const int FixedColumns = 180;
+        private const int FixedRows = 30;
+        private const int FixedColumns = 120;
 
-
-        public static void FixConsole()
-        {
-            system($@"printf '\e[8;{FixedRows};{FixedColumns}t'");
-        }
         public static void RedrawBorder()
         {
             ForegroundColor = ConsoleColor.Green;
-            FixConsole();
+
             // 콘솔의 상단을 그리는 로직
             SetCursorPosition(0, 0);
             Write(new string('=', FixedColumns));
