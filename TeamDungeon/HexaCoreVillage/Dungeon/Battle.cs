@@ -511,6 +511,7 @@ namespace HexaCoreVillage.Dungeon
             }
             BugStatus();
         }
+
         #endregion
     }
 }
