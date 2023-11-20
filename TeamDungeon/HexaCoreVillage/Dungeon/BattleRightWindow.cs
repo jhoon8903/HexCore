@@ -6,13 +6,22 @@ namespace HexaCoreVillage.Dungeon
 {
     public static class BattleRightWindow
     {
+        #region RightWindow Starter
         public static void RightWindow()
         {
             BugStatus();
-            RightBottomDisplay();
+            PlayerStatusDisplay();
         }
+        #endregion
 
-        private static void BugStatus()
+        #region Right TOP
+
+        /// <summary>
+        ///  버그의 Status 를 출력하는 메서드
+        ///  LeftWindow 에서 플레이어가 솔루션을 입력하면
+        ///  갱신되는 호출 메서드
+        /// </summary>
+        public static void BugStatus()
         {
             CurrentBug = DebuggingBugs[CurrentBugIndex];
             SetCursorPosition(50, 10);
@@ -44,42 +53,15 @@ namespace HexaCoreVillage.Dungeon
             }
             ResetColor();
         }
+        #endregion
 
-        public static void InputSolution()
-        {
-            // 데미지 적용 부분 수정 필요
-            SetCursorPosition(50, 10);
-            int progressIncrease = CurrentBug.SolutionType == Solution ? Battle.Random.Next(1, 20) : Battle.Random.Next(1, 10);
+        #region Right Middle
 
-            CurrentBug.BugProgress += progressIncrease;
-
-            if (CurrentBug.BugProgress >= 100)
-            {
-                CurrentBug.BugProgress = 100; 
-                BugStatus();
-                CurrentBugIndex++; // 다음 버그로 이동
-                if (CurrentBugIndex >= DebuggingBugs.Count && CurrentBug.BugProgress >= 100)
-                {
-                    DebuggingSuccess(); 
-                    return;
-                }
-                ClearLogging(11,28);
-                SetCursorPosition(50, 10);
-                WriteLine("현재 버그 디버깅 완료. 다음 버그로 이동합니다."); 
-                SetCursorPosition(50, 13);
-                WriteLine("아무키나 입력 하세요");
-                CurrentBug = DebuggingBugs[CurrentBugIndex];
-                BattleCursorTop = 12;
-                ReadKey();
-            }
-            else
-            {
-                BugStatus(); // 버그 진행률 업데이트
-                PlayerLoggingDisplay();
-            }
-        }
-
-        private static void PlayerLoggingDisplay()
+        /// <summary>
+        ///  플레이어가 전달한 솔루션을 로깅 위치에 출력하는 로깅 메서드
+        ///  메서드 출력 이후에 적 턴으로 로깅 메서드를 출력함
+        /// </summary>
+        public static void PlayerLoggingDisplay()
         {
             LoggingText loggingText = Battle.LoggingText!.First();
             List<string>? logs = Solution switch
@@ -113,6 +95,9 @@ namespace HexaCoreVillage.Dungeon
             BugLoggingDisplay();
         }
 
+        /// <summary>
+        ///  버그의 공격 로깅이 출력 되는 메서드
+        /// </summary>
         private static void BugLoggingDisplay()
         { 
             ClearLine(BattleCursorTop);
@@ -132,60 +117,71 @@ namespace HexaCoreVillage.Dungeon
             }
             else
             {
-                RightBottomDisplay();
+                PlayerStatusDisplay();
             }
         }
+        #endregion
 
-        private static void RightBottomDisplay()
+        #region Right Bottom
+        /// <summary>
+        ///  플레이어의 현재 상태를 출력하는 Display 메서드
+        /// 체력, 멘탈 등의 Stauts 가 갱신됨
+        /// </summary>
+        private static void PlayerStatusDisplay()
         {
             // 라인 그리기
-          SetCursorPosition(46,29);
-          for (int i = 0; i < 135; i++)
-          {
-              BackgroundColor = ConsoleColor.Yellow;
-              Write(" ");
-              ResetColor();
-          }
+            SetCursorPosition(46,29);
+            for (int i = 0; i < 133; i++)
+            {
+                BackgroundColor = ConsoleColor.Yellow;
+                Write(" ");
+                ResetColor();
+            }
           
             // 체력 바 그리기
-          SetCursorPosition(50, 31);
-          Write($"[ 체력 : {CurrentHp:D3} / {Battle.Player!.HP:D3} ]  ");
-          int staminaBlocks = CurrentHp;
-          for (int i = 0; i < Battle.Player.HP; i++)
-          {
-              BackgroundColor = i < staminaBlocks ? 
-                  staminaBlocks > 60 ? ConsoleColor.DarkGreen :
-                  staminaBlocks > 30 ? ConsoleColor.DarkYellow : 
-                  ConsoleColor.DarkRed : 
-                  ConsoleColor.Gray; // 미사용 부분은 회색으로 표시
-              Write(' '); // 공백으로 진행률 표시
-          }
-          ResetColor();
+            SetCursorPosition(50, 31);
+            Write($"[ 체력 : {CurrentHp:D3} / {Battle.Player!.HP:D3} ]  ");
+            int staminaBlocks = CurrentHp;
+            for (int i = 0; i < Battle.Player.HP; i++)
+            {
+                BackgroundColor = i < staminaBlocks ? 
+                    staminaBlocks > 60 ? ConsoleColor.DarkGreen :
+                    staminaBlocks > 30 ? ConsoleColor.DarkYellow : 
+                    ConsoleColor.DarkRed : 
+                    ConsoleColor.Gray; // 미사용 부분은 회색으로 표시
+                Write(' '); // 공백으로 진행률 표시
+            }
+            ResetColor();
 
-          // 멘탈 바 그리기
-          SetCursorPosition(50, 32);
-          Write($"[ 멘탈 : {CurrentHp:D3} / {Battle.Player.Mental:D3} ]  ");
-          int mentalBlock = CurrentMental;
-          for (int i = 0; i < Battle.Player.Mental; i++)
-          {
-              BackgroundColor = i < mentalBlock ? 
-                  mentalBlock > 60 ? ConsoleColor.Cyan :
-                  mentalBlock > 30 ? ConsoleColor.Blue : 
-                  ConsoleColor.DarkRed : 
-                  ConsoleColor.Gray; // 미사용 부분은 회색으로 표시
-              Write(' '); // 공백으로 진행률 표시
-          }
-          ResetColor();
+            // 멘탈 바 그리기
+            SetCursorPosition(50, 32);
+            Write($"[ 멘탈 : {CurrentHp:D3} / {Battle.Player.Mental:D3} ]  ");
+            int mentalBlock = CurrentMental;
+            for (int i = 0; i < Battle.Player.Mental; i++)
+            {
+                BackgroundColor = i < mentalBlock ? 
+                    mentalBlock > 60 ? ConsoleColor.Cyan :
+                    mentalBlock > 30 ? ConsoleColor.Blue : 
+                    ConsoleColor.DarkRed : 
+                    ConsoleColor.Gray; // 미사용 부분은 회색으로 표시
+                Write(' '); // 공백으로 진행률 표시
+            }
+            ResetColor();
 
-          // 디버깅 추가 확률
-          SetCursorPosition(50, 34);
-          Write($"[ 디버깅 추가 성능 : {Battle.Player.BonusDmg} ]  [ 언어 추가 이해력 : {Battle.Player.BonusDef} ]");
+            // 디버깅 추가 확률
+            SetCursorPosition(50, 34);
+            Write($"[ 디버깅 추가 성능 : {Battle.Player.BonusDmg} ]  [ 언어 추가 이해력 : {Battle.Player.BonusDef} ]");
           
-          // 멘트
-          SetCursorPosition(50, 36);
-          Write("[ 멘탈이 일정 수준 감소할 때 마다 디버깅 확률 및 디버깅 능력이 감소합니다. ]");
+            // 멘트
+            SetCursorPosition(50, 36);
+            Write("[ 멘탈이 일정 수준 감소할 때 마다 디버깅 확률 및 디버깅 능력이 감소합니다. ]");
         }
+        #endregion
 
+        #region Game Result
+        /// <summary>
+        ///  게임 패배시 로그를 비우고 Data.BattleSuccess를 false 로 지정하는 메서드
+        /// </summary>
         private static void ClearLoggingAndDefeat()
         {
             while (true)
@@ -208,7 +204,10 @@ namespace HexaCoreVillage.Dungeon
             }
         }
 
-        private static void DebuggingSuccess()
+        /// <summary>
+        ///  디버깅 실행결과 Data.BattleSuccess를 true 로 설정하는 메서드
+        /// </summary>
+        public static void DebuggingSuccess()
         {
             // 모든 버그를 디버깅 완료했을 경우
             while (true)
@@ -231,5 +230,6 @@ namespace HexaCoreVillage.Dungeon
                 }
             }
         }
+        #endregion
     }
 }

@@ -14,7 +14,7 @@ public class Reward : Scene
         WriteLine("여긴 리워드다!!");
         SetCursorPosition(85, 22);
         Write($"디버그 결과는 : {Data.BattleSuccess} 입니다!");
-        ConsoleSizeUtility.RedrawBorder();
+        Renderer.Instance.DrawConsoleBorder();
     }
 
     public override void Update()

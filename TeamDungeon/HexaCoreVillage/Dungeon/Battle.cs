@@ -6,8 +6,12 @@ using static HexaCoreVillage.Utility.ConsoleSizeUtility;
 
 namespace HexaCoreVillage.Dungeon
 {
+    
     #region Debugging Solution
-    // 디버깅 솔루션 클래스
+    /// <summary>
+    ///  디버깅 솔루션 클래스
+    ///  ModifyVariables, FixTypos, ModifyScope, EditPath, CheckMemory 총 5가지 enum
+    /// </summary>
     public static class Debugging
     {
         public enum SolutionTypes{ ModifyVariables, FixTypos, ModifyScope, EditPath, CheckMemory }
@@ -16,23 +20,39 @@ namespace HexaCoreVillage.Dungeon
 
     public class Battle  : Scene
     {
+        #region SceneManager Variable
+        // 씬 네임 할당 BATTLE
         public override SCENE_NAME SceneName => SCENE_NAME.BATTLE;
-        public static Player? Player { get; private set; }
-        private static readonly string BaseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        #endregion
+
+        #region Player Variable
+        public static Player? Player { get; private set; }  // 더미 플레이어 데이터 
+        public static int CurrentHp;    // 현재 플레이어 체력
+        public static int CurrentMental;    // 현재 플레이어 멘탈
+        #endregion
+
+        #region FILEPATH Variable
+        private static readonly string BaseDirectory = AppDomain.CurrentDomain.BaseDirectory;   // 기본 JSON 파일에 대한 FILE PATH
         private static readonly string BugFilePath = Path.GetFullPath(Path.Combine(BaseDirectory, "..", "..", "..", "..", "..", "TeamDungeon", "HexaCoreVillage", "Utility", "BugList.json"));
         private static readonly string LoggingFilePath = Path.GetFullPath(Path.Combine(BaseDirectory, "..", "..", "..",
             "..", "..", "TeamDungeon", "HexaCoreVillage", "Utility", "DebugText.json"));
-        private static List<Bug>? _bugList = new List<Bug>();
-        private static List<Bug>? _selectedBugs;
-        public static readonly Random Random = new Random();
-        public static SolutionTypes Solution;
-        public static int CurrentBugIndex { get; set; }
-        public static List<Bug> DebuggingBugs { get; set; } = new List<Bug>();
-        public static Bug CurrentBug { get; set; } = new Bug();
-        public static List<LoggingText>? LoggingText = new List<LoggingText>();
-        public static int BattleCursorTop = 12;
-        public static int CurrentHp;
-        public static int CurrentMental;
+        #endregion
+
+        #region BUG Variable
+        private static List<Bug>? _bugList = new List<Bug>();   // Json 에서 나온 버그 리스트를 담는 변수
+        private static List<Bug>? _selectedBugs;    // 선택되어 화면에 출력되기 위한 버그 리스트
+        public static int CurrentBugIndex { get; set; } // 현재 디버깅을 진행해야하는 버그 인덱스
+        public static List<Bug> DebuggingBugs { get; set; } = new List<Bug>();  // 현재 진행중인 버그의 리스트
+        public static Bug CurrentBug { get; set; } = new Bug(); // 현재 디버깅 진행중인 버그 인스턴스
+        #endregion
+
+        #region SOLUTION Variable       
+        public static SolutionTypes Solution;   // Solution 입력에 필요한 솔루션 변수
+        public static List<LoggingText>? LoggingText = new List<LoggingText>(); // 솔루션 로깅을 위한 JSON 인스턴스
+        #endregion
+
+        public static readonly Random Random = new Random();    // 난수 생성을 위한 Random
+        public static int BattleCursorTop = 12; // SetCursorTop
 
         # region Deserialize JSON
         /// <summary>
@@ -40,19 +60,26 @@ namespace HexaCoreVillage.Dungeon
         /// </summary>
         public override void Start()
         {
-            Player = new Player();
-            Player.BugPercentage += 15;
+            InitializePlayer();
+            LoadBugs();
+            LoadLoggingText();
+        }
+        
+        /// <summary>
+        ///  플레이어 데이터 초기화
+        /// </summary>
+        private static void InitializePlayer()
+        {
+            Player = new Player { BugPercentage = 15 };
             CurrentHp = Player.CurrentHp;
             CurrentMental = Player.CurrentMental;
-            ListOfBug();
-            LoggingTextLoad();
         }
 
         /// <summary>
         ///  버그 목록을 역직렬화 하여 언제든지 사용가능하도록
         ///  리스트에 담는 메서드 
         /// </summary>
-        private static void ListOfBug()
+        private static void LoadBugs()
         {
             using StreamReader json = new(BugFilePath, Encoding.UTF8);
             string file = json.ReadToEnd();
@@ -62,7 +89,7 @@ namespace HexaCoreVillage.Dungeon
         /// <summary>
         ///  로깅 리스트 역직렬화
         /// </summary>
-        private static void LoggingTextLoad()
+        private static void LoadLoggingText()
         {
             using StreamReader json = new(LoggingFilePath, Encoding.UTF8);
             string file = json.ReadToEnd();
@@ -71,6 +98,9 @@ namespace HexaCoreVillage.Dungeon
         #endregion
 
         #region Loop Logic
+        /// <summary>
+        ///  상속 받아 반복 실행 되는 Update 
+        /// </summary>
         public override void Update()
         {
             Compiling();
@@ -161,7 +191,6 @@ namespace HexaCoreVillage.Dungeon
         /// <summary>
         ///  Console에 FoundBugs 중에서 고른 Bug 리스트의 첫 번재 버그를 출력
         /// </summary>
-        /// <returns>선택한 Bug 리스트를 반환</returns>
         private static void DebuggingList()
         {
             CursorVisible = false;
@@ -206,7 +235,7 @@ namespace HexaCoreVillage.Dungeon
                 }
                 WriteLine("\t컴파일 종료"); 
                 ResetColor();
-                RedrawBorder();
+                Renderer.Instance.DrawConsoleBorder();
                 ConsoleKeyInfo  key = ReadKey();
 
                 switch (key.Key)
@@ -223,7 +252,7 @@ namespace HexaCoreVillage.Dungeon
         }
         # endregion
 
-         #region Escape Action
+        #region Escape Action
         /// <summary>
         ///  전투 도중 "컴파일 종료 선택 시 탈출 안내창 출력"
         /// </summary>
@@ -253,7 +282,7 @@ namespace HexaCoreVillage.Dungeon
                     WriteLine($"\n{options[i]}");
                     ResetColor();
                 }
-                RedrawBorder();
+                Renderer.Instance.DrawConsoleBorder();
                 ConsoleKeyInfo key = ReadKey();
 
                 switch (key.Key)
@@ -280,6 +309,10 @@ namespace HexaCoreVillage.Dungeon
         #endregion
 
         #region Battle Action
+        /// <summary>
+        ///  디버깅 실행 시 화면 분할 및 디버그 로직 실행
+        ///  Left, Right 두 부분으로 레이아웃을 나눠서 실행
+        /// </summary>
         private static void Debugging()
         {
             Clear();
@@ -295,17 +328,27 @@ namespace HexaCoreVillage.Dungeon
             // 왼쪽 영역에 텍스트 출력
             BattleRightWindow.RightWindow();
             BattleLeftWindow.LeftWindow();
-            RedrawBorder();
+            Renderer.Instance.DrawConsoleBorder();
             ReadLine(); // 콘솔 창이 즉시 닫히는 것을 방지
         }
         #endregion
 
+        #region Line Utility
+        /// <summary>
+        ///  로깅 영역 한줄을 지우는 메서드
+        /// </summary>
+        /// <param name="cursorTop"> 커서 탑을 지정해서 해당 부분을 120만큼을 ' '으로 덮어씀</param>
         public static void ClearLine(int cursorTop)
         {
             SetCursorPosition(50, cursorTop);
             Write(new string(' ', 120 ));
         }
 
+        /// <summary>
+        ///  로깅 화면의 초기화를 위한 로깅 전체를 지우는 메서드
+        /// </summary>
+        /// <param name="start"> int 시작 줄</param>
+        /// <param name="end">int 마지막 줄</param>
         public static void ClearLogging(int start, int end)
         {
             for (int i = start; i < end; i++)
@@ -314,5 +357,6 @@ namespace HexaCoreVillage.Dungeon
                 Write(new string(' ', 120 ));
             }
         }
+        #endregion
     }
 }
