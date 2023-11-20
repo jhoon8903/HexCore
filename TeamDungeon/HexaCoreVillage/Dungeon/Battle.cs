@@ -7,25 +7,45 @@ using static HexaCoreVillage.Utility.DividerLineUtility;
 
 namespace HexaCoreVillage.Dungeon
 {
+    #region Debugging Solution
+    // 디버깅 솔루션 클래스
     public static class Debugging
     {
         public enum SolutionTypes{ ModifyVariables, FixTypos, ModifyScope, EditPath, CheckMemory }
     }
+    #endregion
+
+    #region Logging Text Data
+    // 디버깅 솔루션에 따른 Logging Data Class
+    public class LoggingText
+    {
+        public List<string> ModifyVariables { get; set; }
+        public List<string> FixTypos { get; set; }
+        public List<string> ModifyScope { get; set; }
+        public List<string> EditPath { get; set; }
+        public List<string> CheckMemory { get; set; }
+    }
+    #endregion
+
     public class Battle  : Scene
     {
         public override SCENE_NAME SceneName => SCENE_NAME.BATTLE;
         private static Player? Player { get; set; }
         private static readonly string BaseDirectory = AppDomain.CurrentDomain.BaseDirectory;
         private static readonly string BugFilePath = Path.GetFullPath(Path.Combine(BaseDirectory, "..", "..", "..", "..", "..", "TeamDungeon", "HexaCoreVillage", "Utility", "BugList.json"));
+        private static readonly string LoggingFilePath = Path.GetFullPath(Path.Combine(BaseDirectory, "..", "..", "..",
+            "..", "..", "TeamDungeon", "HexaCoreVillage", "Utility", "DebugText.json"));
         private static List<Bug>? _bugList = new List<Bug>();
         private static List<Bug>? _selectedBugs;
         private static readonly Random Random = new Random();
         private static SolutionTypes _solution;
-        private static int _currentBugIndex = 0;
+        private static int _currentBugIndex;
         private static List<Bug> _debuggingBugs = new List<Bug>();
         private static Bug _currentBug = new Bug();
+        private static List<LoggingText> _loggingText = new List<LoggingText>();
+        private static int _cursorTop = 11;
 
-        # region Start
+        # region Deserialize JSON
         /// <summary>
         ///  Player 데이터 파싱
         /// </summary>
@@ -34,6 +54,28 @@ namespace HexaCoreVillage.Dungeon
             Player = new Player();
             Player.BugPercentage += 15;
             ListOfBug();
+            LoggingTextLoad();
+        }
+
+        /// <summary>
+        ///  버그 목록을 역직렬화 하여 언제든지 사용가능하도록
+        ///  리스트에 담는 메서드 
+        /// </summary>
+        private static void ListOfBug()
+        {
+            using StreamReader json = new(BugFilePath, Encoding.UTF8);
+            string file = json.ReadToEnd();
+            _bugList = JsonConvert.DeserializeObject<List<Bug>>(file);
+        } 
+
+        /// <summary>
+        ///  로깅 리스트 역직렬화
+        /// </summary>
+        private static void LoggingTextLoad()
+        {
+            using StreamReader json = new(LoggingFilePath, Encoding.UTF8);
+            string file = json.ReadToEnd();
+            _loggingText = JsonConvert.DeserializeObject<List<LoggingText>>(file);
         }
         #endregion
 
@@ -53,19 +95,6 @@ namespace HexaCoreVillage.Dungeon
             }
         }
         #endregion
-
-        # region BugList
-        /// <summary>
-        ///  버그 목록을 역직렬화 하여 언제든지 사용가능하도록
-        ///  리스트에 담는 메서드 
-        /// </summary>
-        private static void ListOfBug()
-        {
-            using StreamReader json = new(BugFilePath, Encoding.UTF8);
-            string file = json.ReadToEnd();
-            _bugList = JsonConvert.DeserializeObject<List<Bug>>(file);
-        } 
-        # endregion
 
         # region Start Compiling Action
         /// <summary>
@@ -306,15 +335,15 @@ namespace HexaCoreVillage.Dungeon
                 Write($"레벨 : {Player.Level}");
 
                 SetCursorPosition(4, CursorTop + 1);
-                Write($"체력 : {Player.CurrentHp} / {Player.HP}");
+                Write($"스테미나 : {Player.CurrentHp} / {Player.HP}");
 
                 SetCursorPosition(4, CursorTop + 1);
-                Write($"디버깅 능력 : {Player.TypingSpeed}");
+                Write($"타이핑 속력 (DMG) : {Player.TypingSpeed}");
 
                 SetCursorPosition(4, CursorTop + 1);
-                Write($"버그 대응능력 : {Player.C}");
+                Write($"C# 언어 능력 (DEF)  : {Player.C}");
 
-                DividerLine(0,CursorTop + 2, ConsoleColor.Yellow);
+                DividerLine(1,CursorTop + 2, ConsoleColor.Yellow);
         }
         private static void SelectToDebugging()
         {
@@ -345,7 +374,7 @@ namespace HexaCoreVillage.Dungeon
                     ResetColor();
                 }
                 RedrawBorder();
-                DividerLine(0,20, ConsoleColor.Yellow);
+                DividerLine(1,20, ConsoleColor.Yellow);
                 SolutionTypes solution = (SolutionTypes)Enum.Parse(typeof(SolutionTypes), options[debuggingOption]);
                 DescriptionSolution(solution);
                 ConsoleKeyInfo key = ReadKey();
@@ -457,6 +486,7 @@ namespace HexaCoreVillage.Dungeon
         private static void RightWindow()
         {
             BugStatus();
+            RightBottomDisplay();
         }
 
         private static void BugStatus()
@@ -468,15 +498,22 @@ namespace HexaCoreVillage.Dungeon
             }
             _currentBug = _debuggingBugs[_currentBugIndex];
             SetCursorPosition(50,2);
-            Write($"[ Bug : {_currentBug.BugName} ]");
-            SetCursorPosition(50,3);
-            Write($"[ Desc : {_currentBug.BugDesc} ]");
+            Write($"[BugCount : {_currentBugIndex+1} / {_debuggingBugs.Count}]");
+            ClearLine(4);
             SetCursorPosition(50,4);
-            Write($"[ Debug Difficulty : {_currentBug.BugDifficulty}]");
+            Write($"[ Bug : {_currentBug.BugName} ]");
+            ClearLine(5);
             SetCursorPosition(50,5);
-            Write($"[ Debug Complexity : {_currentBug.BugComplexity}]");
+            Write($"[ Desc : {_currentBug.BugDesc} ]");
+            ClearLine(6);
             SetCursorPosition(50,6);
-            Write($"[ Debug Process : {_currentBug.BugProgress} % ]  ");
+            Write($"[ Debug Difficulty : {_currentBug.BugDifficulty} ]");
+            ClearLine(7);
+            SetCursorPosition(50,7);
+            Write($"[ Debug Complexity : {_currentBug.BugComplexity} ]");
+            ClearLine(8);
+            SetCursorPosition(50,8);
+            Write($"[ Debug Process : {_currentBug.BugProgress:D3} % ]  ");
             const int totalBlocks = 100;
             int greenBlocks = _currentBug.BugProgress;
 
@@ -496,21 +533,142 @@ namespace HexaCoreVillage.Dungeon
         private static void InputSolution()
         {
             SetCursorPosition(50, 10);
-            if (_currentBug.SolutionType == _solution)
+            
+            // 데미지 적용 부분 수정 필요
+
+            int progressIncrease = _currentBug.SolutionType == _solution ? Random.Next(1, 20) : Random.Next(1, 10);
+            _currentBug.BugProgress += progressIncrease;
+
+            if (_currentBug.BugProgress >= 100)
             {
-                _currentBug.BugProgress += Random.Next(0,20);
+                _currentBug.BugProgress = 100;
+                BugStatus(); // 현재 버그 상태 업데이트
+
+                if (_currentBugIndex + 1 >= _debuggingBugs.Count)
+                {
+                    ClearLine(10);
+                    SetCursorPosition(50, 10);
+                    // 모든 버그를 디버깅 완료했을 경우
+                    WriteLine("디버그를 완료 하였습니다.");
+                }
+                else
+                {
+                    ClearLine(10);
+                    SetCursorPosition(50, 10);
+                    // 다음 버그로 넘어가기 전에 메시지 출력
+                    WriteLine("현재 버그 디버깅 완료. 다음 버그로 이동합니다.");
+                    _currentBugIndex++; // 다음 버그로 이동
+                }
             }
             else
             {
-                _currentBug.BugProgress += Random.Next(0,10);
+                BugStatus(); // 버그 진행률 업데이트
             }
-            if (_currentBug.BugProgress > 100)
+            PlayerLoggingDisplay();
+        }
+
+        private static void PlayerLoggingDisplay()
+        {
+            LoggingText loggingText = _loggingText.First();
+            List<string> logs = _solution switch
             {
-                _currentBug.BugProgress = 100;
-                _currentBugIndex++;
+                SolutionTypes.ModifyVariables => loggingText.ModifyVariables,
+                SolutionTypes.FixTypos => loggingText.FixTypos,
+                SolutionTypes.ModifyScope => loggingText.ModifyScope,
+                SolutionTypes.EditPath => loggingText.EditPath,
+                SolutionTypes.CheckMemory => loggingText.CheckMemory,
+                _ => new List<string>()
+            };
+
+            if (!logs.Any()) return;
+
+            int index = Random.Next(logs.Count);
+            string logMessage = logs[index];
+
+            ClearLine(_cursorTop);
+            SetCursorPosition(50, _cursorTop);
+            WriteLine(logMessage);
+
+            if (_cursorTop == 27)
+            {
+                _cursorTop = 11;
             }
-            BugStatus();
+            else
+            {
+                _cursorTop++;
+            }
+            BugLoggingDisplay();
+        }
+
+        private static void RightBottomDisplay()
+        {
+            // 라인 그리기
+          SetCursorPosition(46,29);
+          for (int i = 0; i < WindowWidth-50; i++)
+          {
+              BackgroundColor = ConsoleColor.Yellow;
+              Write(" ");
+              ResetColor();
+          }
+          
+          // 체력 바 그리기
+          SetCursorPosition(50, 31);
+          Write($"[ 체력 : {Player.CurrentHp:D3} / {Player.HP:D3} ]  ");
+          int staminaBlocks = Player.CurrentHp;
+          ForegroundColor = staminaBlocks switch
+          {
+              > 60 => ConsoleColor.DarkGreen,
+              <= 60 and > 30 => ConsoleColor.DarkYellow,
+              _ => ConsoleColor.DarkRed
+          };
+          for (int i = 0; i < staminaBlocks; i++)
+          {
+              Write('█');
+          }
+          ResetColor();
+          
+          // 멘탈 바 그리기
+          SetCursorPosition(50, 32);
+          Write($"[ 멘탈 : {Player.CurrentMental:D3} / {Player.Mental:D3} ]  ");
+          int mentalBlock = Player.CurrentMental;
+          ForegroundColor = mentalBlock switch
+          {
+              > 60 => ConsoleColor.Cyan,
+              <= 60 and > 30 => ConsoleColor.Blue,
+              _ => ConsoleColor.DarkRed
+          };
+          for (int i = 0; i < mentalBlock; i++)
+          {
+              Write('█');
+          }
+          ResetColor();
+
+          // 디버깅 추가 확률
+          SetCursorPosition(50, 34);
+          Write($"[ 디버깅 추가 성능 : {Player.BonusDmg} ]  [ 언어 추가 이해력 : {Player.BonusDef} ]");
+          
+          // 멘트
+          SetCursorPosition(50, 36);
+          Write("[ 멘탈이 일정 수준 감소할 때 마다 디버깅 확률 및 디버깅 능력이 감소합니다. ]");
+        }
+        
+        private static void BugLoggingDisplay()
+        { 
+            SetCursorPosition(50, _cursorTop);
+            ForegroundColor = ConsoleColor.Red; 
+            Write($"디버깅 어려움과 복잡도로 인해서  플레이어의 체력이 {_currentBug.BugDifficulty}, 멘탈이 {_currentBug.BugComplexity} 감소 했습니다.");
+            ResetColor();
+            Player.CurrentHp -= _currentBug.BugDifficulty;
+            Player.CurrentMental -= _currentBug.BugComplexity;
+        }
+
+        private static void ClearLine(int cursorTop)
+        {
+            SetCursorPosition(50, cursorTop);
+            Write(new string(' ', 120 ));
         }
         #endregion
     }
+
+
 }

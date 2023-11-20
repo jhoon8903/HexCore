@@ -7,7 +7,7 @@ public static class MainProcedure
     public static void Main()
     {
         // Title Scene Load.
-        Managers.Scene.LoadScene(SCENE_NAME.TITLE);
+        Managers.Scene.LoadScene(SCENE_NAME.BATTLE);
 
         Run();
     }
