@@ -32,6 +32,16 @@ public class WindowsAPI
         public int Bottom;
     }
 
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CONSOLE_SCREEN_BUFFER_INFO
+    {
+        public COORD dwSize;
+        public COORD dwCursorPosition;
+        public short wAttributes;
+        public RECT srWindow;
+        public COORD dwMaximumWindowSize;
+    }
+
     /* Literals */
     private const string CONSOLE_TITLE = "HexaCore Dungeon";
 
@@ -105,6 +115,11 @@ public class WindowsAPI
     // 현재 윈도우 콘솔창의 크기를 구하는 함수
     [DllImport("user32.dll")] [return: MarshalAs(UnmanagedType.Bool)]
     private static extern bool GetWindowRect(IntPtr hWnd, out INT_RECT lpRect);
+    
+    // 현재 윈도우 콘솔 버퍼의 정보를 구하는 함수
+
+    [DllImport("kernel32.dll")]
+    public static extern bool GetConsoleScreenBufferInfo(IntPtr hConsoleOutput, out CONSOLE_SCREEN_BUFFER_INFO lpConsoleScreenBufferInfo);
 
     #endregion
 
@@ -147,18 +162,32 @@ public class WindowsAPI
         consoleBuffers.X = Renderer.FixedXColumnBuffer;
         consoleBuffers.Y = Renderer.FixedYRowsBuffer;
 
+        // 콘솔 버퍼에 맞는 렉탱글(콘솔화면) 설정
+        RECT consoleRect;
+        consoleRect.Left = 0;
+        consoleRect.Top = 0;
+
+        // 화면이 초기 버퍼를 초과할 때 예외 처리
+        if (IsBufferOverflow(consoleBuffers))
+        {
+            consoleRect.Right = 5;
+            consoleRect.Bottom = 5;
+            SetConsoleWindowInfo(hOuput, true, ref consoleRect);
+        }
+        else
+        {
+            consoleRect.Right = Renderer.FixedXColumnBuffer - 1;
+            consoleRect.Bottom = Renderer.FixedYRowsBuffer - 1;
+        }
+
+        // 콘솔 버퍼 셋팅
         if (SetConsoleScreenBufferSize(hOuput, consoleBuffers))
             WriteLine($"화면이 {consoleBuffers.X} , {consoleBuffers.Y}로 고정되었습니다.");
         else
             throw new Exception("화면 버퍼 설정 실패.");
 
-        // 콘솔 버퍼에 맞는 렉탱글(콘솔화면) 설정
-        RECT consoleRect;
-        consoleRect.Left = 0;
-        consoleRect.Top = 0;
-        consoleRect.Right = Renderer.FixedXColumnBuffer - 1;
-        consoleRect.Bottom = Renderer.FixedYRowsBuffer - 1;
 
+        // 콘솔 윈도우 화면 셋팅
         if (SetConsoleWindowInfo(hOuput, true, ref consoleRect))
             WriteLine($"콘솔 화면 크기가 {consoleBuffers.X - 1} , {consoleBuffers.Y - 1}로 맞춰졌습니다.");
         else
@@ -173,24 +202,40 @@ public class WindowsAPI
     /// </summary>
     private void SetWindowsConsolePosition()
     {
-        int cWidth;
-        int cHeight;
-        if (GetWindowRect(hConsole, out INT_RECT rect))
-        {
-            //var tem = myRect.Left;
-            cWidth = rect.Right - rect.Left;
-            cHeight = rect.Bottom - rect.Top;
-        }
-        else
-            throw new Exception("콘솔 화면의 크기를 가져올 수 없습니다.");
+        GetWindowsWH(out COORD coord);
 
         int screenWidth = GetSystemMetrics(SM_CXSCREEN);
         int screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
-        int x = (screenWidth - cWidth) / 2;
-        int y = (screenHeight - cHeight) / 2;
+        int x = (screenWidth - coord.X) / 2;
+        int y = (screenHeight - coord.Y) / 2;
 
         SetWindowPos(hConsole, HWND_TOP, x, y, 0, 0, SWP_NOSIZE);
+    }
+
+    /// <summary>
+    /// # 윈도우 콘솔창 너비,높이를 반환하는 함수
+    /// </summary>
+    private void GetWindowsWH(out COORD widthHeight)
+    {
+        if (GetWindowRect(hConsole, out INT_RECT rect))
+        {
+            widthHeight.X = (short)(rect.Right - rect.Left);
+            widthHeight.Y = (short)(rect.Bottom - rect.Top);
+        }
+        else
+            throw new Exception("콘솔 화면의 크기를 가져올 수 없습니다.");
+    }
+
+    private bool IsBufferOverflow(COORD coord)
+    {
+        COORD bufferSize;
+        GetConsoleScreenBufferInfo(hOuput, out CONSOLE_SCREEN_BUFFER_INFO bufferInfo);
+
+        bufferSize.X = (short)(bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1);
+        bufferSize.Y = (short)(bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1);
+
+        return (bufferSize.X > coord.X) || (bufferSize.Y > coord.Y);
     }
     #endregion
 }
