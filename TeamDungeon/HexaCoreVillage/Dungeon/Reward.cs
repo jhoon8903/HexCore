@@ -1,4 +1,6 @@
 
+using HexaCoreVillage.Utility;
+
 namespace HexaCoreVillage.Dungeon;
 
 public class Reward : Scene
@@ -7,12 +9,16 @@ public class Reward : Scene
 
     public override void Start()
     {
-        throw new NotImplementedException();
+        Clear();
+        SetCursorPosition(85,20);
+        WriteLine("여긴 리워드다!!");
+        SetCursorPosition(85, 22);
+        Write($"디버그 결과는 : {Data.BattleSuccess} 입니다!");
+        ConsoleSizeUtility.RedrawBorder();
     }
 
     public override void Update()
     {
-        throw new NotImplementedException();
     }
 
     // Battle 성공시 Data Class의 "bool BattleSuccess" 로  bool 값 넣어두도록 하겠습니다,
