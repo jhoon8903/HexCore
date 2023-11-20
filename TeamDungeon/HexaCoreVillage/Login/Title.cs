@@ -10,7 +10,7 @@ public class Title : Scene
     {
         Managers.Scene.LoadScene(SCENE_NAME.LOGIN);
         // 초기화
-        ConsoleSizeUtility.RedrawBorder();
+        Renderer.Instance.DrawConsoleBorder();
 
     }
 

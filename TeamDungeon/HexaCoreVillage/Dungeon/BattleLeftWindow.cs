@@ -1,11 +1,15 @@
 using HexaCoreVillage.Utility;
 using static HexaCoreVillage.Utility.DividerLineUtility;
-using static HexaCoreVillage.Utility.ConsoleSizeUtility;
+using static HexaCoreVillage.Dungeon.Battle;
 
 namespace HexaCoreVillage.Dungeon
 { 
     public static class BattleLeftWindow
     {
+        #region Left Procedure
+        /// <summary>
+        ///  Left 레이아웃 실행 메서드
+        /// </summary>
         public static void LeftWindow()
         {
             // Left Top
@@ -13,31 +17,43 @@ namespace HexaCoreVillage.Dungeon
             // Left Middle
             SelectToDebugging();
         }
+        #endregion
+
+        #region Player Layout
+        /// <summary>
+        ///  플레이어의 정보를 받아오는 메서드
+        ///  Battle Class의 Player 인스턴스를 참조
+        /// </summary>
         private static void PlayerInformation()
         {
-                SetCursorPosition(4, 1);
-                BackgroundColor = ConsoleColor.Green;
-                ForegroundColor = ConsoleColor.Black;
-                Write("[ Running To Debug ]");
+            SetCursorPosition(4, 1);
+            BackgroundColor = ConsoleColor.Green;
+            ForegroundColor = ConsoleColor.Black;
+            Write("[ Running To Debug ]");
 
-                SetCursorPosition(4, CursorTop + 2);
-                ResetColor();
-                Write($"[ {Battle.Player!.NickName} 상태 ]");
+            SetCursorPosition(4, CursorTop + 2);
+            ResetColor();
+            Write($"[ {Battle.Player!.NickName} 상태 ]");
 
-                SetCursorPosition(4, CursorTop + 2);
-                Write($"레벨 : {Battle.Player.Level}");
+            SetCursorPosition(4, CursorTop + 2);
+            Write($"레벨 : {Battle.Player.Level}");
 
-                SetCursorPosition(4, CursorTop + 1);
-                Write($"체력 : {Battle.CurrentHp} / {Battle.Player.HP}");
+            SetCursorPosition(4, CursorTop + 1);
+            Write($"체력 : {CurrentHp} / {Battle.Player.HP}");
 
-                SetCursorPosition(4, CursorTop + 1);
-                Write($"타이핑 속력 (DMG) : {Battle.Player.TypingSpeed}");
+            SetCursorPosition(4, CursorTop + 1);
+            Write($"타이핑 속력 (DMG) : {Battle.Player.TypingSpeed}");
 
-                SetCursorPosition(4, CursorTop + 1);
-                Write($"C# 언어 능력 (DEF)  : {Battle.Player.C}");
+            SetCursorPosition(4, CursorTop + 1);
+            Write($"C# 언어 능력 (DEF)  : {Battle.Player.C}");
 
-                DividerLine(1,CursorTop + 2, ConsoleColor.Yellow);
+            DividerLine(1,CursorTop + 2, ConsoleColor.Yellow);
         }
+        /// <summary>
+        ///  디버깅 솔루션을 선택하는 메서드
+        ///  Battle.Solution 변수를 할당
+        /// </summary>
+        /// <returns>솔루션 Class 를 할당하여 반환</returns>>
         private static void SelectToDebugging()
         {
             CursorVisible = false;
@@ -66,7 +82,7 @@ namespace HexaCoreVillage.Dungeon
                     Write(options[i]);
                     ResetColor();
                 }
-                RedrawBorder();
+                Renderer.Instance.DrawConsoleBorder();
                 DividerLine(1,20, ConsoleColor.Yellow);
                 Debugging.SolutionTypes solution = (Debugging.SolutionTypes)Enum.Parse(typeof(Debugging.SolutionTypes), options[debuggingOption]);
                 DescriptionSolution(solution);
@@ -83,8 +99,8 @@ namespace HexaCoreVillage.Dungeon
                         DescriptionSolution(solution);
                         break;
                     case ConsoleKey.Enter:
-                        Battle.Solution = solution;
-                        BattleRightWindow.InputSolution();
+                        Solution = solution;
+                        InputSolution();
                         if (Data.BattleSuccess)
                         {
                             return;
@@ -93,6 +109,52 @@ namespace HexaCoreVillage.Dungeon
                 }
             }
         }
+
+        /// <summary>
+        ///  솔루션 선택시 RightWindow로 선책한 솔루션 데이터를 전달
+        ///  버그의 진행률을 높히는 공격 메서드,
+        /// </summary>
+        private static void InputSolution()
+        {
+            // 데미지 적용 부분 수정 필요
+            SetCursorPosition(50, 10);
+            int progressIncrease = CurrentBug.SolutionType == Solution ? Battle.Random.Next(1, 20) : Battle.Random.Next(1, 10);
+
+            CurrentBug.BugProgress += progressIncrease;
+
+            if (CurrentBug.BugProgress >= 100)
+            {
+                CurrentBug.BugProgress = 100; 
+                BattleRightWindow.BugStatus();
+                CurrentBugIndex++; // 다음 버그로 이동
+                if (CurrentBugIndex >= DebuggingBugs.Count && CurrentBug.BugProgress >= 100)
+                {
+                    BattleRightWindow.DebuggingSuccess(); 
+                    return;
+                }
+                ClearLogging(11,28);
+                SetCursorPosition(50, 10);
+                WriteLine("현재 버그 디버깅 완료. 다음 버그로 이동합니다."); 
+                SetCursorPosition(50, 13);
+                WriteLine("아무키나 입력 하세요");
+                CurrentBug = DebuggingBugs[CurrentBugIndex];
+                BattleCursorTop = 12;
+                ReadKey();
+            }
+            else
+            {
+                BattleRightWindow.BugStatus(); // 버그 진행률 업데이트
+                BattleRightWindow.PlayerLoggingDisplay();
+            }
+        }
+        #endregion
+
+        #region Solution Desc Method
+        /// <summary>
+        ///  솔루션 선택시 솔루션 타입을 받아
+        ///  하단에 설명을 다음과 같이 출력
+        /// </summary>
+        /// <param name="solution"> 선택에서 솔루션을 입력</param>
         private static void DescriptionSolution(Debugging.SolutionTypes solution)
         {
             SetCursorPosition(4, 22);
@@ -132,10 +194,12 @@ namespace HexaCoreVillage.Dungeon
                     WriteDesc("성능 및 안정성 최적화", 26);
                     WriteDesc("효율적 메모리 관리", 27);
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(solution), solution, null);
             }
         }
+        #endregion
+
+        #region LOGO
+
         private static void WriteDesc(string desc, int cursorTop)
         {
             SetCursorPosition(4, cursorTop);
@@ -203,5 +267,6 @@ namespace HexaCoreVillage.Dungeon
 
             ResetColor(); // Reset to default colors
         }
+        #endregion
     }
 }
