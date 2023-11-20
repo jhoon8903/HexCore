@@ -174,11 +174,9 @@ public class WindowsAPI
             consoleRect.Bottom = 5;
             SetConsoleWindowInfo(hOuput, true, ref consoleRect);
         }
-        else
-        {
-            consoleRect.Right = Renderer.FixedXColumnBuffer - 1;
-            consoleRect.Bottom = Renderer.FixedYRowsBuffer - 1;
-        }
+
+        consoleRect.Right = Renderer.FixedXColumnBuffer - 1;
+        consoleRect.Bottom = Renderer.FixedYRowsBuffer - 1;
 
         // 콘솔 버퍼 셋팅
         if (SetConsoleScreenBufferSize(hOuput, consoleBuffers))
