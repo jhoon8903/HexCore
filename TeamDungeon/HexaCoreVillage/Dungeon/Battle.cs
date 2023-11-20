@@ -455,11 +455,11 @@ namespace HexaCoreVillage.Dungeon
         private static void Logo()
         {
             string[] asciiArt = {
-                "██   ██ ███████ ██   ██  █████",  
-                "██   ██ ██       ██ ██  ██   ██", 
-                "███████ █████     ███   ███████", 
-                "██   ██ ██       ██ ██  ██   ██", 
-                "██   ██ ███████ ██   ██ ██   ██"
+                "■■   ■■ ■■■■■■■ ■■   ■■  ■■■■■",  
+                "■■   ■■ ■■       ■■ ■■  ■■   ■■", 
+                "■■■■■■■ ■■■■■     ■■■   ■■■■■■■", 
+                "■■   ■■ ■■       ■■ ■■  ■■   ■■", 
+                "■■   ■■ ■■■■■■■ ■■   ■■ ■■   ■■"
             };
 
             ConsoleColor[] colors = {
@@ -520,12 +520,12 @@ namespace HexaCoreVillage.Dungeon
             ForegroundColor = ConsoleColor.Green;
             for (int i = 0; i < greenBlocks; i++)
             {
-                Write('█');
+                Write('■');
             }
             ForegroundColor = ConsoleColor.DarkRed;
             for (int i = greenBlocks; i < totalBlocks; i++)
             {
-                Write('█');
+                Write('■');
             }
             ResetColor();
         }
@@ -535,8 +535,8 @@ namespace HexaCoreVillage.Dungeon
             SetCursorPosition(50, 10);
             
             // 데미지 적용 부분 수정 필요
-
             int progressIncrease = _currentBug.SolutionType == _solution ? Random.Next(1, 20) : Random.Next(1, 10);
+
             _currentBug.BugProgress += progressIncrease;
 
             if (_currentBug.BugProgress >= 100)
@@ -623,7 +623,7 @@ namespace HexaCoreVillage.Dungeon
           };
           for (int i = 0; i < staminaBlocks; i++)
           {
-              Write('█');
+              Write('■');
           }
           ResetColor();
           
@@ -639,7 +639,7 @@ namespace HexaCoreVillage.Dungeon
           };
           for (int i = 0; i < mentalBlock; i++)
           {
-              Write('█');
+              Write('■');
           }
           ResetColor();
 
