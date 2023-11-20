@@ -6,6 +6,9 @@ public static class MainProcedure
     /* Main */
     public static void Main()
     {
+        // Console Size [OS condition] Resetting
+        Renderer.Instance.InitalizeRenderer();
+
         // Title Scene Load.
         Managers.Scene.LoadScene(SCENE_NAME.BATTLE);
 

@@ -114,7 +114,7 @@ namespace HexaCoreVillage.Dungeon
                         FoundBugs();
                         return;
                     }
-                    RedrawBorder();
+                    Renderer.Instance.DrawConsoleBorder();
                     Thread.Sleep(1000);
                 }
             }

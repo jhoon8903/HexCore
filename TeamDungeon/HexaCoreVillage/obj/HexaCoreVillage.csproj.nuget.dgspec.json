@@ -1,25 +1,27 @@
 {
   "format": 1,
   "restore": {
-    "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/HexaCoreVillage/HexaCoreVillage.csproj": {}
+    "D:\\BootCamp Git\\HexCore\\TeamDungeon\\HexaCoreVillage\\HexaCoreVillage.csproj": {}
   },
   "projects": {
-    "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/HexaCoreVillage/HexaCoreVillage.csproj": {
+    "D:\\BootCamp Git\\HexCore\\TeamDungeon\\HexaCoreVillage\\HexaCoreVillage.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/HexaCoreVillage/HexaCoreVillage.csproj",
+        "projectUniqueName": "D:\\BootCamp Git\\HexCore\\TeamDungeon\\HexaCoreVillage\\HexaCoreVillage.csproj",
         "projectName": "HexaCoreVillage",
-        "projectPath": "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/HexaCoreVillage/HexaCoreVillage.csproj",
-        "packagesPath": "/Users/daniel/.nuget/packages/",
-        "outputPath": "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/HexaCoreVillage/obj/",
+        "projectPath": "D:\\BootCamp Git\\HexCore\\TeamDungeon\\HexaCoreVillage\\HexaCoreVillage.csproj",
+        "packagesPath": "C:\\Users\\iamde\\.nuget\\packages\\",
+        "outputPath": "D:\\BootCamp Git\\HexCore\\TeamDungeon\\HexaCoreVillage\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/daniel/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\iamde\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -67,7 +69,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.302/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
         }
       }
     }
