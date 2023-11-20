@@ -43,7 +43,9 @@ namespace HexaCoreVillage.Dungeon
         private static List<Bug> _debuggingBugs = new List<Bug>();
         private static Bug _currentBug = new Bug();
         private static List<LoggingText> _loggingText = new List<LoggingText>();
-        private static int _cursorTop = 11;
+        private static int _cursorTop = 12;
+        private static int _currentHP;
+        private static int _currentMental;
 
         # region Deserialize JSON
         /// <summary>
@@ -53,6 +55,8 @@ namespace HexaCoreVillage.Dungeon
         {
             Player = new Player();
             Player.BugPercentage += 15;
+            _currentHP = Player.CurrentHp;
+            _currentMental = Player.CurrentMental;
             ListOfBug();
             LoggingTextLoad();
         }
@@ -335,7 +339,7 @@ namespace HexaCoreVillage.Dungeon
                 Write($"레벨 : {Player.Level}");
 
                 SetCursorPosition(4, CursorTop + 1);
-                Write($"스테미나 : {Player.CurrentHp} / {Player.HP}");
+                Write($"체력 : {_currentHP} / {Player.HP}");
 
                 SetCursorPosition(4, CursorTop + 1);
                 Write($"타이핑 속력 (DMG) : {Player.TypingSpeed}");
@@ -513,7 +517,7 @@ namespace HexaCoreVillage.Dungeon
 
             for (int i = 0; i < asciiArt.Length; i++)
             {
-                SetCursorPosition(6, 32 + i);
+                SetCursorPosition(5, 32 + i);
 
                 foreach (char c in asciiArt[i])
                 {
@@ -539,7 +543,6 @@ namespace HexaCoreVillage.Dungeon
 
             ResetColor(); // Reset to default colors
         }
-
         #endregion
 
         #region RIGHT WINDOWS
@@ -644,9 +647,9 @@ namespace HexaCoreVillage.Dungeon
             SetCursorPosition(50, _cursorTop);
             WriteLine(logMessage);
 
-            if (_cursorTop == 27)
+            if (_cursorTop >= 26)
             {
-                _cursorTop = 11;
+                _cursorTop = 12;
             }
             else
             {
@@ -655,21 +658,34 @@ namespace HexaCoreVillage.Dungeon
             BugLoggingDisplay();
         }
 
+        private static void BugLoggingDisplay()
+        { 
+            ClearLine(_cursorTop);
+            SetCursorPosition(50, _cursorTop);
+            ForegroundColor = ConsoleColor.Red; 
+            Write($"디버깅 어려움과 복잡도로 인해서  플레이어의 체력이 {_currentBug.BugDifficulty}, 멘탈이 {_currentBug.BugComplexity} 감소 했습니다.");
+            ResetColor();
+            _cursorTop++;
+            _currentHP -= _currentBug.BugDifficulty;
+            _currentMental -= _currentBug.BugComplexity;
+            RightBottomDisplay();
+        }
+
         private static void RightBottomDisplay()
         {
             // 라인 그리기
           SetCursorPosition(46,29);
-          for (int i = 0; i < 130; i++)
+          for (int i = 0; i < 135; i++)
           {
               BackgroundColor = ConsoleColor.Yellow;
               Write(" ");
               ResetColor();
           }
           
-// 체력 바 그리기
+            // 체력 바 그리기
           SetCursorPosition(50, 31);
-          Write($"[ 체력 : {Player.CurrentHp:D3} / {Player.HP:D3} ]  ");
-          int staminaBlocks = Player.CurrentHp;
+          Write($"[ 체력 : {_currentHP:D3} / {Player.HP:D3} ]  ");
+          int staminaBlocks = _currentHP;
           for (int i = 0; i < Player.HP; i++)
           {
               BackgroundColor = i < staminaBlocks ? 
@@ -681,10 +697,10 @@ namespace HexaCoreVillage.Dungeon
           }
           ResetColor();
 
-// 멘탈 바 그리기
+          // 멘탈 바 그리기
           SetCursorPosition(50, 32);
-          Write($"[ 멘탈 : {Player.CurrentMental:D3} / {Player.Mental:D3} ]  ");
-          int mentalBlock = Player.CurrentMental;
+          Write($"[ 멘탈 : {_currentHP:D3} / {Player.Mental:D3} ]  ");
+          int mentalBlock = _currentMental;
           for (int i = 0; i < Player.Mental; i++)
           {
               BackgroundColor = i < mentalBlock ? 
@@ -703,16 +719,6 @@ namespace HexaCoreVillage.Dungeon
           // 멘트
           SetCursorPosition(50, 36);
           Write("[ 멘탈이 일정 수준 감소할 때 마다 디버깅 확률 및 디버깅 능력이 감소합니다. ]");
-        }
-        
-        private static void BugLoggingDisplay()
-        { 
-            SetCursorPosition(50, _cursorTop);
-            ForegroundColor = ConsoleColor.Red; 
-            Write($"디버깅 어려움과 복잡도로 인해서  플레이어의 체력이 {_currentBug.BugDifficulty}, 멘탈이 {_currentBug.BugComplexity} 감소 했습니다.");
-            ResetColor();
-            Player.CurrentHp -= _currentBug.BugDifficulty;
-            Player.CurrentMental -= _currentBug.BugComplexity;
         }
 
         private static void ClearLine(int cursorTop)
