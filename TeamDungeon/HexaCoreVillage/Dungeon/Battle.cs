@@ -452,34 +452,94 @@ namespace HexaCoreVillage.Dungeon
             DividerLine(1,29,ConsoleColor.Yellow); 
             Logo();
         }
+        // private static void Logo()
+        // {
+        //     string[] asciiArt = {
+        //         "■■   ■■ ■■■■■■■ ■■   ■■  ■■■■■",  
+        //         "■■   ■■ ■■       ■■ ■■  ■■   ■■", 
+        //         "■■■■■■■ ■■■■■     ■■■   ■■■■■■■", 
+        //         "■■   ■■ ■■       ■■ ■■  ■■   ■■", 
+        //         "■■   ■■ ■■■■■■■ ■■   ■■ ■■   ■■"
+        //     };
+        //
+        //
+        //     ConsoleColor[] colors = {
+        //         ConsoleColor.Red,
+        //         ConsoleColor.Yellow,
+        //         ConsoleColor.Green,
+        //         ConsoleColor.Cyan,
+        //         ConsoleColor.Blue,
+        //         ConsoleColor.Magenta
+        //     };
+        //
+        //     for (int i = 0; i < asciiArt.Length; i++)
+        //     {
+        //         SetCursorPosition(6, 32 + i);
+        //         ForegroundColor = colors[i % colors.Length];
+        //         WriteLine(asciiArt[i]);
+        //     }
+        //
+        //     ResetColor();
+        // }
         private static void Logo()
         {
             string[] asciiArt = {
-                "■■   ■■ ■■■■■■■ ■■   ■■  ■■■■■",  
-                "■■   ■■ ■■       ■■ ■■  ■■   ■■", 
-                "■■■■■■■ ■■■■■     ■■■   ■■■■■■■", 
-                "■■   ■■ ■■       ■■ ■■  ■■   ■■", 
-                "■■   ■■ ■■■■■■■ ■■   ■■ ■■   ■■"
+                "   ■■   ■      ■   ■■■   ■■■■   ",
+                "   ■■   ■   ■■■■■   ■   ■■■   ■   ",
+                "        ■      ■■■■   ■■■■         ",
+                "   ■■   ■   ■■■■■   ■   ■■   ■■■   ",
+                "   ■■   ■      ■   ■■■   ■   ■■■   "
             };
+
+            // {
+            //     string[] asciiArt = {
+            //         "■■   ■■ ■■■■■■■ ■■   ■■  ■■■■■",  
+            //         "■■   ■■ ■■       ■■ ■■  ■■   ■■", 
+            //         "■■■■■■■ ■■■■■     ■■■   ■■■■■■■", 
+            //         "■■   ■■ ■■       ■■ ■■  ■■   ■■", 
+            //         "■■   ■■ ■■■■■■■ ■■   ■■ ■■   ■■"
+            //     };
 
             ConsoleColor[] colors = {
                 ConsoleColor.Red,
                 ConsoleColor.Yellow,
                 ConsoleColor.Green,
                 ConsoleColor.Cyan,
-                ConsoleColor.Blue,
+                ConsoleColor.Blue, 
                 ConsoleColor.Magenta
             };
+
+            ConsoleColor bgColor = BackgroundColor; // Assuming background color is black
 
             for (int i = 0; i < asciiArt.Length; i++)
             {
                 SetCursorPosition(6, 32 + i);
-                ForegroundColor = colors[i % colors.Length];
-                WriteLine(asciiArt[i]);
+
+                foreach (char c in asciiArt[i])
+                {
+                    if (c == '■')
+                    {
+                        // For special character, set background color same as current background
+                        BackgroundColor = bgColor;
+                        ForegroundColor = bgColor; // Set foreground color to match background
+                        Write(' '); // Print space with background color
+                    }
+                    else
+                    {
+                        // For spaces, set background color to one of the specified colors
+                        BackgroundColor = colors[i % colors.Length];
+                        ForegroundColor = colors[i % colors.Length]; // Set foreground to match background
+                        Write(' '); // Print space with colored background
+                    }
+                }
+
+                WriteLine(); // Move to the next line after printing each row
+                BackgroundColor = bgColor; // Reset background color for new line
             }
 
-            ResetColor();
+            ResetColor(); // Reset to default colors
         }
+
         #endregion
 
         #region RIGHT WINDOWS
@@ -517,15 +577,10 @@ namespace HexaCoreVillage.Dungeon
             const int totalBlocks = 100;
             int greenBlocks = _currentBug.BugProgress;
 
-            ForegroundColor = ConsoleColor.Green;
-            for (int i = 0; i < greenBlocks; i++)
+            for (int i = 0; i < totalBlocks; i++)
             {
-                Write('■');
-            }
-            ForegroundColor = ConsoleColor.DarkRed;
-            for (int i = greenBlocks; i < totalBlocks; i++)
-            {
-                Write('■');
+                BackgroundColor = i < greenBlocks ? ConsoleColor.Green : ConsoleColor.DarkRed;
+                Write(' '); // 공백으로 진행률 표시
             }
             ResetColor();
         }
@@ -604,42 +659,40 @@ namespace HexaCoreVillage.Dungeon
         {
             // 라인 그리기
           SetCursorPosition(46,29);
-          for (int i = 0; i < WindowWidth-50; i++)
+          for (int i = 0; i < 130; i++)
           {
               BackgroundColor = ConsoleColor.Yellow;
               Write(" ");
               ResetColor();
           }
           
-          // 체력 바 그리기
+// 체력 바 그리기
           SetCursorPosition(50, 31);
           Write($"[ 체력 : {Player.CurrentHp:D3} / {Player.HP:D3} ]  ");
           int staminaBlocks = Player.CurrentHp;
-          ForegroundColor = staminaBlocks switch
+          for (int i = 0; i < Player.HP; i++)
           {
-              > 60 => ConsoleColor.DarkGreen,
-              <= 60 and > 30 => ConsoleColor.DarkYellow,
-              _ => ConsoleColor.DarkRed
-          };
-          for (int i = 0; i < staminaBlocks; i++)
-          {
-              Write('■');
+              BackgroundColor = i < staminaBlocks ? 
+                  staminaBlocks > 60 ? ConsoleColor.DarkGreen :
+                  staminaBlocks > 30 ? ConsoleColor.DarkYellow : 
+                  ConsoleColor.DarkRed : 
+                  ConsoleColor.Gray; // 미사용 부분은 회색으로 표시
+              Write(' '); // 공백으로 진행률 표시
           }
           ResetColor();
-          
-          // 멘탈 바 그리기
+
+// 멘탈 바 그리기
           SetCursorPosition(50, 32);
           Write($"[ 멘탈 : {Player.CurrentMental:D3} / {Player.Mental:D3} ]  ");
           int mentalBlock = Player.CurrentMental;
-          ForegroundColor = mentalBlock switch
+          for (int i = 0; i < Player.Mental; i++)
           {
-              > 60 => ConsoleColor.Cyan,
-              <= 60 and > 30 => ConsoleColor.Blue,
-              _ => ConsoleColor.DarkRed
-          };
-          for (int i = 0; i < mentalBlock; i++)
-          {
-              Write('■');
+              BackgroundColor = i < mentalBlock ? 
+                  mentalBlock > 60 ? ConsoleColor.Cyan :
+                  mentalBlock > 30 ? ConsoleColor.Blue : 
+                  ConsoleColor.DarkRed : 
+                  ConsoleColor.Gray; // 미사용 부분은 회색으로 표시
+              Write(' '); // 공백으로 진행률 표시
           }
           ResetColor();
 
