@@ -1,9 +1,8 @@
 using HexaCoreVillage.Utility;
 using Newtonsoft.Json;
-using NAudio.Wave;
-using TeamDungeon.Utility;
-using HexaCoreVillage.Manager;
 using System.Text;
+using static HexaCoreVillage.Utility.AudioPlayer;
+using Player = HexaCoreVillage.Utility.Player;
 
 namespace HexaCoreVillage.Login;
 
@@ -19,21 +18,20 @@ public class Login : Scene
     static string relativePathToAudio = Path.GetFullPath(Path.Combine(baseDirectory, "..", "..", "..", "..", "..", "TeamDungeon", "HexaCoreVillage"));
     static string startBGMPath = Path.Combine(relativePathToAudio, "startBGM.wav");
     static string newWorldBGMPath = Path.Combine(relativePathToAudio, "newWorldBGM.wav");
+    private static string UtilityPath = Path.Combine(relativePathToAudio, "Utility");
 
-    static AudioFileReader startBGM = new AudioFileReader(startBGMPath);
-    static LoopStream startLoop = new LoopStream(startBGM);
-    static AudioFileReader newWorldBGM = new AudioFileReader(newWorldBGMPath);
-    static LoopStream newWorldLoop = new LoopStream(newWorldBGM);
-    static WaveOutEvent audioMgr = new WaveOutEvent();
+    // static AudioFileReader startBGM = new AudioFileReader(startBGMPath);
+    // static LoopStream startLoop = new LoopStream(startBGM);
+    // static AudioFileReader newWorldBGM = new AudioFileReader(newWorldBGMPath);
+    // static LoopStream newWorldLoop = new LoopStream(newWorldBGM);
+    // static WaveOutEvent audioMgr = new WaveOutEvent();
 
     public static List<Item> ItemBox = new List<Item>();
-    public static Player? player = null;
-    string CurrentDirectory = Directory.GetCurrentDirectory();
+    private static Player _player = null;
     public override void Start()
     {
         CursorVisible = false;
-        audioMgr.Init(startLoop);
-        audioMgr.Play();
+        AudioController(startBGMPath,PlayOption.Play);
     }
 
     public override void Update()
@@ -41,10 +39,8 @@ public class Login : Scene
         LoginScene();
     }
 
-    public void LoginScene()
+    private void LoginScene()
     {
-
-
         int selectedOption = 0;
         string[] options = { "New Game", "Load Game", "Exit" };
         string[] plusOpt = { "새로운 아이디로 게임을 처음부터 시작합니다.(프롤로그 포함)", "전에 사용하던 아이디로 게임을 시작합니다.(프롤로그 스킵)", "게임 종료하기" };
@@ -52,7 +48,7 @@ public class Login : Scene
         {
             Clear();
             Renderer.Instance.DrawConsoleBorder();
-            SetItemBox();
+            //SetItemBox();
             SetCursorPosition(1, 35);
 
             for (int i = 0; i < options.Length; i++)
@@ -196,7 +192,7 @@ public class Login : Scene
         }
 
         userJob = (Job)selectedOption;
-        player = new Player(userID, userName, userJob);
+        _player = new Player(userID, userName, userJob);
 
         while (true)                //배경 설정
         {
@@ -237,25 +233,25 @@ public class Login : Scene
         switch ((BackgroundSelectOption)selectedOption)
         {
             case BackgroundSelectOption.HPup:
-                player.HP += 50;
-                player.CurrentHp += 50;
+                _player.HP += 50;
+                _player.CurrentHp += 50;
                 break;
 
             case BackgroundSelectOption.DMGup:
-                player.TypingSpeed += 5;
+                _player.TypingSpeed += 5;
                 break;
 
             case BackgroundSelectOption.DEFup:
-                player.C += 5;
+                _player.C += 5;
                 break;
 
             case BackgroundSelectOption.Mentalup:
-                player.Mental += 50;
-                player.CurrentMental += 50;
+                _player.Mental += 50;
+                _player.CurrentMental += 50;
                 break;
 
             case BackgroundSelectOption.Goldup:
-                player.Gold += 500;
+                _player.Gold += 500;
                 break;
         }
 
@@ -299,25 +295,25 @@ public class Login : Scene
         switch ((WeakSelectOption)selectedOption)
         {
             case WeakSelectOption.HPdown:
-                player.HP -= 30;
-                player.CurrentHp -= 30;
+                _player.HP -= 30;
+                _player.CurrentHp -= 30;
                 break;
 
             case WeakSelectOption.DMGdown:
-                player.TypingSpeed -= 3;
+                _player.TypingSpeed -= 3;
                 break;
 
             case WeakSelectOption.DEFdown:
-                player.C -= 3;
+                _player.C -= 3;
                 break;
 
             case WeakSelectOption.Mentaldown:
-                player.Mental -= 30;
-                player.CurrentMental -= 30;
+                _player.Mental -= 30;
+                _player.CurrentMental -= 30;
                 break;
 
             case WeakSelectOption.Golddown:
-                player.Gold -= 300;
+                _player.Gold -= 300;
                 break;
         }
         SetInvenItem();
@@ -327,8 +323,8 @@ public class Login : Scene
 
     private void LoadGame()
     {
-        string loadData = File.ReadAllText(CurrentDirectory + "\\savePlayer.json");         //캐릭터 정보 불러오기
-        player = JsonConvert.DeserializeObject<Player>(loadData);
+        string loadData = File.ReadAllText(UtilityPath + "/savePlayer.json");         //캐릭터 정보 불러오기
+        _player = JsonConvert.DeserializeObject<Player>(loadData);
 
         while (true)
         {
@@ -337,7 +333,7 @@ public class Login : Scene
             SetCursorPosition(1, 1);
             WriteInForm("사용하던 아이디를 입력해 주세요.",ConsoleColor.White);
             SetCursorPosition(1, 38);
-            if (player.ID == ReadLine())
+            if (_player.ID == ReadLine())
             {
                 SetCursorPosition(CursorLeft, CursorTop+1);
                 WriteInForm("사용자를 확인하였습니다.",ConsoleColor.Blue);
@@ -348,9 +344,7 @@ public class Login : Scene
             WriteInForm("데이터가 일치하지 않습니다.", ConsoleColor.Blue);
             Thread.Sleep(1500);
         }
-        audioMgr.Stop();
-        audioMgr.Init(newWorldLoop);
-        audioMgr.Play();
+        AudioController(newWorldBGMPath,PlayOption.Change);
         Managers.Scene.LoadScene(SCENE_NAME.BATTLE);
 
     }
@@ -379,9 +373,7 @@ public class Login : Scene
         WriteInForm("어라..? 근데 왜 이렇게 어지럽....", ConsoleColor.White);
         Thread.Sleep(3000);
 
-        audioMgr.Stop();
-        audioMgr.Init(newWorldLoop);
-        audioMgr.Play();
+        AudioController(newWorldBGMPath,PlayOption.Change);
         //사운드 변환
         Clear();
         Renderer.Instance.DrawConsoleBorder();
@@ -421,26 +413,26 @@ public class Login : Scene
 
     private void SaveData()
     {
-        string playerData = JsonConvert.SerializeObject(player, Formatting.Indented);        //캐릭터 정보 저장
-        File.WriteAllText(CurrentDirectory + ".\\savePlayer.json", playerData);
+        string playerData = JsonConvert.SerializeObject(_player, Formatting.Indented);        //캐릭터 정보 저장
+        File.WriteAllText(UtilityPath+"/savePlayer.json", playerData);
 
         //string dungeonData =                  //던전 정보도 저장할 예정.
     }
 
     private void SetItemBox()
     {
-        using StreamReader json = new(CurrentDirectory + "\\ItemData.json", Encoding.UTF8);     //버그 저장한거 보고 따라함;
+        using StreamReader json = new(UtilityPath+"/ItemList.json", Encoding.UTF8);     //버그 저장한거 보고 따라함;
         string file = json.ReadToEnd();
         ItemBox = JsonConvert.DeserializeObject<List<Item>>(file);
     }
 
     private void SetInvenItem()
     {
-        player.Inventory.Add(new InventoryItem(ItemBox[0].ItemName, false, false, 1));
-        player.Inventory.Add(new InventoryItem(ItemBox[1].ItemName, false, false, 1));
-        player.Inventory.Add(new InventoryItem(ItemBox[2].ItemName, false, false, 1));
-        player.Inventory.Add(new InventoryItem(ItemBox[3].ItemName, false, false, 1));
-        player.Inventory.Add(new InventoryItem(ItemBox[4].ItemName, false, false, 1));
+        _player.Inventory.Add(new InventoryItem(ItemBox[0].ItemName, false, false, 1));
+        _player.Inventory.Add(new InventoryItem(ItemBox[1].ItemName, false, false, 1));
+        _player.Inventory.Add(new InventoryItem(ItemBox[2].ItemName, false, false, 1));
+        _player.Inventory.Add(new InventoryItem(ItemBox[3].ItemName, false, false, 1));
+        _player.Inventory.Add(new InventoryItem(ItemBox[4].ItemName, false, false, 1));
     }
 }
 
