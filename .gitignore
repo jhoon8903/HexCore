@@ -613,3 +613,5 @@ fabric.properties
 *.cache
 *.info
 *.json
+*.editorconfig
+*.cache
