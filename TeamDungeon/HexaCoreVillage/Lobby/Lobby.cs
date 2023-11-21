@@ -14,7 +14,6 @@ public class Lobby : Scene
     #region Flow Methods
     public override void Start()
     {
-        
     }
 
     public override void Update()
