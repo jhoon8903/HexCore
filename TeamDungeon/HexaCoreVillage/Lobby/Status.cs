@@ -72,7 +72,7 @@ public class Status : Scene
             SetCursorPosition(startPoint_x + width - 1, i);
             Write(' ');
         }
-
+        //test 주석
         //캐릭터 아래 테두리 그리는 로직
         SetCursorPosition(startPoint_x, height);
         Write(new string(' ', width));
