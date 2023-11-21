@@ -20,7 +20,7 @@ public class Login : Scene
     static string startBGMPath = Path.Combine(relativePathToAudio, "startBGM.wav");
     static string newWorldBGMPath = Path.Combine(relativePathToAudio, "newWorldBGM.wav");
 
-    static AudioFileReader startBGM = new AudioFileReader(startBGMPath);
+    static AudioFileReader startBGM = Managers.Resource.GetResources<AudioFileReader>(ResourceKeys.startBGM);
     static LoopStream startLoop = new LoopStream(startBGM);
     static AudioFileReader newWorldBGM = new AudioFileReader(newWorldBGMPath);
     static LoopStream newWorldLoop = new LoopStream(newWorldBGM);
@@ -52,7 +52,7 @@ public class Login : Scene
         {
             Clear();
             Renderer.Instance.DrawConsoleBorder();
-            SetItemBox();
+            //SetItemBox();
             SetCursorPosition(1, 35);
 
             for (int i = 0; i < options.Length; i++)

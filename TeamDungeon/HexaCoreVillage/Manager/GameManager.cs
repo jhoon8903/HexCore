@@ -9,11 +9,15 @@ namespace HexaCoreVillage.Manager;
 public class GameManager : Singleton<GameManager>
 {
     #region Member Variables
-    private Manager_Scene SceneManager = new();
+    private Manager_Scene _sceneManager = new();
+    private Manager_Resource _resourceManager = new();
+    private Manager_UserInterface _userInterfaceManager = new();
     #endregion
 
     #region Properties
-    public Manager_Scene Scene => Instance.SceneManager;
+    public Manager_Scene Scene => _sceneManager;
+    public Manager_Resource Resource => _resourceManager;
+    public Manager_UserInterface UserInterface => _userInterfaceManager;
     #endregion
 }
 
@@ -26,4 +30,6 @@ public static class ManagersAliasClass
 {
     public static GameManager GM => GameManager.Instance;
     public static Manager_Scene Scene => GameManager.Instance.Scene;
+    public static Manager_Resource Resource => GameManager.Instance.Resource;
+    public static Manager_UserInterface UI => GameManager.Instance.UserInterface;
 }
