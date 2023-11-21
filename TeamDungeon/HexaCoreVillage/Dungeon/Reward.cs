@@ -11,6 +11,7 @@ public class Reward : Scene
     public static Random random = new Random();
     string CurrentDirectory = Directory.GetCurrentDirectory();
     private static int limitExp = 100;
+    private static int dummyBug = 2;
 
 
     public override void Start()
@@ -57,6 +58,8 @@ public class Reward : Scene
         WriteLine($"플레이어 Metal : {Battle.CurrentMental}/{player.Mental}");
         SetCursorPosition(85, 27);
         WriteLine($"플레이어 Exp : {player.Exp}");
+        SetCursorPosition(85, 28);
+        WriteLine($"플레이어 레벨 : {player.Level}");
         Renderer.Instance.DrawConsoleBorder();
     }
 
@@ -64,7 +67,7 @@ public class Reward : Scene
     {
         // 계획은 레벨에 따른 배틀 성공 리워드 수치 증가
         player.Gold += random.Next(100, 300) * player.Level; // 현재 주는 골드 수(랜덤 100 ~ 500) * 현제 레벨 * 처치 버그 수 
-        player.Exp += 5;   // 현재 주는 경험치 량(적게)*레벨 * 처지 버그 수
+        player.Exp += random.Next(50, 100) * dummyBug;   // 현재 주는 경험치 량(적게)*레벨 * 처지 버그 수
         battleResult = "Debug Complete";
     }
 
@@ -77,9 +80,20 @@ public class Reward : Scene
 
     private static void LevelUp()
     {
+        SetCursorPosition(85, 10);
+        WriteLine("!!! 레벨업 !!!");
+        SetCursorPosition(85, 11);
+        Write($"현재 레벨 {player.Level}에서 ");
+
         player.Exp -= limitExp;
         limitExp = limitExp + (player.Level * 20);
         player.Level += 1;
+
+        WriteLine($"레벨 {player.Level}로 올랐습니다.");
+        SetCursorPosition(85, 12);
+        WriteLine($"현제 다음 레벨업을 하기 위한 필요 경험치 수는 {limitExp - player.Exp} 가 필요합니다.");
+        SetCursorPosition(85, 13);
+        WriteLine($"LimitExp : {limitExp}, currentExp: {player.Exp}");
         // 일정 경험치 한계 이상이 되면 플레이어의 레벨을 업해야 한다
         // 그러기 위해선 플레이어 정보가 담긴 Json 파일에 접근해서 수정해야 한다
         // 문제는 레벨을 포함한 다른 player 수치를 어떻게 담아야 하는가?
