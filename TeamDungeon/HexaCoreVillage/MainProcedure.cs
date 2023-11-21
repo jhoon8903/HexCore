@@ -1,23 +1,26 @@
-﻿
-using HexaCoreVillage.Framework;
-using HexaCoreVillage.Login;
 
 namespace HexaCoreVillage;
 
 public static class MainProcedure
 {
-    static void Main()
+    /* Main */
+    public static void Main()
     {
-        Title titleScene = new Title();
-        titleScene.Start();
+        // Console Size [OS condition] Resetting
+        Renderer.Instance.InitalizeRenderer();
 
-        Scene currentScene = titleScene;
+        // Title Scene Load.
+        Managers.Scene.LoadScene(SCENE_NAME.TITLE);
 
-
-        // 임시용 무한반복
-        while(true)
-        {
-            currentScene.Update();
-        }
+        Run();
     }
+
+    #region Running To Game (LOOP)
+    private static void Run()
+    {
+        /* 조건식이 게임이 종료되지 않았을 때로 바꿔야한다. */
+        while (Managers.Scene.GetCurrentScene() != null)
+            Managers.Scene.GetCurrentScene()?.Update();
+    }
+    #endregion
 }

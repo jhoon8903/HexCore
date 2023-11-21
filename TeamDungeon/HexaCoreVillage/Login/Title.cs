@@ -1,5 +1,5 @@
+using HexaCoreVillage.Utility;
 
-using HexaCoreVillage.Framework;
 namespace HexaCoreVillage.Login;
 
 public class Title : Scene
@@ -8,17 +8,14 @@ public class Title : Scene
 
     public override void Start()
     {
-        // ÃÊ±âÈ­
+        Managers.Scene.LoadScene(SCENE_NAME.LOGIN);
+        // ì´ˆê¸°í™”
+        Renderer.Instance.DrawConsoleBorder();
+
     }
 
     public override void Update()
     {
-        // ·ÎÁ÷ÀÌ µÉ ³»¿ë ÀÛ¼º
-        this.WriteConsole();
-    }
-
-    private void WriteConsole()
-    {
-        Console.Write("¾È³ç");
+        
     }
 }

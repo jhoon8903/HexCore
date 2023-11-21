@@ -1,5 +1,4 @@
 using HexaCoreVillage.Utility;
-using HexaCoreVillage.Utility.ConsoleSizeUtility;
 using HexaCoreVillage.Framework;
 namespace HexaCoreVillage.Lobby;
 
@@ -16,7 +15,6 @@ public class Status : Scene
 
     public override void Update()
     {
-
         DrawLine();
         PrintStatusMenu();
     }
