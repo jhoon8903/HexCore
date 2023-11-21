@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace HexaCoreVillage.Utility;
 
-internal class Item
+public class Item
 {
     [JsonPropertyName("ItemName")] public string? ItemName {  get; set; }
     [JsonPropertyName("Type")] public ItemType Type {  get; set; }
@@ -10,14 +10,6 @@ internal class Item
     [JsonPropertyName("Price")] public int Price {  get; set; }
     [JsonPropertyName("ItemOption")] public int ItemOption {  get; set; }
 
-    //public Item()
-    //{
-    //    ItemName = "로지텍 마우스";
-    //    Type = ItemType.Mouse;
-    //    Desc = "나쁘지 않은 마우스이다.";
-    //    Price = 500;
-    //    ItemOption = 5;
-    //}
 }
 
 public enum ItemType

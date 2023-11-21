@@ -43,27 +43,32 @@ public class Login : Scene
 
     public void LoginScene()
     {
-        
+
+
         int selectedOption = 0;
         string[] options = { "New Game", "Load Game", "Exit" };
         string[] plusOpt = { "새로운 아이디로 게임을 처음부터 시작합니다.(프롤로그 포함)", "전에 사용하던 아이디로 게임을 시작합니다.(프롤로그 스킵)", "게임 종료하기" };
         while (true)
         {
             Clear();
+            Renderer.Instance.DrawConsoleBorder();
             SetItemBox();
-            SetCursorPosition(0, 28);
+            SetCursorPosition(1, 35);
 
             for (int i = 0; i < options.Length; i++)
             {
                 if (i == selectedOption)
                 {
+                    SetCursorPosition(CursorLeft + 1, CursorTop);
                     ForegroundColor = ConsoleColor.Blue;
                     WriteLine("-> " + options[i]);
+                    SetCursorPosition(CursorLeft + 1, CursorTop);
                     WriteLine("   - " + plusOpt[i]);
                     ResetColor();
                 }
                 else
                 {
+                    SetCursorPosition(CursorLeft + 1, CursorTop);
                     WriteLine("   " + options[i]);
                 }
             }
@@ -129,36 +134,38 @@ public class Login : Scene
         Prologue();
 
         Clear();
+        Renderer.Instance.DrawConsoleBorder();
         WriteLine();
+        SetCursorPosition(CursorLeft+1, CursorTop);
         WriteLine("사용할 아이디를 입력해 주세요.");
-        SetCursorPosition(0, 28);
+        SetCursorPosition(1, 35);
         userID = ReadLine();
 
         Clear();
+        Renderer.Instance.DrawConsoleBorder();
         WriteLine();
-        WriteLine("당신은 이 헥사코어 안에서 새로운 코드명으로 불리게 될 것입니다.");
-        WriteLine("당신을 드러낼 코드네임을 정해주세요.");
-        SetCursorPosition(0, 28);
+        WriteInForm("당신은 이 헥사코어 안에서 새로운 코드명으로 불리게 될 것입니다.", ConsoleColor.White);
+        WriteInForm("당신을 드러낼 코드네임을 정해주세요.", ConsoleColor.White );
+        SetCursorPosition(1, 35);
         userName = ReadLine();
 
         while (true)
         {
             Clear();
+            Renderer.Instance.DrawConsoleBorder();
             WriteLine();
-            WriteLine("당신은 어떤 일을 하고 있나요?");
+            WriteInForm("당신은 어떤 일을 하고 있나요?", ConsoleColor.White);
             SetCursorPosition(0, 5);
 
             for (int i = 0; i < jobOptions.Count; i++)
             {
                 if (i == selectedOption)
                 {
-                    ForegroundColor = ConsoleColor.Blue; // 선택중인 옵션
-                    WriteLine("-> " + jobOptions[i]);
-                    ResetColor();
+                    WriteInForm("-> " + jobOptions[i],ConsoleColor.Blue);
                 }
                 else
                 {
-                    WriteLine("   " + jobOptions[i]);
+                    WriteInForm("   " + jobOptions[i], ConsoleColor.White);
                 }
                 WriteLine();
             }
@@ -194,22 +201,21 @@ public class Login : Scene
         while (true)                //배경 설정
         {
             Clear();
+            Renderer.Instance.DrawConsoleBorder();
             WriteLine();
-            WriteLine("지금까지 어떻게 살아왔는지 알려주세요.");
+            WriteInForm("지금까지 어떻게 살아왔는지 알려주세요.",ConsoleColor.White);
             SetCursorPosition(0, 5);
 
             for (int i = 0; i < backgroundOptions.Length; i++)
             {
                 if (i == selectedOption)
                 {
-                    ForegroundColor = ConsoleColor.Blue; // 선택중인 옵션
-                    WriteLine("-> " + backgroundOptions[i]);
-                    WriteLine("   - " + statusUpObt[i] + " Up!");
-                    ResetColor();
+                    WriteInForm("-> " + backgroundOptions[i],ConsoleColor.Blue);
+                    WriteInForm("   - " + statusUpObt[i] + " Up!", ConsoleColor.Blue);
                 }
                 else
                 {
-                    WriteLine("   " + backgroundOptions[i]);
+                    WriteInForm("   " + backgroundOptions[i], ConsoleColor.White);
                 }
                 WriteLine();
             }
@@ -257,22 +263,21 @@ public class Login : Scene
         while (true)                //배경 설정
         {
             Clear();
+            Renderer.Instance.DrawConsoleBorder();
             WriteLine();
-            WriteLine("항상 좋은 일만 있는 건 아니었잖아요. 그렇죠?");
+            WriteInForm("항상 좋은 일만 있는 건 아니었잖아요. 그렇죠?", ConsoleColor.White);
             SetCursorPosition(0, 5);
 
             for (int i = 0; i < weakOptions.Length; i++)
             {
                 if (i == selectedOption)
                 {
-                    ForegroundColor = ConsoleColor.Blue; // 선택중인 옵션
-                    WriteLine("-> " + weakOptions[i]);
-                    WriteLine("   - " + statusUpObt[i] + " Down");
-                    ResetColor();
+                    WriteInForm("-> " + weakOptions[i], ConsoleColor.Blue);
+                    WriteInForm("   - " + statusUpObt[i] + " Down", ConsoleColor.Blue);
                 }
                 else
                 {
-                    WriteLine("   " + weakOptions[i]);
+                    WriteInForm("   " + weakOptions[i], ConsoleColor.White);
                 }
                 WriteLine();
             }
@@ -317,7 +322,7 @@ public class Login : Scene
         }
         SetInvenItem();
         SaveData();
-        Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
+        Managers.Scene.LoadScene(SCENE_NAME.BATTLE);
     }
 
     private void LoadGame()
@@ -328,76 +333,89 @@ public class Login : Scene
         while (true)
         {
             Clear();
-            WriteLine("사용하던 아이디를 입력해 주세요.");
-            SetCursorPosition(0, 28);
+            Renderer.Instance.DrawConsoleBorder();
+            SetCursorPosition(1, 1);
+            WriteInForm("사용하던 아이디를 입력해 주세요.",ConsoleColor.White);
+            SetCursorPosition(1, 38);
             if (player.ID == ReadLine())
             {
-                ForegroundColor = ConsoleColor.Blue;
-                WriteLine("사용자를 확인하였습니다.");
-                ResetColor();
+                SetCursorPosition(CursorLeft, CursorTop+1);
+                WriteInForm("사용자를 확인하였습니다.",ConsoleColor.Blue);
                 Thread.Sleep(1500);
                 break;
             }
-            ForegroundColor = ConsoleColor.Blue;
-            WriteLine("데이터가 일치하지 않습니다.");
-            ResetColor();
+            SetCursorPosition(CursorLeft, CursorTop + 1);
+            WriteInForm("데이터가 일치하지 않습니다.", ConsoleColor.Blue);
             Thread.Sleep(1500);
         }
         audioMgr.Stop();
         audioMgr.Init(newWorldLoop);
         audioMgr.Play();
-        Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
+        Managers.Scene.LoadScene(SCENE_NAME.BATTLE);
 
     }
 
     private void Prologue()
     {
         Clear();
-        SetCursorPosition(0, 28);
-        WriteLine("오늘따라 옛날 생각이 난다.");
+        Renderer.Instance.DrawConsoleBorder();
+        SetCursorPosition(0, 35);
+        WriteInForm("오늘따라 옛날 생각이 난다.", ConsoleColor.White);
         Thread.Sleep(1500);
-        WriteLine("언제였더라? 돌아보면 시간이 이렇게도 빠르다.");
+        WriteInForm("언제였더라? 돌아보면 시간이 이렇게도 빠르다.", ConsoleColor.White);
         Thread.Sleep(3000);
 
         Clear();
-        SetCursorPosition(0, 28);
-        WriteLine("동기들과 내배캠을 수료할 때만 해도 이런저런 걱정이 많았었는데");
+        Renderer.Instance.DrawConsoleBorder();
+        SetCursorPosition(0, 35);
+        WriteInForm("동기들과 내배캠을 수료할 때만 해도 이런저런 걱정이 많았었는데", ConsoleColor.White);
         Thread.Sleep(1500);
-        WriteLine("금방 이렇게 번듯한 회사에 취업하게 될 줄이야..");
+        WriteInForm("금방 이렇게 번듯한 회사에 취업하게 될 줄이야..",ConsoleColor.White);
         Thread.Sleep(3000);
 
         Clear();
-        SetCursorPosition(0, 28);
-        WriteLine("어라..? 근데 왜 이렇게 어지럽....");
+        Renderer.Instance.DrawConsoleBorder();
+        SetCursorPosition(0, 35);
+        WriteInForm("어라..? 근데 왜 이렇게 어지럽....", ConsoleColor.White);
         Thread.Sleep(3000);
+
         audioMgr.Stop();
         audioMgr.Init(newWorldLoop);
         audioMgr.Play();
         //사운드 변환
-        ForegroundColor = ConsoleColor.Red;
         Clear();
-        SetCursorPosition(0, 28);
-        WriteLine("잘 살아가던 당신은 알 수 없는 이유로 이상한 세계로 이동해버렸다!");
+        Renderer.Instance.DrawConsoleBorder();
+        SetCursorPosition(0, 35);
+        WriteInForm("잘 살아가던 당신은 알 수 없는 이유로 이상한 세계로 이동해버렸다!", ConsoleColor.Red);
         Thread.Sleep(3000);
 
         Clear();
-        SetCursorPosition(0, 28);
-        WriteLine("이곳은 놀랍게도 몬스터가 존재하는 세상.");
+        Renderer.Instance.DrawConsoleBorder();
+        SetCursorPosition(0, 35);
+        WriteInForm("이곳은 놀랍게도 몬스터가 존재하는 세상.", ConsoleColor.Red);
         Thread.Sleep(1500);
-        WriteLine("몬스터를 쓰러트리기 위해서는 코딩으로만 공격할 수 있다고 한다?!");
+        WriteInForm("몬스터를 쓰러트리기 위해서는 코딩으로만 공격할 수 있다고 한다?!", ConsoleColor.Red);
         Thread.Sleep(3000);
 
         Clear();
-        SetCursorPosition(0, 28);
-        WriteLine("승리를 위한 코딩!");
+        Renderer.Instance.DrawConsoleBorder();
+        SetCursorPosition(0, 35);
+        WriteInForm("승리를 위한 코딩!", ConsoleColor.Red);
         Thread.Sleep(1500);
-        WriteLine("생존을 위한 디버깅!");
+        WriteInForm("생존을 위한 디버깅!", ConsoleColor.Red);
         Thread.Sleep(3000);
 
         Clear();
-        SetCursorPosition(0, 28);
-        WriteLine("이 험난한 세상에서, 당신은 살아갈 수 있을 것인가...");
+        Renderer.Instance.DrawConsoleBorder();
+        SetCursorPosition(0, 35);
+        WriteInForm("이 험난한 세상에서, 당신은 살아갈 수 있을 것인가...",ConsoleColor.Red);
         Thread.Sleep(3000);
+    }
+    private void WriteInForm(string s,ConsoleColor c)
+    {
+        SetCursorPosition(CursorLeft+1, CursorTop);
+        ForegroundColor = c;
+        WriteLine(s);
         ResetColor();
     }
 
