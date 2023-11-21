@@ -1,8 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "s6bJxmwo47WQ9LXBRJofp3FTYr155vSkLETgkFexXNR/ylCgn4WpDwR3iBmQ4vcPV6J9CyFtYtq1OAxPka77Ig==",
+  "dgSpecHash": "uCQCRLHjglugnfiW3pw0LyoOI26OfgDuTBzkLVHHfr+flgg4Sw92icy6gkm++CBxPoQbwv2Uxd37F/bxrfvNbA==",
   "success": true,
-  "projectFilePath": "/Users/daniel/Documents/GitHub/HexCore/TeamDungeon/HexaCoreVillage/HexaCoreVillage.csproj",
+  "projectFilePath": "C:\\Github\\HexCore\\TeamDungeon\\HexaCoreVillage\\HexaCoreVillage.csproj",
   "expectedPackageFiles": [],
-  "logs": []
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "캐시 파일 C:\\Github\\HexCore\\TeamDungeon\\HexaCoreVillage\\obj\\project.nuget.cache을(를) 읽는 동안 문제가 발생했습니다. Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }
