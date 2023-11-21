@@ -24,10 +24,10 @@ public class Status : Scene
     {
         Console.SetCursorPosition(1, 20);
         Console.BackgroundColor = ConsoleColor.Yellow;
-        for (int i = 0; i < ConsoleSizeUtility.FixedColumns - 2; i++)
+        for (int i = 0; i < Renderer.FixedXColumn - 2; i++)
             Console.Write(" ");
 
-        for (int i = 0; i < ConsoleSizeUtility.FixedRows - 21; i++)
+        for (int i = 0; i < Renderer.FixedYRows - 21; i++)
         {
             Console.SetCursorPosition(90, 20 + i);
             Console.WriteLine(" ");
