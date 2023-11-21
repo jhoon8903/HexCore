@@ -32,6 +32,8 @@ public class Login : Scene
     public override void Start()
     {
         CursorVisible = false;
+        audioMgr.Init(startLoop);
+        audioMgr.Play();
     }
 
     public override void Update()
@@ -41,8 +43,7 @@ public class Login : Scene
 
     public void LoginScene()
     {
-        audioMgr.Init(startLoop);
-        audioMgr.Play();
+        
         int selectedOption = 0;
         string[] options = { "New Game", "Load Game", "Exit" };
         string[] plusOpt = { "새로운 아이디로 게임을 처음부터 시작합니다.(프롤로그 포함)", "전에 사용하던 아이디로 게임을 시작합니다.(프롤로그 스킵)", "게임 종료하기" };
@@ -104,8 +105,7 @@ public class Login : Scene
         string userID = "";
         int selectedOption = 0;
         List<string> jobOptions = new List<string> { "Unity 개발자", "Unreal 개발자", "AI 개발자", "PM(Product manager)", "QA(Quality Assurance)" };
-        //List<ConsoleKey> NeoKey = new List<ConsoleKey>() { ConsoleKey.RightArrow, ConsoleKey.LeftArrow, ConsoleKey.RightArrow, ConsoleKey.LeftArrow, ConsoleKey.UpArrow, ConsoleKey.DownArrow };
-        List<ConsoleKey> NeoKey = new List<ConsoleKey>() { ConsoleKey.RightArrow, ConsoleKey.LeftArrow};
+        List<ConsoleKey> NeoKey = new List<ConsoleKey>() { ConsoleKey.RightArrow, ConsoleKey.LeftArrow, ConsoleKey.RightArrow, ConsoleKey.LeftArrow, ConsoleKey.UpArrow, ConsoleKey.DownArrow };
 
 
         string[] backgroundOptions = { "언제는 하루 종일 코딩만 한 적이 있어요. 그래서인지 하루 12시간 정도는 전혀 지치치 않죠."     //HP
@@ -126,7 +126,7 @@ public class Login : Scene
         Job userJob;
         string? userName;
 
-        //Prologue();
+        Prologue();
 
         Clear();
         WriteLine();
@@ -162,16 +162,13 @@ public class Login : Scene
                 }
                 WriteLine();
             }
-
-
             ConsoleKeyInfo keyInfo = ReadKey();
             userInput.Add(keyInfo.Key);
-            if (userInput.Count > 2)
+            if (userInput.Count > 6 && jobOptions.Count == 5)
             {
-                for(int i = 0; i < userInput.Count-1; i++)
+                for (int i = 0; i < userInput.Count - 5; i++)
                 {
-                    var temp = userInput.GetRange(i, 2);
-                    if (NeoKey == userInput.GetRange(i, 2))
+                    if (NeoKey.SequenceEqual(userInput.GetRange(i, 6)))
                     {
                         jobOptions.Add("Neo");
                     }
