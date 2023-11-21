@@ -183,8 +183,8 @@ namespace HexaCoreVillage.Dungeon
                     selectedBug = _bugList[index];
                 }
                 while (Player.Level <= 5 && selectedBug.BugDifficulty > 5);
-
                 _selectedBugs.Add(selectedBug);
+                Data.BugCount = _selectedBugs.Count;
             }
         }
 
