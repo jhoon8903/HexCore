@@ -613,3 +613,7 @@ fabric.properties
 *.cache
 *.info
 *.json
+.DS_Store
+TeamDungeon/.DS_Store
+.DS_Store
+TeamDungeon/HexaCoreVillage/.DS_Store
