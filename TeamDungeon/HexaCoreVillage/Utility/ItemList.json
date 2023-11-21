@@ -54,5 +54,33 @@
     "Desc": "오! 터치됨",
     "Price": 500,
     "ItemOption": 5
+  },
+  {
+    "ItemName": "헤드셋1",
+    "Type": "HeadSet",
+    "Desc": "평범한 헤드셋",
+    "Price": 500,
+    "ItemOption": 5
+  },
+  {
+    "ItemName": "헤드셋2",
+    "Type": "HeadSet",
+    "Desc": "좋은 헤드셋",
+    "Price": 700,
+    "ItemOption": 7
+  },
+  {
+    "ItemName": "몬스터",
+    "Type": "EnergyDrink",
+    "Desc": "먹으면 헐크처럼 피부가 초록색으로 변할 것 같이 생김",
+    "Price": 500,
+    "ItemOption": 5
+  },
+  {
+    "ItemName": "레드불",
+    "Type": "EnergyDrink",
+    "Desc": "날개를 펼쳐줘요",
+    "Price": 700,
+    "ItemOption": 7
   }
 ]
