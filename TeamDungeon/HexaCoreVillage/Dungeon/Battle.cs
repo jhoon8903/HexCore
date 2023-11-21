@@ -2,7 +2,6 @@ using HexaCoreVillage.Utility;
 using Newtonsoft.Json;
 using System.Text;
 using static HexaCoreVillage.Dungeon.Debugging;
-using static HexaCoreVillage.Utility.ConsoleSizeUtility;
 
 namespace HexaCoreVillage.Dungeon
 {
@@ -316,8 +315,8 @@ namespace HexaCoreVillage.Dungeon
         private static void Debugging()
         {
             Clear();
-            const int splitPosition = FixedColumns / 4; // 분할 위치 결정
-            for (int i = 0; i < FixedRows; i++) // 분할선 그리기
+            const int splitPosition = Renderer.FixedXColumn / 4; // 분할 위치 결정
+            for (int i = 0; i < Renderer.FixedYRows; i++) // 분할선 그리기
             {
                 SetCursorPosition(splitPosition, i);
                 BackgroundColor = ConsoleColor.Yellow;
