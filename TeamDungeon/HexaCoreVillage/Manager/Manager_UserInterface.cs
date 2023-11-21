@@ -1,19 +1,46 @@
 
-using System.Drawing;
+using HexaCoreVillage.Utility;
 
 namespace HexaCoreVillage.Manager;
 
 public class Manager_UserInterface
 {
+    #region Member Variables
+
+    public static readonly int StartPosX = 2;
+    public static readonly int StartPosY = 1;
+    public readonly int EndPosX = Renderer.FixedXColumn - StartPosX;
+    public readonly int EndPosY = Renderer.FixedYRows - StartPosY;
+    public readonly int areaX = Renderer.FixedXColumn - (StartPosX * 2);
+    public readonly int areaY = Renderer.FixedYRows - (StartPosY * 2);
+
+    #endregion
+
+
+
     #region Draw Methods
     public void DrawProgress(string message, int width, int length)
     {
 
     }
 
-    public void DrawAsciiMessage()
+    public int DrawAsciiMessage(ResourceKeys key, int startPosY = 2)
     {
-        string textOrigin; 
+        string asciiArtResource = Managers.Resource.GetTextResource(key);
+        string[] asciiArtSplitMessage = asciiArtResource.Split(new[] { "\n" }, StringSplitOptions.None);
+
+        int idx;
+        for(idx = 0; idx < asciiArtSplitMessage.Length; ++idx)
+        {
+            ConsoleColor color = ConsoleColor.Gray;
+            if (idx < 3) color = ConsoleColor.Yellow;
+            else if (idx >= 3 && idx < 6) color = ConsoleColor.Cyan;
+            else color = ConsoleColor.Blue;
+
+            PrintMsgAlignCenter(asciiArtSplitMessage[idx], idx + startPosY, color);
+        }
+
+        return idx;
     }
     #endregion
 
@@ -54,6 +81,25 @@ public class Manager_UserInterface
     {
         SetPos(posX, posY);
         PrintMsgToColor(message, fontColor, bgColor);
+    }
+    #endregion
+
+
+
+    #region Clear Methods
+    public void ClearRow(int row)
+    {
+        SetPos(StartPosX, row);
+        PrintMsg(new string(' ', areaX));
+    }
+
+    public void ClearRows(int from, int to)
+    {
+        for(int row = from; row <= to; ++row)
+        {
+            SetPos(StartPosX, row);
+            PrintMsg(new string(' ', areaX));
+        }
     }
     #endregion
 
