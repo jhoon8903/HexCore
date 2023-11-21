@@ -11,7 +11,6 @@ public class Reward : Scene
     public static Random random = new Random();
     string CurrentDirectory = Directory.GetCurrentDirectory();
     private static int limitExp = 100;
-    private static int dummyBug = 2;
 
 
     public override void Start()
@@ -67,7 +66,7 @@ public class Reward : Scene
     {
         // 계획은 레벨에 따른 배틀 성공 리워드 수치 증가
         player.Gold += random.Next(100, 300) * player.Level; // 현재 주는 골드 수(랜덤 100 ~ 500) * 현제 레벨 * 처치 버그 수 
-        player.Exp += random.Next(50, 100) * dummyBug;   // 현재 주는 경험치 량(적게)*레벨 * 처지 버그 수
+        player.Exp += random.Next(50, 100) * Data.BugCount;   // 현재 주는 경험치 량(적게)*레벨 * 처지 버그 수
         battleResult = "Debug Complete";
     }
 
@@ -102,6 +101,7 @@ public class Reward : Scene
 
     public override void Update()
     {
+        ChooseScene();
         // 기능적으로 계속 업데이트 해야 하는 부분
         // 이 부분은 다른 분들 처럼 커서를 위 아래로 이동시키는 목록을 작성한다던가?,
         // 아니면 그냥 Readline을 Start에 때려 박아서 원하는 술자를 입력한다던가?
@@ -121,7 +121,50 @@ public class Reward : Scene
     /// </summary>
     private static void ChooseScene()
     {
+        Clear();
         CursorVisible = false;
+        int index = 0;
+        int totalMenuOption = 2;
+        string[] options = { "계속 디버깅하기", "로비로 돌아가기" };
+
+        while (true)
+        {
+            SetCursorPosition(40, 10);
+            WriteLine("[앞으로 무얼 하시겠습니까?]\n");
+
+            for (int i = 0; i < totalMenuOption; i++)
+            {
+                SetCursorPosition(40, 12 + i);
+                if (i == index)
+                {
+                    ForegroundColor = ConsoleColor.Green;
+                }                
+                WriteLine($"\n{options[i]}");
+                ResetColor();
+            }
+            Renderer.Instance.DrawConsoleBorder();
+            ConsoleKeyInfo key = ReadKey();
+
+            switch (key.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    index = (index - 1 + index) % index;
+                    break;
+                case ConsoleKey.DownArrow:
+                    index = (index + 1) % index;
+                    break;
+                case ConsoleKey.Enter:
+                    if (index == 0)
+                    {
+                        Managers.Scene.LoadScene(SCENE_NAME.BATTLE);
+                    }
+                    if (index == 1)
+                    {
+                        Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
+                    }
+                    return;
+            }
+        }
     }
 
     // Battle 성공시 Data Class의 "bool BattleSuccess" 로  bool 값 넣어두도록 하겠습니다,
