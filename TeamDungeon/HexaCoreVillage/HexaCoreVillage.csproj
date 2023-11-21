@@ -14,4 +14,8 @@
       <PackageReference Include="portaudio" Version="0.19.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Resources\" />
+    </ItemGroup>
+
 </Project>
