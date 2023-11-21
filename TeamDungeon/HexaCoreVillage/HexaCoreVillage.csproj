@@ -10,6 +10,7 @@
 
     <ItemGroup>
       <PackageReference Include="NAudio" Version="2.2.1" />
+      <PackageReference Include="NetCoreAudio" Version="1.7.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="portaudio" Version="0.19.1" />
     </ItemGroup>
