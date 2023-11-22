@@ -63,7 +63,7 @@ public class Lobby : Scene
         // BGM start
         AudioPlayer.AudioController(_newWorldBGM, AudioPlayer.PlayOption.LoopStart);
 
-        // LoadToResourcePlayerData - 리소스 매니저가 지니고 있는 json 갱신
+        // LoadToResourcePlayerData - 새로 플레이어 생성됐을 시 리소스 매니저가 지니고 있는 리소스 갱신
         Managers.Resource.LoadResourcePlayerData();
     }
 
