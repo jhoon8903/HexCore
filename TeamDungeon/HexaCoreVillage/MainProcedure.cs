@@ -13,7 +13,7 @@ public static class MainProcedure
 
         // Title Scene Load.
 
-        Managers.Scene.LoadScene(SCENE_NAME.TITLE);
+        Managers.Scene.LoadScene(SCENE_NAME.STATUS);
 
 
         Run();

@@ -1,24 +1,209 @@
 using HexaCoreVillage.Utility;
 using HexaCoreVillage.Framework;
+using Newtonsoft.Json.Converters;
+using System.ComponentModel;
+using Newtonsoft.Json;
+
 namespace HexaCoreVillage.Lobby;
 
 public class Status : Scene
 {
     public override SCENE_NAME SceneName => SCENE_NAME.STATUS;
-    private Player _player = new Player(); // test용
-
+    private Player _player = Login.Login._player;
+    private List<Item> itemList = new List<Item>();
+    bool isInventoryScene = false;
     public override void Start()
     {
+        Console.Clear();
         Console.CursorVisible = false;
-        PrintPlayer();
+        SetItem();
     }
 
     public override void Update()
     {
-        DrawLine();
-        PrintStatusMenu();
+        StatusScene();
+    }
+    //게임 내 사용할 아이템 호출
+    private void SetItem()
+    {
+        string Json = Managers.Resource.GetTextResource(ResourceKeys.ItemList);
+        itemList = JsonConvert.DeserializeObject<List<Item>>(Json); //게임 내 사용할 수 있는 모든 ITEM
     }
 
+    private Item GetItemInform(string itemName)
+    {
+        foreach(Item item in itemList)
+        {
+            if (itemName == item.ItemName)
+                return item;
+        }
+        return null;
+    }
+
+
+    private void InventoryScene()
+    {
+        int itemStart_x = 8;    //아이템 시작 x 좌표
+        int itemStart_y = 24;   //아이템 시작 y 좌표
+        int idx = 1;
+        int selectedOption = 0;
+
+        if(_player.Inventory.Count==0)//만약 아이템이 없다면 그냥 status메뉴로 바로 이동
+        {
+            isInventoryScene = false;
+            StatusScene();
+        }
+
+        foreach (var item in _player.Inventory)
+        {
+            //여기다가 아이템 별로 출력하면 되고 만약 y값이 정해진 label 보다 크면 안 x좌표 처음부터 y좌표 처음부터
+            if (itemStart_y > 33)
+            {
+                itemStart_x = 99;
+                itemStart_y = 24;
+            }
+            SetCursorPosition(itemStart_x, itemStart_y);
+            if (item.IsEquipment == true)
+                Console.ForegroundColor = ConsoleColor.Green;
+            Write($"{idx++}. {item.ItemName} : 아이템 능력치 표시 아이템 설명 표시");
+            ResetColor();
+            itemStart_y += 3;   //한번 출력할 때마다 y좌표 3내려서 출력
+        }
+
+        while (true)
+        {
+            itemStart_x = 8;
+            itemStart_y = 24;
+            SetCursorPosition(itemStart_x, itemStart_y);
+            for (int i = 0; i < _player.Inventory.Count; i++)
+            {
+
+                if (i == 4)
+                {
+                    //아이템 목록이 4개가 아이템 오른쪽 창으로 넘기기
+                    itemStart_x = 99;
+                    itemStart_y = 24;
+                }
+
+                if (i == selectedOption)
+                {
+                    ForegroundColor = ConsoleColor.Green;
+                    SetCursorPosition(itemStart_x, itemStart_y + 3 * (i % 4));
+                    Write($"-> {_player.Inventory[i].ItemName}");
+                    ResetColor();
+                }
+                else
+                {
+                    SetCursorPosition(itemStart_x, itemStart_y + 3 * (i % 4));
+                    WriteLine($"   {_player.Inventory[i].ItemName}");
+                }
+            }
+
+            ConsoleKeyInfo keyInfo = ReadKey();
+            if (keyInfo.Key == ConsoleKey.UpArrow)
+            {
+                selectedOption = (selectedOption == 0) ? _player.Inventory.Count - 1 : selectedOption - 1;
+            }
+            else if (keyInfo.Key == ConsoleKey.DownArrow)
+            {
+                selectedOption = (selectedOption == _player.Inventory.Count - 1) ? 0 : selectedOption + 1;
+            }
+            else if (keyInfo.Key == ConsoleKey.Enter)
+            {
+                break;
+            }
+        }
+
+        //모든 case마다 로직이 같다. 
+        // 아이템이 장착되지 않았다면 장착하고 -> 플레이서 스탯 올려주기
+        // 아이템이 장착되어있다면 장착 해제하고 -> 플레이서 스탯 내려주기
+
+        //아이템 장착,해제 기능구현
+        //만약 플레이어 인벤토리에 있는 아이템과 같은 이름이 있다면
+        if (_player.Inventory[selectedOption].IsEquipment==false)    //아이템이 장착되어 있지 않다면
+        {
+            foreach (var item in itemList)
+            {
+                if (item.ItemName == _player.Inventory[selectedOption].ItemName) //아이템 이름이 같다면 
+                {
+                    //스탯 올려주고 player에서 어떻게 구현할거고 어떻게 표현할지 생각
+                    //장착한거 알려주고
+                    _player.Inventory[selectedOption].IsEquipment = true;
+                }
+
+            }
+        }
+        else        //아이템이 장착되어 있다면
+        {
+            //스탯 내려주고
+            _player.Inventory[selectedOption].IsEquipment=false;
+        }
+
+        isInventoryScene = false;
+        StatusScene();
+
+    }
+
+    private void StatusScene()
+    {
+        int selectedOption = 0;
+        string[] options = { "INVENTORY", "LOBBY" };
+        string[] plusOpt = { "아이템 장착 관리를 위한 인벤토리", "로비로 돌아갑니다." };
+
+
+        PrintPlayer();
+        DrawLine();
+        PrintStatusMenu();
+        if (isInventoryScene)
+            InventoryScene();
+
+        while (true)
+        {
+            SetCursorPosition(0, 35);
+            for (int i = 0; i < options.Length; i++)
+            {
+                if (i == selectedOption)
+                {
+                    ForegroundColor = ConsoleColor.Blue;
+
+                    SetCursorPosition(CursorLeft + 1, CursorTop);
+                    Write($"-> {options[i]}");
+                    SetCursorPosition(CursorLeft + 1, CursorTop);
+                    WriteLine("   - " + plusOpt[i]);
+                    ResetColor();
+                }
+                else
+                {
+                    SetCursorPosition(CursorLeft + 1, CursorTop);
+                    WriteLine($"   {options[i]}                                     ");
+                }
+            }
+
+            ConsoleKeyInfo keyInfo = ReadKey();
+            if (keyInfo.Key == ConsoleKey.UpArrow)
+            {
+                selectedOption = (selectedOption == 0) ? options.Length - 1 : selectedOption - 1;
+            }
+            else if (keyInfo.Key == ConsoleKey.DownArrow)
+            {
+                selectedOption = (selectedOption == options.Length - 1) ? 0 : selectedOption + 1;
+            }
+            else if (keyInfo.Key == ConsoleKey.Enter)
+            {
+                break;
+            }
+        }
+
+        switch ((SelectOption)selectedOption)
+        {
+            case SelectOption.Inventory:
+                isInventoryScene = true;
+                break;
+            case SelectOption.Lobby:
+                Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
+                break;
+        }
+    }
 
     private void DrawLine()
     {
@@ -35,6 +220,7 @@ public class Status : Scene
 
         Console.ResetColor();
     }
+    //플레이어 모습 아스키 코드 그림
     private void PrintPlayer()
     {
         string[] asciPlayer =
@@ -72,7 +258,7 @@ public class Status : Scene
             SetCursorPosition(startPoint_x + width - 1, i);
             Write(' ');
         }
-        //test 주석
+
         //캐릭터 아래 테두리 그리는 로직
         SetCursorPosition(startPoint_x, height);
         Write(new string(' ', width));
@@ -86,11 +272,12 @@ public class Status : Scene
         }
 
     }
-
+    //플레이어 상태창 출력 함수
     private void PrintStatusMenu()
     {
         int itemStart_x = 8;    //아이템 시작 x 좌표
         int itemStart_y = 24;   //아이템 시작 y 좌표
+        Item itemInform = new Item();
 
         SetCursorPosition(42, 3);
         Write("LV");
@@ -159,37 +346,31 @@ public class Status : Scene
             }
             SetCursorPosition(itemStart_x, itemStart_y);
             if (item.IsEquipment == true)
-                Console.ForegroundColor = ConsoleColor.Green;
-            Write($"◆ {item.ItemName} : 아이템 능력치 표시 아이템 설명 표시");
+            {
+                 Console.ForegroundColor = ConsoleColor.Green;
+                 itemInform = GetItemInform(item.ItemName);
+            }
+
+            Write($"◆ {itemInform.ItemName} : {GetItemStatsType(itemInform.Type)} +{itemInform.ItemOption} - {itemInform.Desc}");
             ResetColor();
             itemStart_y += 3;   //한번 출력할 때마다 y좌표 3내려서 출력
         }
-        SetCursorPosition(8, 24);
-        Write("◆ 아이템 출력 아이템 설명 아이템 능력치");
-
-        SetCursorPosition(8, 27);
-        Write("◆ 아이템 출력 아이템 설명 아이템 능력치");
-
-        SetCursorPosition(8, 30);
-        Write("◆ 아이템 출력 아이템 설명 아이템 능력치");
-
-        SetCursorPosition(8, 33);
-        Write("◆ 아이템 출력 아이템 설명 아이템 능력치");
-
-
-
-        SetCursorPosition(99, 24);
-        Write("◆ 아이템 출력 아이템 설명 아이템 능력치");
-
-        SetCursorPosition(99, 27);
-        Write("◆ 아이템 출력 아이템 설명 아이템 능력치");
-
-        SetCursorPosition(99, 30);
-        Write("◆ 아이템 출력 아이템 설명 아이템 능력치");
-
-        SetCursorPosition(99, 33);
-        Write("◆ 아이템 출력 아이템 설명 아이템 능력치");
     }
+    //아이템 스탯 타입 가져오는 함수
+    private string GetItemStatsType(ItemType type)
+    {
+        string result = "";
+        if (type == ItemType.Keyboard || type == ItemType.Monitor)
+            result = "DEF";
+        else if (type == ItemType.Mouse || type == ItemType.Notebook)
+            result = "ATK";
+        else if (type == ItemType.HeadSet)
+            result = "HP";
+        else
+            result = "SP";
+        return result;
+    }
+
     //문자열을 가운데 정렬 해주는 함수
     public static string PadCenterForMixedText(string str, int totalLength)
     {
@@ -202,6 +383,7 @@ public class Status : Scene
         resultStr += paddingStr;
         return resultStr;
     }
+
     //문자열을 오른쪽 정렬 해주는 함수
     public static string PadRightForMixedText(string str, int totalLength)
     {
@@ -209,6 +391,7 @@ public class Status : Scene
         int padding = totalLength - currentLength;
         return str.PadRight(str.Length + padding);
     }
+
     //특수문자인지 구분해주는 함수
     public static int GetPrintableLegnth(string str)
     {
@@ -240,6 +423,13 @@ public class Status : Scene
 
     public override void Stop()
     {
-        throw new NotImplementedException();
+
     }
 }
+enum SelectOption
+{
+    Inventory,
+    Lobby
+}
+
+

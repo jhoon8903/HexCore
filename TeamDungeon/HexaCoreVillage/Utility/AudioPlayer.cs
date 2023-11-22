@@ -4,12 +4,12 @@ namespace HexaCoreVillage.Utility
 {
     public class AudioPlayer
     {
-        public enum PlayOption { Play, Pause, Resume, Stop, Change, LoopStart, LoopStop}
+        public enum PlayOption { Play, Pause, Resume, Stop, Change, LoopStart, LoopStop }
         private static readonly IPlayer _audioPlayer = new NetCoreAudio.Player();
         private static bool _loop = false;
         private static string? _currentFilePath;
 
-        
+
         /// <summary>
         ///  오디오 플레이어 메서드
         /// </summary>
@@ -22,8 +22,8 @@ namespace HexaCoreVillage.Utility
             switch (playOption)
             {
                 case PlayOption.Play:
-                    PlayAudio();  
-                    return; 
+                    PlayAudio();
+                    return;
                 case PlayOption.Pause:
                     _audioPlayer.Pause();
                     return;
@@ -46,10 +46,10 @@ namespace HexaCoreVillage.Utility
                     return;
             }
         }
-
+        
         private static void PlayAudio()
         {
-            _audioPlayer.PlaybackFinished+= OnPlayFinished;
+            _audioPlayer.PlaybackFinished += OnPlayFinished;
             _audioPlayer.Play(_currentFilePath);
         }
 
