@@ -25,7 +25,7 @@ public class Manager_UserInterface
     #region Draw Methods
     public void DrawProgress(string message, int width, int length)
     {
-
+        
     }
 
     public int DrawAsciiMessage(ResourceKeys key, int startPosY = 2)
@@ -50,13 +50,45 @@ public class Manager_UserInterface
     public void DrawBox(int startPosX, int startPosY, int width, int height, ConsoleColor color = ConsoleColor.Green)
     {
         string topView = "┌" + new string('─', width - 2) + "┐";
-        string bottomBiew = "└" + new string('─', width - 2) + "┘";
+        string bottomView = "└" + new string('─', width - 2) + "┘";
 
         PrintMsgCoordbyColor(topView, startPosX, startPosY, color);
-        for(int col = startPosY; col <= height; ++col)
+        for(int col = startPosY + 1; col < startPosY + height; ++col)
         {
-            //PrintMsgCoordbyColor()
+            string symbol = "│";
+            PrintMsgCoordbyColor(symbol, startPosX, col, color);
+            PrintMsgCoordbyColor(symbol, startPosX + width - 1, col, color);
         }
+        PrintMsgCoordbyColor(bottomView, startPosX, startPosY + height, color);
+    }
+
+    public COORD[] DrawColumnBox(int startPosX, int startPosY, int width, int height, int columnsNumber = 2, ConsoleColor color = ConsoleColor.Green)
+    {
+        int columnWidth = (width - 1) / columnsNumber;
+        COORD[] columnPositions = new COORD[columnsNumber];
+
+        // 상단 테두리
+        string topView = "┌" + string.Join("┬", Enumerable.Repeat(new string('─', columnWidth), columnsNumber)) + "┐";
+        PrintMsgCoordbyColor(topView, startPosX, startPosY, color);
+
+        // 측면 테두리 및 컬럼 분리선
+        for (int col = startPosY + 1; col < startPosY + height; ++col)
+        {
+            string sideView = "│" + string.Join("│", Enumerable.Repeat(new string(' ', columnWidth), columnsNumber)) + "│";
+            PrintMsgCoordbyColor(sideView, startPosX, col, color);
+        }
+
+        // 하단 테두리
+        string bottomView = "└" + string.Join("┴", Enumerable.Repeat(new string('─', columnWidth), columnsNumber)) + "┘";
+        PrintMsgCoordbyColor(bottomView, startPosX, startPosY + height, color);
+
+        // 컬럼 시작 좌표 계산
+        for (int i = 0; i < columnsNumber; ++i)
+            columnPositions[i] = new COORD(
+                startPosX + 2 + i * (columnWidth + 1),
+                startPosY + 1);
+
+        return columnPositions;
     }
     #endregion
 
@@ -137,8 +169,20 @@ public class Manager_UserInterface
     {
         lock (_lock)
         {
-            SetPos(row, colStart);
+            SetPos(colStart, row);
             PrintMsg(new string(' ', colEnd - colStart));
+        }
+    }
+
+    public void ClearRowsColSelect(int from, int to, int colStart, int colEnd)
+    {
+        lock(_lock)
+        {
+            for(int row = from; row <= to; ++row)
+            {
+                SetPos(colStart, row);
+                PrintMsg(new string(' ', colEnd - colStart));
+            }
         }
     }
     #endregion
