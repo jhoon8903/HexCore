@@ -10,41 +10,32 @@ public class Login : Scene
 {
     public override SCENE_NAME SceneName => SCENE_NAME.LOGIN;
 
-    // by 정훈
-    // 다른 PC에서는 절대경로 설정시 File을 찾을 수 없어 상대경로 표시를 위한 변수를 별도로 작성했습니다.
-    // 하지만 맥에서는 작동하지 않습니다.
-    //  'winmm.dll' 의존성이 문제 입니다. 
-    //static string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-    //static string relativePathToAudio = Path.GetFullPath(Path.Combine(baseDirectory, "..", "..", "..", "..", "..", "TeamDungeon", "HexaCoreVillage"));
-    //static string startBGMPath = Path.Combine(relativePathToAudio, "startBGM.wav");
-    //static string newWorldBGMPath = Path.Combine(relativePathToAudio, "newWorldBGM.wav");
-    // private static string UtilityPath = Path.Combine(relativePathToAudio, "Utility");
-
-    // static AudioFileReader startBGM = new AudioFileReader(startBGMPath);
-    // static LoopStream startLoop = new LoopStream(startBGM);
-    // static AudioFileReader newWorldBGM = new AudioFileReader(newWorldBGMPath);
-    // static LoopStream newWorldLoop = new LoopStream(newWorldBGM);
-    // static WaveOutEvent audioMgr = new WaveOutEvent();
-
     public static List<Item> ItemBox = new List<Item>();
-    private static Player _player = null;
+    public static Player _player = null;
 
     /* Audio Resources */
     private string _newWorldBGM = Managers.Resource.GetSoundResource(ResourceKeys.newWorldBGM);
     private string _startBGM = Managers.Resource.GetSoundResource(ResourceKeys.startBGM);
 
-
+    #region Overriding Part
     public override void Start()
     {
+        SetItemBox();
         CursorVisible = false;
-        AudioController(Managers.Resource.GetSoundResource(ResourceKeys.startBGM),PlayOption.Play);
+        AudioController(_startBGM,PlayOption.Play);
     }
-
     public override void Update()
     {
         LoginScene();
     }
+    public override void Stop()
+    {
+        Clear();
+        AudioController(Managers.Resource.GetSoundResource(ResourceKeys.newWorldBGM), PlayOption.LoopStop);
+    }
+    #endregion
 
+    #region Flow Part
     private void LoginScene()
     {
         int selectedOption = 0;
@@ -54,8 +45,7 @@ public class Login : Scene
         {
             Clear();
             Renderer.Instance.DrawConsoleBorder();
-            //SetItemBox();
-            SetCursorPosition(1, 35);
+            SetCursorPosition(0, 35);
 
             for (int i = 0; i < options.Length; i++)
             {
@@ -106,7 +96,60 @@ public class Login : Scene
                 break;
         }
     }
+    private void Prologue()
+    {
+        Clear();
+        Renderer.Instance.DrawConsoleBorder();
+        SetCursorPosition(0, 35);
+        WriteInForm("오늘따라 옛날 생각이 난다.", ConsoleColor.White);
+        Thread.Sleep(1500);
+        WriteInForm("언제였더라? 돌아보면 시간이 이렇게도 빠르다.", ConsoleColor.White);
+        Thread.Sleep(3000);
 
+        Clear();
+        Renderer.Instance.DrawConsoleBorder();
+        SetCursorPosition(0, 35);
+        WriteInForm("동기들과 내배캠을 수료할 때만 해도 이런저런 걱정이 많았었는데", ConsoleColor.White);
+        Thread.Sleep(1500);
+        WriteInForm("금방 이렇게 번듯한 회사에 취업하게 될 줄이야..", ConsoleColor.White);
+        Thread.Sleep(3000);
+
+        Clear();
+        Renderer.Instance.DrawConsoleBorder();
+        SetCursorPosition(0, 35);
+        WriteInForm("어라..? 근데 왜 이렇게 어지럽....", ConsoleColor.White);
+        Thread.Sleep(3000);
+
+        AudioController(_newWorldBGM, PlayOption.LoopStart);
+        //사운드 변환
+        Clear();
+        Renderer.Instance.DrawConsoleBorder();
+        SetCursorPosition(0, 35);
+        WriteInForm("잘 살아가던 당신은 알 수 없는 이유로 이상한 세계로 이동해버렸다!", ConsoleColor.Red);
+        Thread.Sleep(3000);
+
+        Clear();
+        Renderer.Instance.DrawConsoleBorder();
+        SetCursorPosition(0, 35);
+        WriteInForm("이곳은 놀랍게도 몬스터가 존재하는 세상.", ConsoleColor.Red);
+        Thread.Sleep(1500);
+        WriteInForm("몬스터를 쓰러트리기 위해서는 코딩으로만 공격할 수 있다고 한다?!", ConsoleColor.Red);
+        Thread.Sleep(3000);
+
+        Clear();
+        Renderer.Instance.DrawConsoleBorder();
+        SetCursorPosition(0, 35);
+        WriteInForm("승리를 위한 코딩!", ConsoleColor.Red);
+        Thread.Sleep(1500);
+        WriteInForm("생존을 위한 디버깅!", ConsoleColor.Red);
+        Thread.Sleep(3000);
+
+        Clear();
+        Renderer.Instance.DrawConsoleBorder();
+        SetCursorPosition(0, 35);
+        WriteInForm("이 험난한 세상에서, 당신은 살아갈 수 있을 것인가...", ConsoleColor.Red);
+        Thread.Sleep(3000);
+    }
     private void NewGame()
     {
         string userID = "";
@@ -324,9 +367,8 @@ public class Login : Scene
         }
         SetInvenItem();
         SaveData();
-        Managers.Scene.LoadScene(SCENE_NAME.BATTLE);
+        Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
     }
-
     private void LoadGame()
     {
 
@@ -346,92 +388,37 @@ public class Login : Scene
         {
             Clear();
             Renderer.Instance.DrawConsoleBorder();
-            SetCursorPosition(1, 1);
+            SetCursorPosition(0, 1);
             WriteInForm("사용하던 아이디를 입력해 주세요.",ConsoleColor.White);
             SetCursorPosition(1, 38);
+            
             if (_player.ID == ReadLine())
             {
                 SetCursorPosition(CursorLeft, CursorTop+1);
                 WriteInForm("사용자를 확인하였습니다.",ConsoleColor.Blue);
                 Thread.Sleep(1500);
+                Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
                 break;
             }
             SetCursorPosition(CursorLeft, CursorTop + 1);
             WriteInForm("데이터가 일치하지 않습니다.", ConsoleColor.Blue);
             Thread.Sleep(1500);
+            WriteInForm("이전 화면으로 돌아가시겠습니까?", ConsoleColor.White);
+            if(ReadKey().Key == ConsoleKey.Enter)
+            {
+                break;
+            }
         }
-        AudioController(_newWorldBGM, PlayOption.Change);
-        Managers.Scene.LoadScene(SCENE_NAME.BATTLE);
 
     }
+    #endregion
 
-    private void Prologue()
-    {
-        Clear();
-        Renderer.Instance.DrawConsoleBorder();
-        SetCursorPosition(0, 35);
-        WriteInForm("오늘따라 옛날 생각이 난다.", ConsoleColor.White);
-        Thread.Sleep(1500);
-        WriteInForm("언제였더라? 돌아보면 시간이 이렇게도 빠르다.", ConsoleColor.White);
-        Thread.Sleep(3000);
-
-        Clear();
-        Renderer.Instance.DrawConsoleBorder();
-        SetCursorPosition(0, 35);
-        WriteInForm("동기들과 내배캠을 수료할 때만 해도 이런저런 걱정이 많았었는데", ConsoleColor.White);
-        Thread.Sleep(1500);
-        WriteInForm("금방 이렇게 번듯한 회사에 취업하게 될 줄이야..",ConsoleColor.White);
-        Thread.Sleep(3000);
-
-        Clear();
-        Renderer.Instance.DrawConsoleBorder();
-        SetCursorPosition(0, 35);
-        WriteInForm("어라..? 근데 왜 이렇게 어지럽....", ConsoleColor.White);
-        Thread.Sleep(3000);
-
-        AudioController(_newWorldBGM, PlayOption.Change);
-        //사운드 변환
-        Clear();
-        Renderer.Instance.DrawConsoleBorder();
-        SetCursorPosition(0, 35);
-        WriteInForm("잘 살아가던 당신은 알 수 없는 이유로 이상한 세계로 이동해버렸다!", ConsoleColor.Red);
-        Thread.Sleep(3000);
-
-        Clear();
-        Renderer.Instance.DrawConsoleBorder();
-        SetCursorPosition(0, 35);
-        WriteInForm("이곳은 놀랍게도 몬스터가 존재하는 세상.", ConsoleColor.Red);
-        Thread.Sleep(1500);
-        WriteInForm("몬스터를 쓰러트리기 위해서는 코딩으로만 공격할 수 있다고 한다?!", ConsoleColor.Red);
-        Thread.Sleep(3000);
-
-        Clear();
-        Renderer.Instance.DrawConsoleBorder();
-        SetCursorPosition(0, 35);
-        WriteInForm("승리를 위한 코딩!", ConsoleColor.Red);
-        Thread.Sleep(1500);
-        WriteInForm("생존을 위한 디버깅!", ConsoleColor.Red);
-        Thread.Sleep(3000);
-
-        Clear();
-        Renderer.Instance.DrawConsoleBorder();
-        SetCursorPosition(0, 35);
-        WriteInForm("이 험난한 세상에서, 당신은 살아갈 수 있을 것인가...",ConsoleColor.Red);
-        Thread.Sleep(3000);
-    }
-    private void WriteInForm(string s,ConsoleColor c)
-    {
-        SetCursorPosition(CursorLeft+1, CursorTop);
-        ForegroundColor = c;
-        WriteLine(s);
-        ResetColor();
-    }
-
+    #region SET PART
     private void SaveData()
     {
+        // 경로 지정 (리소스 폴더와 json파일의 이름을 합침)
         // By. 희성
         // Literals.cs에 저장되야할 json파일의 이름이 지정되었습니다.
-        // 경로 지정 (리소스 폴더와 json파일의 이름을 합침)
         var playerDataPath = Path.Combine(Managers.Resource.GetResourceFolderPath(), Literals.PlayerDataPath);
 
         string playerData = JsonConvert.SerializeObject(_player, Formatting.Indented);        //캐릭터 정보 저장
@@ -441,13 +428,11 @@ public class Login : Scene
 
         //string dungeonData =                  //던전 정보도 저장할 예정.
     }
-
     private void SetItemBox()
     {
         string file = Managers.Resource.GetTextResource(ResourceKeys.ItemList);
         ItemBox = JsonConvert.DeserializeObject<List<Item>>(file);
     }
-
     private void SetInvenItem()
     {
         _player.Inventory.Add(new InventoryItem(ItemBox[0].ItemName, false, false, 1));
@@ -456,22 +441,24 @@ public class Login : Scene
         _player.Inventory.Add(new InventoryItem(ItemBox[3].ItemName, false, false, 1));
         _player.Inventory.Add(new InventoryItem(ItemBox[4].ItemName, false, false, 1));
     }
+    #endregion
 
-    public override void Stop()
+    private void WriteInForm(string s, ConsoleColor c)
     {
-        throw new NotImplementedException();
+        SetCursorPosition(CursorLeft + 1, CursorTop);
+        ForegroundColor = c;
+        WriteLine(s);
+        ResetColor();
     }
 }
 
-
-
+#region ENUM Class
 enum JobSelectOption
 {
     NewGame,
     LoadGame,
     Exit
 }
-
 enum BackgroundSelectOption
 {
     HPup,
@@ -480,7 +467,6 @@ enum BackgroundSelectOption
     Mentalup,
     Goldup
 }
-
 enum WeakSelectOption
 {
     HPdown,
@@ -489,3 +475,4 @@ enum WeakSelectOption
     Mentaldown,
     Golddown
 }
+#endregion

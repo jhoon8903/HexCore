@@ -9,7 +9,6 @@ public class Item
     [JsonPropertyName("Desc")] public string? Desc {  get; set; }
     [JsonPropertyName("Price")] public int Price {  get; set; }
     [JsonPropertyName("ItemOption")] public int ItemOption {  get; set; }
-
 }
 
 public enum ItemType
