@@ -6,7 +6,7 @@ namespace HexaCoreVillage.Dungeon;
 public class Reward : Scene
 {
     public override SCENE_NAME SceneName => SCENE_NAME.REWARD;
-    private static Player player = new Player();
+    private static Player player = Login.Login._player;
     private static string battleResult = "";
     public static Random random = new Random();
     string CurrentDirectory = Directory.GetCurrentDirectory();
@@ -34,18 +34,19 @@ public class Reward : Scene
         }
         if (player.Exp >= limitExp) LevelUp();
         DisplayReward();
-        SaveData();
+        Data.SavePlayerData(player);
+        //SaveData();
     }
 
-    private void SaveData()
-    {
-        var playerDataPath = Path.Combine(Managers.Resource.GetResourceFolderPath(), Literals.PlayerDataPath);
+    //private void SaveData()
+    //{
+    //    var playerDataPath = Path.Combine(Managers.Resource.GetResourceFolderPath(), Literals.PlayerDataPath);
 
-        string playerData = JsonConvert.SerializeObject(player, Formatting.Indented);        //캐릭터 정보 저장
-        File.WriteAllText(playerDataPath, playerData);
+    //    string playerData = JsonConvert.SerializeObject(player, Formatting.Indented);        //캐릭터 정보 저장
+    //    File.WriteAllText(playerDataPath, playerData);
 
-        //string dungeonData =                  //던전 정보도 저장할 예정.
-    }
+    //    //string dungeonData =                  //던전 정보도 저장할 예정.
+    //}
 
     private static void DisplayReward()
     {
