@@ -344,11 +344,11 @@ public class Store : Scene
                             if (_player.Inventory[i].ItemName == itemdata[j].ItemName)
                             {
                                 SetCursorPosition(70, 12 + i);
-                                Write($"{itemdata[i].Type}");
+                                Write($"{itemdata[j].Type}");
                                 SetCursorPosition(90, 12 + i);
-                                Write($"{itemdata[i].ItemOption}");
+                                Write($"{itemdata[j].ItemOption}");
                                 SetCursorPosition(110, 12 + i);
-                                Write($"{itemdata[i].Price}");
+                                Write($"{itemdata[j].Price}");
                             }
                         }
                         ResetColor();
@@ -359,12 +359,18 @@ public class Store : Scene
                     {
                         SetCursorPosition(50, 12 + i);
                         Write($"-  {_player.Inventory[i].ItemName}");
-                        SetCursorPosition(70, 12 + i);
-                        Write($"{itemdata[i].Type}");
-                        SetCursorPosition(90, 12 + i);
-                        Write($"{itemdata[i].ItemOption}");
-                        SetCursorPosition(110, 12 + i);
-                        Write($"{itemdata[i].Price}");
+                        for (int j = 0; j < itemdata.Count; j++)
+                        {
+                            if (_player.Inventory[i].ItemName == itemdata[j].ItemName)
+                            {
+                                SetCursorPosition(70, 12 + i);
+                                Write($"{itemdata[j].Type}");
+                                SetCursorPosition(90, 12 + i);
+                                Write($"{itemdata[j].ItemOption}");
+                                SetCursorPosition(110, 12 + i);
+                                Write($"{itemdata[j].Price}");
+                            }
+                        }
                     }
                 }
             }
