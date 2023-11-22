@@ -15,12 +15,11 @@ public class Reward : Scene
 
     public override void Start()
     {
-
+        Clear();
         // 초기화 해주는 부분,
         // 아래 부분 따로 메서드 선언 후 분리,
         // 눈에 띄지 않는 부분
         // 파일들 json 으로 저장하기 ?? 어떻게, login.cs의 SaveData()를 사용?
-        Clear();
         if (Data.BattleSuccess == true)
         {
             SuccessReward();            
@@ -33,31 +32,39 @@ public class Reward : Scene
             }
         }
         if (player.Exp >= limitExp) LevelUp();
-        SaveData();
         DisplayReward();
+        SaveData();
+    }
+
+    private void SaveData()
+    {
+        string playerData = JsonConvert.SerializeObject(player, Formatting.Indented);        //캐릭터 정보 저장
+        File.WriteAllText(CurrentDirectory + ".\\savePlayer.json", playerData);
+
+        //string dungeonData =                  //던전 정보도 저장할 예정.
     }
 
     private static void DisplayReward()
     {
-        SetCursorPosition(85, 20);
-        WriteLine("여긴 리워드다!!");
-        SetCursorPosition(85, 22);
+        SetCursorPosition(45, 20);
+        WriteLine("전투 결과입니다.");
+        SetCursorPosition(45, 22);
         Write($"디버그 결과는 : {battleResult} 입니다!");
 
         Renderer.Instance.DrawConsoleBorder();
 
         WriteLine();
-        SetCursorPosition(85, 23);
+        SetCursorPosition(45, 23);
         WriteLine($"플레이어의 골드는 {player.Gold}G입니다.");
-        SetCursorPosition(85, 24);
+        SetCursorPosition(45, 24);
         WriteLine($"플레이어의 현재 상태는");
-        SetCursorPosition(85, 25);
+        SetCursorPosition(45, 25);
         WriteLine($"플레이어 HP : {Battle.CurrentHp}/{player.HP}");
-        SetCursorPosition(85, 26);
+        SetCursorPosition(45, 26);
         WriteLine($"플레이어 Metal : {Battle.CurrentMental}/{player.Mental}");
-        SetCursorPosition(85, 27);
+        SetCursorPosition(45, 27);
         WriteLine($"플레이어 Exp : {player.Exp}");
-        SetCursorPosition(85, 28);
+        SetCursorPosition(45, 28);
         WriteLine($"플레이어 레벨 : {player.Level}");
         Renderer.Instance.DrawConsoleBorder();
     }
@@ -79,9 +86,9 @@ public class Reward : Scene
 
     private static void LevelUp()
     {
-        SetCursorPosition(85, 10);
+        SetCursorPosition(45, 10);
         WriteLine("!!! 레벨업 !!!");
-        SetCursorPosition(85, 11);
+        SetCursorPosition(45, 11);
         Write($"현재 레벨 {player.Level}에서 ");
 
         player.Exp -= limitExp;
@@ -89,9 +96,9 @@ public class Reward : Scene
         player.Level += 1;
 
         WriteLine($"레벨 {player.Level}로 올랐습니다.");
-        SetCursorPosition(85, 12);
+        SetCursorPosition(45, 12);
         WriteLine($"현제 다음 레벨업을 하기 위한 필요 경험치 수는 {limitExp - player.Exp} 가 필요합니다.");
-        SetCursorPosition(85, 13);
+        SetCursorPosition(45, 13);
         WriteLine($"LimitExp : {limitExp}, currentExp: {player.Exp}");
         // 일정 경험치 한계 이상이 되면 플레이어의 레벨을 업해야 한다
         // 그러기 위해선 플레이어 정보가 담긴 Json 파일에 접근해서 수정해야 한다
@@ -107,21 +114,11 @@ public class Reward : Scene
         // 아니면 그냥 Readline을 Start에 때려 박아서 원하는 술자를 입력한다던가?
     }
 
-    private void SaveData()
-    {
-        string playerData = JsonConvert.SerializeObject(player, Formatting.Indented);        //캐릭터 정보 저장
-        File.WriteAllText(CurrentDirectory + ".\\savePlayer.json", playerData);
-
-        //string dungeonData =                  //던전 정보도 저장할 예정.
-    }
-
-
     /// <summary>
     /// 이 메서드는 리워드 적용 후 씬 고르기다.
     /// </summary>
     private static void ChooseScene()
     {
-        Clear();
         CursorVisible = false;
         int index = 0;
         int totalMenuOption = 2;
@@ -129,17 +126,17 @@ public class Reward : Scene
 
         while (true)
         {
-            SetCursorPosition(40, 10);
-            WriteLine("[앞으로 무얼 하시겠습니까?]\n");
-
+            Clear();
+            SetCursorPosition(45, 10);
+            Write("[앞으로 무얼 하시겠습니까?]\n");
             for (int i = 0; i < totalMenuOption; i++)
             {
-                SetCursorPosition(40, 12 + i);
                 if (i == index)
                 {
                     ForegroundColor = ConsoleColor.Green;
-                }                
-                WriteLine($"\n{options[i]}");
+                }
+                SetCursorPosition(45, 12+i);
+                Write($"{options[i]}");
                 ResetColor();
             }
             Renderer.Instance.DrawConsoleBorder();
@@ -148,10 +145,10 @@ public class Reward : Scene
             switch (key.Key)
             {
                 case ConsoleKey.UpArrow:
-                    index = (index - 1 + index) % index;
+                    index = (index - 1 + totalMenuOption) % totalMenuOption;
                     break;
                 case ConsoleKey.DownArrow:
-                    index = (index + 1) % index;
+                    index = (index + 1) % totalMenuOption;
                     break;
                 case ConsoleKey.Enter:
                     if (index == 0)
