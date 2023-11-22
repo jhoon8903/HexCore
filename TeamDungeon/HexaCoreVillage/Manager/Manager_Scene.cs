@@ -38,7 +38,6 @@ public class Manager_Scene
         // switch Lambda, _currentScene에 SCENE_NAME에 해당하는 SCENE으로 동적 할당
         _currentScene = sceneKey switch
         {
-            SCENE_NAME.TITLE => new TitleScene(),
             SCENE_NAME.LOGIN => new LoginScene(),
             SCENE_NAME.LOBBY => new LobbyScene(),
             SCENE_NAME.STATUS => new StatusScene(),

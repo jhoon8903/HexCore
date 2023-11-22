@@ -195,7 +195,7 @@ public class Lobby : Scene
             case LobbySelectMenu.Rest:
                 break;
             case LobbySelectMenu.GoTitle:
-                Managers.Scene.LoadScene(SCENE_NAME.TITLE);
+                Managers.Scene.LoadScene(SCENE_NAME.LOGIN);
                 break;
             case LobbySelectMenu.Exit:
                 Clear();
