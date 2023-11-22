@@ -105,46 +105,47 @@ public class Login : Scene
         Managers.UI.PrintMsgAlignCenter("오늘따라 옛날 생각이 난다.",35);
         Thread.Sleep(1500);
         Managers.UI.PrintMsgAlignCenter("언제였더라? 돌아보면 시간이 이렇게도 빠르다.", 36);
-        Thread.Sleep(3000);
+        Thread.Sleep(2500);
+        
 
         Clear();
         Renderer.Instance.DrawConsoleBorder();
         Managers.UI.PrintMsgAlignCenter("동기들과 내배캠을 수료할 때만 해도 이런저런 걱정이 많았었는데",35);
         Thread.Sleep(1500);
         Managers.UI.PrintMsgAlignCenter("금방 이렇게 번듯한 회사에 취업하게 될 줄이야..",36);
-        Thread.Sleep(3000);
+        Thread.Sleep(2500);
 
         Clear();
         Renderer.Instance.DrawConsoleBorder();
         Managers.UI.PrintMsgAlignCenter("어라..? 근데 왜 이렇게 어지럽....", 35);
-        Thread.Sleep(3000);
+        Thread.Sleep(2500);
 
         AudioController(_newWorldBGM, PlayOption.LoopStart);
         //사운드 변환
         Clear();
         Renderer.Instance.DrawConsoleBorder();
         Managers.UI.PrintMsgAlignCenter("잘 살아가던 당신은 알 수 없는 이유로 이상한 세계로 이동해버렸다!", 35,ConsoleColor.Red);
-        Thread.Sleep(3000);
+        Thread.Sleep(2500);
 
         Clear();
         Renderer.Instance.DrawConsoleBorder();
         Managers.UI.PrintMsgAlignCenter("이곳은 놀랍게도 몬스터가 존재하는 세상.", 35,ConsoleColor.Red);
         Thread.Sleep(1500);
         Managers.UI.PrintMsgAlignCenter("몬스터를 쓰러트리기 위해서는 코딩으로만 공격할 수 있다고 한다?!", 36,ConsoleColor.Red);
-        Thread.Sleep(3000);
+        Thread.Sleep(2500);
 
         Clear();
         Renderer.Instance.DrawConsoleBorder();
         Managers.UI.PrintMsgAlignCenter("승리를 위한 코딩!", 35,ConsoleColor.Red);
         Thread.Sleep(1500);
         Managers.UI.PrintMsgAlignCenter("생존을 위한 디버깅!", 36,ConsoleColor.Red);
-        Thread.Sleep(3000);
+        Thread.Sleep(2500);
 
         Clear();
         Renderer.Instance.DrawConsoleBorder();
         SetCursorPosition(0, 35);
         Managers.UI.PrintMsgAlignCenter("이 험난한 세상에서, 당신은 살아갈 수 있을 것인가...", 35,ConsoleColor.Red);
-        Thread.Sleep(3000);
+        Thread.Sleep(2500);
     }
     private void NewGame()
     {
@@ -173,20 +174,40 @@ public class Login : Scene
         string? userName;
 
         Prologue();
-
-        Clear();
-        Renderer.Instance.DrawConsoleBorder();
-        Managers.UI.PrintMsgAlignCenter("사용할 아이디를 입력해 주세요.",2);
-        SetCursorPosition(90, 35);
-        userID = ReadLine();
-
-        Clear();
-        Renderer.Instance.DrawConsoleBorder();
-        Managers.UI.PrintMsgAlignCenter("당신은 이 헥사코어 안에서 새로운 코드명으로 불리게 될 것입니다.",2);
-        Managers.UI.PrintMsgAlignCenter("당신을 드러낼 코드네임을 정해주세요.", 3);
-        SetCursorPosition(90, 35);
-        userName = ReadLine();
-
+        while (KeyAvailable)
+        {
+            ReadKey(intercept: true);
+        }
+        while (true)
+        {
+            Clear();
+            Renderer.Instance.DrawConsoleBorder();
+            Managers.UI.PrintMsgAlignCenter("사용할 아이디를 입력해 주세요.", 2);
+            SetCursorPosition(90, 35);
+            CursorVisible = true;
+            string nameID = ReadLine();
+            if (nameID != "")
+            {
+                userID = nameID;
+                break;
+            }
+        }
+        while (true)
+        {
+            Clear();
+            Renderer.Instance.DrawConsoleBorder();
+            Managers.UI.PrintMsgAlignCenter("당신은 이 헥사코어 안에서 새로운 코드명으로 불리게 될 것입니다.", 2);
+            Managers.UI.PrintMsgAlignCenter("당신을 드러낼 코드네임을 정해주세요.", 3);
+            SetCursorPosition(90, 35);
+            CursorVisible = true;
+            string name= ReadLine();
+            if(name != "")
+            {
+                userName = name;
+                break;
+            }
+        }
+        
         while (true)
         {
             Clear();
@@ -207,6 +228,7 @@ public class Login : Scene
                 }
             }
             ConsoleKeyInfo keyInfo = ReadKey();
+            CursorVisible = false;
             userInput.Add(keyInfo.Key);
             if (userInput.Count > 6 && jobOptions.Count == 5)
             {
@@ -379,6 +401,7 @@ public class Login : Scene
 
         if (_isFlagLoadScene) return;
         _player = JsonConvert.DeserializeObject<Player>(loadData);
+        TreatControlCAsInput = true;
 
         while (true)
         {
@@ -409,19 +432,13 @@ public class Login : Scene
     #endregion
 
     #region SET PART
-    private void SaveData()
+    public void SaveData()
     {
         // 경로 지정 (리소스 폴더와 json파일의 이름을 합침)
-        // By. 희성
-        // Literals.cs에 저장되야할 json파일의 이름이 지정되었습니다.
         var playerDataPath = Path.Combine(Managers.Resource.GetResourceFolderPath(), Literals.PlayerDataPath);
-
         string playerData = JsonConvert.SerializeObject(_player, Formatting.Indented);        //캐릭터 정보 저장
         File.WriteAllText(playerDataPath, playerData);
 
-        //File.WriteAllText(UtilityPath+"/savePlayer.json", playerData);
-
-        //string dungeonData =                  //던전 정보도 저장할 예정.
     }
     private void SetItemBox()
     {
@@ -437,14 +454,6 @@ public class Login : Scene
         _player.Inventory.Add(new InventoryItem(ItemBox[4].ItemName, false, false, 1));
     }
     #endregion
-
-    private void WriteInForm(string s, ConsoleColor c)
-    {
-        SetCursorPosition(CursorLeft + 2, CursorTop);
-        ForegroundColor = c;
-        WriteLine(s);
-        ResetColor();
-    }
 }
 
 #region ENUM Class
