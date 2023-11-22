@@ -319,20 +319,22 @@ public class Store : Scene
     private static void StoreSellScene()
     {
 
-        int selectOtion = 0;
-        string[] storeOption = { };
+        int selectOption = 0;
+        string[] storeOption = new string[_player.Inventory.Count];
+
+        for (int i = 0; i < _player.Inventory.Count; i++)
+        {
+            storeOption[i] = _player.Inventory[i].ItemName;
+        }
 
         while (true)
         {
-            for (int i = 0; i < _player.Inventory.Count; i++)
-            {
-                storeOption = _player.Inventory[i].ItemName.Split(",");
-            }
             if (_player.Inventory.Count > 0)
             {
                 for (int i = 0; i < _player.Inventory.Count; i++)
                 {
-                    if (i == selectOtion)
+
+                    if (i == selectOption)
                     {
                         ForegroundColor = ConsoleColor.Blue;
                         SetCursorPosition(50, 12 + i);
@@ -376,11 +378,11 @@ public class Store : Scene
             ConsoleKeyInfo selectKey = ReadKey();
             if (selectKey.Key == ConsoleKey.UpArrow)
             {
-                selectOtion = (selectOtion == 0) ? storeOption.Length - 1 : selectOtion - 1;
+                selectOption = (selectOption == 0) ? storeOption.Length - 1 : selectOption - 1;
             }
             else if (selectKey.Key == ConsoleKey.DownArrow)
             {
-                selectOtion = (selectOtion == storeOption.Length - 1) ? 0 : 1;
+                selectOption = (selectOption == storeOption.Length - 1) ? 0 : selectOption + 1;
             }
             else if(selectKey.Key == ConsoleKey.Escape)
             {
@@ -397,13 +399,13 @@ public class Store : Scene
                     // 인벤 - 선택아이템 Remove
                     for (int j = 0; j < itemdata.Count; j++)
                     {
-                        if (_player.Inventory[selectOtion].ItemName == itemdata[j].ItemName)
+                        if (_player.Inventory[selectOption].ItemName == itemdata[j].ItemName)
                         {
                             _player.Gold += itemdata[j].Price;
                             Gold();
                         }
                     }
-                    _player.Inventory.Remove(_player.Inventory[selectOtion]);
+                    _player.Inventory.Remove(_player.Inventory[selectOption]);
                     SetCursorPosition(50, 24);
                     WriteLine("판매가 완료되었습니다.");
                     Data.SavePlayerData(_player);
@@ -425,7 +427,7 @@ public class Store : Scene
                 break;
             }
         }
-        switch ((StoreSelect)selectOtion)
+        switch ((StoreSelect)selectOption)
         {
             case StoreSelect.Exit:
                 StoreScene();
@@ -433,6 +435,7 @@ public class Store : Scene
                 break;
         }
     }
+
     private static void CreativeUI()
     {
         Clear();
