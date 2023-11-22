@@ -33,19 +33,19 @@ namespace HexaCoreVillage.Dungeon
 
             SetCursorPosition(4, CursorTop + 2);
             ResetColor();
-            Write($"[ {Battle.Player!.NickName} 상태 ]");
+            Write($"[ {LoginPlayer!.NickName} 상태 ]");
 
             SetCursorPosition(4, CursorTop + 2);
-            Write($"레벨 : {Battle.Player.Level}");
+            Write($"레벨 : {LoginPlayer.Level}");
 
             SetCursorPosition(4, CursorTop + 1);
-            Write($"체력 : {CurrentHp} / {Battle.Player.HP}");
+            Write($"체력 : {CurrentHp} / {LoginPlayer.HP}");
 
             SetCursorPosition(4, CursorTop + 1);
-            Write($"타이핑 속력 (DMG) : {Battle.Player.TypingSpeed}");
+            Write($"타이핑 속력 (DMG) : {LoginPlayer.TypingSpeed}");
 
             SetCursorPosition(4, CursorTop + 1);
-            Write($"C# 언어 능력 (DEF)  : {Battle.Player.C}");
+            Write($"C# 언어 능력 (DEF)  : {LoginPlayer.C}");
 
             DividerLine(1,CursorTop + 2, ConsoleColor.Yellow);
         }
@@ -118,9 +118,15 @@ namespace HexaCoreVillage.Dungeon
         {
             // 데미지 적용 부분 수정 필요
             SetCursorPosition(50, 10);
-            int progressIncrease = CurrentBug.SolutionType == Solution ? Battle.Random.Next(1, 20) : Battle.Random.Next(1, 10);
+            if (LoginPlayer != null)
+            {
+                int damage = LoginPlayer.TypingSpeed + LoginPlayer.BonusDmg;
+                int minDamage = damage / 3;
+                int randomDamage = Battle.Random.Next(minDamage, damage);
+                int progressIncrease = CurrentBug.SolutionType == Solution ? randomDamage * 2 : randomDamage;
 
-            CurrentBug.BugProgress += progressIncrease;
+                CurrentBug.BugProgress += progressIncrease;
+            }
 
             if (CurrentBug.BugProgress >= 100)
             {

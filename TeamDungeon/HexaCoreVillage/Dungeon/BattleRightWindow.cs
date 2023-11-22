@@ -103,8 +103,16 @@ namespace HexaCoreVillage.Dungeon
             ClearLine(BattleCursorTop);
             SetCursorPosition(50, BattleCursorTop);
             ForegroundColor = ConsoleColor.Red;
-            int diff = Battle.Random.Next(1,CurrentBug.BugDifficulty+1);
-            int comp = Battle.Random.Next(1,CurrentBug.BugComplexity+1);
+            int playerDef = LoginPlayer.C + LoginPlayer.BonusDef;
+            int diff = CurrentBug.BugDifficulty - (playerDef / 5);
+            int playerMental = LoginPlayer.Mental;
+            int comp = CurrentBug.BugComplexity - (playerMental / 5);
+            if (diff <= 0) {
+                diff = 1;
+            }
+            if (comp <= 0) {
+                comp = 1;
+            }
             Write($"디버깅 어려움과 복잡도로 인해서  플레이어의 체력이 {diff}, 멘탈이 {comp} 감소 했습니다.");
             ResetColor();
             BattleCursorTop++;
@@ -140,9 +148,9 @@ namespace HexaCoreVillage.Dungeon
           
             // 체력 바 그리기
             SetCursorPosition(50, 31);
-            Write($"[ 체력 : {CurrentHp:D3} / {Battle.Player!.HP:D3} ]  ");
+            Write($"[ 체력 : {CurrentHp:D3} / {Battle.LoginPlayer!.HP:D3} ]  ");
             int staminaBlocks = CurrentHp;
-            for (int i = 0; i < Battle.Player.HP; i++)
+            for (int i = 0; i < Battle.LoginPlayer.HP; i++)
             {
                 BackgroundColor = i < staminaBlocks ? 
                     staminaBlocks > 60 ? ConsoleColor.DarkGreen :
@@ -155,9 +163,9 @@ namespace HexaCoreVillage.Dungeon
 
             // 멘탈 바 그리기
             SetCursorPosition(50, 32);
-            Write($"[ 멘탈 : {CurrentHp:D3} / {Battle.Player.Mental:D3} ]  ");
+            Write($"[ 멘탈 : {CurrentHp:D3} / {Battle.LoginPlayer.Mental:D3} ]  ");
             int mentalBlock = CurrentMental;
-            for (int i = 0; i < Battle.Player.Mental; i++)
+            for (int i = 0; i < Battle.LoginPlayer.Mental; i++)
             {
                 BackgroundColor = i < mentalBlock ? 
                     mentalBlock > 60 ? ConsoleColor.Cyan :
@@ -170,7 +178,7 @@ namespace HexaCoreVillage.Dungeon
 
             // 디버깅 추가 확률
             SetCursorPosition(50, 34);
-            Write($"[ 디버깅 추가 성능 : {Battle.Player.BonusDmg} ]  [ 언어 추가 이해력 : {Battle.Player.BonusDef} ]");
+            Write($"[ 디버깅 추가 성능 : {Battle.LoginPlayer.BonusDmg} ]  [ 언어 추가 이해력 : {Battle.LoginPlayer.BonusDef} ]");
           
             // 멘트
             SetCursorPosition(50, 36);

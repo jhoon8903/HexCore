@@ -25,15 +25,15 @@ namespace HexaCoreVillage.Dungeon
         #endregion
 
         #region Player Variable
-        public static Player? Player { get; private set; }  // 더미 플레이어 데이터 
+        public static Player? LoginPlayer { get; private set; }  // 더미 플레이어 데이터 
         public static int CurrentHp;    // 현재 플레이어 체력
         public static int CurrentMental;    // 현재 플레이어 멘탈
         #endregion
 
         #region BUG Variable
         private static List<Bug>? _bugList = new List<Bug>();   // Json 에서 나온 버그 리스트를 담는 변수
-        private static List<Bug>? _selectedBugs;    // 선택되어 화면에 출력되기 위한 버그 리스트
-        public static int CurrentBugIndex { get; set; } // 현재 디버깅을 진행해야하는 버그 인덱스
+        private static List<Bug>? _selectedBugs = new List<Bug>();    // 선택되어 화면에 출력되기 위한 버그 리스트
+        public static int CurrentBugIndex { get; set; } = new int();// 현재 디버깅을 진행해야하는 버그 인덱스
         public static List<Bug> DebuggingBugs { get; set; } = new List<Bug>();  // 현재 진행중인 버그의 리스트
         public static Bug CurrentBug { get; set; } = new Bug(); // 현재 디버깅 진행중인 버그 인스턴스
         #endregion
@@ -56,7 +56,7 @@ namespace HexaCoreVillage.Dungeon
             LoadBugs();
             LoadLoggingText();
             AudioPlayer.AudioController(Managers.Resource.GetSoundResource(ResourceKeys.BattleBGM), AudioPlayer.PlayOption.LoopStart);
-            AudioPlayer.AudioVolume(3);
+            AudioPlayer.AudioVolume(15);
         }
         
         /// <summary>
@@ -64,9 +64,12 @@ namespace HexaCoreVillage.Dungeon
         /// </summary>
         private static void InitializePlayer()
         {
-            Player = new Player { BugPercentage = 15 };
-            CurrentHp = Player.CurrentHp;
-            CurrentMental = Player.CurrentMental;
+            LoginPlayer = LoginScene._player;
+            Data.BattleSuccess = false;
+            CurrentBugIndex = 0;
+            CurrentHp = LoginPlayer.CurrentHp;
+            CurrentMental = LoginPlayer.CurrentMental;
+            LoginPlayer.BugPercentage = 10;
         }
 
         /// <summary>
@@ -94,9 +97,9 @@ namespace HexaCoreVillage.Dungeon
         ///  상속 받아 반복 실행 되는 Update 
         /// </summary>
         public override void Update()
-        {
+        { 
             Compiling();
-           DebuggingList();
+            DebuggingList();
             if (DebuggingBugs != null)
             {
                 Debugging();
@@ -131,7 +134,7 @@ namespace HexaCoreVillage.Dungeon
                     // 초당 1개씩 Dot을 추가
                     Write("\tCompiling" + new string('.', i));
         
-                    if (Random.Next(0,100) <=  Player!.BugPercentage)
+                    if (Random.Next(0,100) <=  LoginPlayer!.BugPercentage)
                     {
                         FoundBugs();
                         return;
@@ -149,7 +152,7 @@ namespace HexaCoreVillage.Dungeon
         private static void FoundBugs()
         {
             _selectedBugs = new List<Bug>();
-            int bugsCount = Player!.Level switch
+            int bugsCount = LoginPlayer!.Level switch
             {
                 1 => Random.Next(1, 4),
                 2 =>  Random.Next(1, 5),
@@ -174,7 +177,7 @@ namespace HexaCoreVillage.Dungeon
                     int index = Random.Next(_bugList.Count);
                     selectedBug = _bugList[index];
                 }
-                while (Player.Level <= 5 && selectedBug.BugDifficulty > 5);
+                while (LoginPlayer.Level <= 5 && selectedBug.BugDifficulty > 5);
                 _selectedBugs.Add(selectedBug);
                 Data.BugCount = _selectedBugs.Count;
             }
@@ -185,6 +188,7 @@ namespace HexaCoreVillage.Dungeon
         /// </summary>
         private static void DebuggingList()
         {
+            DebuggingBugs = null;
             CursorVisible = false;
             Bug selectedBug = _selectedBugs![Random.Next(_selectedBugs.Count)];
             List<Bug> selectedBugs = new List<Bug> { selectedBug };
@@ -195,11 +199,11 @@ namespace HexaCoreVillage.Dungeon
             {
                 Clear();
                 WriteLine("\n\n\t[ 디버깅 - 버그 확인 ]\n");
-                WriteLine($"\t[ {Player!.NickName}의 상태 ]"); 
-                WriteLine($"\t레벨 : {Player.Level}");
-                WriteLine($"\t체력 : {Player.CurrentHp} / {Player.HP}"); 
-                WriteLine($"\t디버깅 능력 : {Player.TypingSpeed}");
-                WriteLine($"\t버그대응 능력 : {Player.C}\n"); 
+                WriteLine($"\t[ {LoginPlayer!.NickName}의 상태 ]"); 
+                WriteLine($"\t레벨 : {LoginPlayer.Level}");
+                WriteLine($"\t체력 : {LoginPlayer.CurrentHp} / {LoginPlayer.HP}"); 
+                WriteLine($"\t디버깅 능력 : {LoginPlayer.TypingSpeed}");
+                WriteLine($"\t버그대응 능력 : {LoginPlayer.C}\n"); 
                 Write("\t");
                 BackgroundColor = ConsoleColor.Red;
                 ForegroundColor = ConsoleColor.Black;
