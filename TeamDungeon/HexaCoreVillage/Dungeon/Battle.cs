@@ -30,13 +30,6 @@ namespace HexaCoreVillage.Dungeon
         public static int CurrentMental;    // 현재 플레이어 멘탈
         #endregion
 
-        #region FILEPATH Variable
-        private static readonly string BaseDirectory = AppDomain.CurrentDomain.BaseDirectory;   // 기본 JSON 파일에 대한 FILE PATH
-        private static readonly string BugFilePath = Path.GetFullPath(Path.Combine(BaseDirectory, "..", "..", "..", "..", "..", "TeamDungeon", "HexaCoreVillage", "Utility", "BugList.json"));
-        private static readonly string LoggingFilePath = Path.GetFullPath(Path.Combine(BaseDirectory, "..", "..", "..",
-            "..", "..", "TeamDungeon", "HexaCoreVillage", "Utility", "DebugText.json"));
-        #endregion
-
         #region BUG Variable
         private static List<Bug>? _bugList = new List<Bug>();   // Json 에서 나온 버그 리스트를 담는 변수
         private static List<Bug>? _selectedBugs;    // 선택되어 화면에 출력되기 위한 버그 리스트
@@ -81,7 +74,6 @@ namespace HexaCoreVillage.Dungeon
         /// </summary>
         private static void LoadBugs()
         {
-            using StreamReader json = new(BugFilePath, Encoding.UTF8);
             string file = Managers.Resource.GetTextResource(ResourceKeys.BugList);
             _bugList = JsonConvert.DeserializeObject<List<Bug>>(file);
         } 
@@ -91,8 +83,7 @@ namespace HexaCoreVillage.Dungeon
         /// </summary>
         private static void LoadLoggingText()
         {
-            using StreamReader json = new(LoggingFilePath, Encoding.UTF8);
-            string file = json.ReadToEnd();
+            string file = Managers.Resource.GetTextResource(ResourceKeys.DebugText);
             LoggingText = JsonConvert.DeserializeObject<List<LoggingText>>(file);
         }
         #endregion

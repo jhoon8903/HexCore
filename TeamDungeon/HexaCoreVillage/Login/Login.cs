@@ -16,6 +16,12 @@ public class Login : Scene
 
     public static List<Item> ItemBox = new List<Item>();
     private static Player _player = null;
+
+    /* Audio Resources */
+    private string _newWorldBGM = Managers.Resource.GetSoundResource(ResourceKeys.newWorldBGM);
+    private string _startBGM = Managers.Resource.GetSoundResource(ResourceKeys.startBGM);
+
+
     public override void Start()
     {
         SetItemBox();
@@ -311,7 +317,17 @@ public class Login : Scene
 
     private void LoadGame()
     {
-        string loadData = Managers.Resource.GetTextResource(ResourceKeys.SavePlayer);         //캐릭터 정보 불러오기
+
+        // string loadData = File.ReadAllText(UtilityPath + "/savePlayer.json");         //캐릭터 정보 불러오기
+
+        /* By. 희성
+         * 기존 내용을 리소스매니저가 대체하게 했습니다. */
+        string loadData = Managers.Resource.GetTextResource(ResourceKeys.SavePlayer);
+        // 데이터가 존재하지 않을경우
+        if (loadData == string.Empty)
+        {
+            NewGame();
+        }
         _player = JsonConvert.DeserializeObject<Player>(loadData);
 
         while (true)
@@ -337,9 +353,8 @@ public class Login : Scene
             WriteInForm("데이터가 일치하지 않습니다.", ConsoleColor.Blue);
             Thread.Sleep(1500);
         }
-        AudioController(Managers.Resource.GetSoundResource(ResourceKeys.startBGM), PlayOption.Stop);
-        AudioController(Managers.Resource.GetSoundResource(ResourceKeys.newWorldBGM), PlayOption.LoopStart);
-        Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
+        AudioController(_newWorldBGM, PlayOption.Change);
+        Managers.Scene.LoadScene(SCENE_NAME.BATTLE);
 
     }
 
@@ -366,8 +381,8 @@ public class Login : Scene
         SetCursorPosition(0, 35);
         WriteInForm("어라..? 근데 왜 이렇게 어지럽....", ConsoleColor.White);
         Thread.Sleep(3000);
-        AudioController(Managers.Resource.GetSoundResource(ResourceKeys.startBGM), PlayOption.Stop);
-        AudioController(Managers.Resource.GetSoundResource(ResourceKeys.newWorldBGM), PlayOption.LoopStart);
+
+        AudioController(_newWorldBGM, PlayOption.Change);
         //사운드 변환
         Clear();
         Renderer.Instance.DrawConsoleBorder();
@@ -407,8 +422,15 @@ public class Login : Scene
 
     private void SaveData()
     {
+        // By. 희성
+        // Literals.cs에 저장되야할 json파일의 이름이 지정되었습니다.
+        // 경로 지정 (리소스 폴더와 json파일의 이름을 합침)
+        var playerDataPath = Path.Combine(Managers.Resource.GetResourceFolderPath(), Literals.PlayerDataPath);
+
         string playerData = JsonConvert.SerializeObject(_player, Formatting.Indented);        //캐릭터 정보 저장
-        File.WriteAllText(UtilityPath+"/savePlayer.json", playerData);
+        File.WriteAllText(playerDataPath, playerData);
+
+        //File.WriteAllText(UtilityPath+"/savePlayer.json", playerData);
 
         //string dungeonData =                  //던전 정보도 저장할 예정.
     }
