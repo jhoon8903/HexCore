@@ -31,6 +31,7 @@ public class Manager_Scene
             _currentScene = null;
         }
 
+        this.StreamClear();
         this.FakeLoading();
 
         // switch Lambda, _currentScene에 SCENE_NAME에 해당하는 SCENE으로 동적 할당
@@ -46,8 +47,20 @@ public class Manager_Scene
             _ => throw new ArgumentException("Invalid [SceneKey]")
         };
 
+        // Buffer Discard
+        
+
         // Change the 'scene' and initalize(Start)
         _currentScene.Start();
+    }
+
+    private void StreamClear()
+    {
+        while (Console.KeyAvailable)
+        {
+            Console.ReadKey(false);
+            Console.Clear();
+        }
     }
     #endregion
 
