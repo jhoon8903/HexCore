@@ -31,6 +31,8 @@ public class Manager_Scene
             _currentScene = null;
         }
 
+        this.FakeLoading();
+
         // switch Lambda, _currentScene에 SCENE_NAME에 해당하는 SCENE으로 동적 할당
         _currentScene = sceneKey switch
         {
@@ -60,7 +62,26 @@ public class Manager_Scene
             ConsoleColor color;
 
             float progress = (float)i / progressTotal;
+            int progressWidth = (int)(Renderer.FixedXColumn * 0.7);
+            int progressLength = (int)(progressWidth * progress);
+
+            string progressMin = new string('#', progressLength);
+            string progressMax = new string('=', progressWidth - progressLength);
+            string progressBar = progressMin + progressMax;
+            string loadingText = $"[ {progressBar} ] [{i * 10} %]";
+
+            if (i >= 0 && i < 4)
+                color = ConsoleColor.Red;
+            else if (i >= 4 && i < 8)
+                color = ConsoleColor.Yellow;
+            else
+                color = ConsoleColor.Green;
+
+            Managers.UI.PrintMsgAlignCenterByCenter(loadingText, color);
+            Thread.Sleep(200);
         }
+
+        Clear();
     }
     #endregion
 }
