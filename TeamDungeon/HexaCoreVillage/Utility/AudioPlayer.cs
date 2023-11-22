@@ -4,7 +4,7 @@ namespace HexaCoreVillage.Utility
 {
     public class AudioPlayer
     {
-        public enum PlayOption { Play, Pause, Resume, Stop, Change, LoopStart, LoopStop }
+        public enum PlayOption { Play, Pause, Resume, Stop, Change, LoopStart, LoopStop, SetVolume }
         private static readonly IPlayer _audioPlayer = new NetCoreAudio.Player();
         private static bool _loop = false;
         private static string? _currentFilePath;
@@ -46,6 +46,11 @@ namespace HexaCoreVillage.Utility
                     return;
             }
         }
+
+        public static void AudioVolume(byte volume)
+        {
+            _audioPlayer.SetVolume(volume);
+        }
         
         private static void PlayAudio()
         {
@@ -72,6 +77,17 @@ namespace HexaCoreVillage.Utility
             {
                 PlayAudio();
             }
+        }
+
+        public static void SetupApplicationExitHandling()
+        {
+            AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
+        }
+
+        private static void OnProcessExit(object sender, EventArgs e)
+        {
+            // Stop the audio when the application is exiting
+            StopAudio();
         }
     }
 }
