@@ -10,6 +10,7 @@ namespace HexaCoreVillage.Utility
         BugList,
         DebugText,
         ItemList,
+        SavePlayer,
         // BGMS
         newWorldBGM,
         startBGM,
