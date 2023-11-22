@@ -438,7 +438,6 @@ public class Login : Scene
         var playerDataPath = Path.Combine(Managers.Resource.GetResourceFolderPath(), Literals.PlayerDataPath);
         string playerData = JsonConvert.SerializeObject(_player, Formatting.Indented);        //캐릭터 정보 저장
         File.WriteAllText(playerDataPath, playerData);
-
     }
     private void SetItemBox()
     {

@@ -71,6 +71,39 @@ public class Manager_Resource
             _isComplete = true;
     }
 
+    /// <summary>
+    /// # 리소스를 불러오는 메서드
+    /// </summary>
+    public void LoadTextResource(ResourceKeys key, string path)
+    {
+        try
+        {
+            if (File.Exists(path) && _textResources != null)
+            {
+                string textFile = File.ReadAllText(path);
+                _textResources[key] = textFile;
+            }
+            else
+                Console.WriteLine($"Text resources not found : {key.ToString()}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading text resource : {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// # 플레이어 전용 로드 메서드
+    /// </summary>
+    public void LoadResourcePlayerData()
+    {
+        string path = Managers.Resource.GetResourceFolderPath();
+        string fileName = ResourceKeys.SavePlayer.ToString() + ".json";
+        path = Path.Combine(path, fileName);
+
+        LoadTextResource(ResourceKeys.SavePlayer, path);
+    }
+
     public string GetTextResource(ResourceKeys key)
     {
         if (_textResources?.ContainsKey(key) == true)

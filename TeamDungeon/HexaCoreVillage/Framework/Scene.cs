@@ -19,7 +19,6 @@ public abstract class Scene
 // 추 후 Utility 같은 정적 클래스로 뺄 예정
 public enum SCENE_NAME
 {
-    TITLE,
     LOGIN,
     LOBBY,
     STATUS,
