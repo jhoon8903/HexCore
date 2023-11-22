@@ -46,25 +46,25 @@ public class Reward : Scene
 
     private static void DisplayReward()
     {
-        SetCursorPosition(45, 20);
-        WriteLine("전투 결과입니다.");
-        SetCursorPosition(45, 22);
+        SetCursorPosition(4, 10);
+        WriteLine("[전투 결과입니다]");
+        SetCursorPosition(4, 12);
         Write($"디버그 결과는 : {battleResult} 입니다!");
 
         Renderer.Instance.DrawConsoleBorder();
 
         WriteLine();
-        SetCursorPosition(45, 23);
+        SetCursorPosition(4, 13);
         WriteLine($"플레이어의 골드는 {player.Gold}G입니다.");
-        SetCursorPosition(45, 24);
+        SetCursorPosition(4, 14);
         WriteLine($"플레이어의 현재 상태는");
-        SetCursorPosition(45, 25);
+        SetCursorPosition(4, 15);
         WriteLine($"플레이어 HP : {Battle.CurrentHp}/{player.HP}");
-        SetCursorPosition(45, 26);
+        SetCursorPosition(4, 16);
         WriteLine($"플레이어 Metal : {Battle.CurrentMental}/{player.Mental}");
-        SetCursorPosition(45, 27);
+        SetCursorPosition(4, 17);
         WriteLine($"플레이어 Exp : {player.Exp}");
-        SetCursorPosition(45, 28);
+        SetCursorPosition(4, 18);
         WriteLine($"플레이어 레벨 : {player.Level}");
         Renderer.Instance.DrawConsoleBorder();
     }
@@ -86,9 +86,9 @@ public class Reward : Scene
 
     private static void LevelUp()
     {
-        SetCursorPosition(45, 10);
+        SetCursorPosition(4, 5);
         WriteLine("!!! 레벨업 !!!");
-        SetCursorPosition(45, 11);
+        SetCursorPosition(4, 6);
         Write($"현재 레벨 {player.Level}에서 ");
 
         player.Exp -= limitExp;
@@ -96,9 +96,9 @@ public class Reward : Scene
         player.Level += 1;
 
         WriteLine($"레벨 {player.Level}로 올랐습니다.");
-        SetCursorPosition(45, 12);
+        SetCursorPosition(4, 7);
         WriteLine($"현제 다음 레벨업을 하기 위한 필요 경험치 수는 {limitExp - player.Exp} 가 필요합니다.");
-        SetCursorPosition(45, 13);
+        SetCursorPosition(4, 8);
         WriteLine($"LimitExp : {limitExp}, currentExp: {player.Exp}");
         // 일정 경험치 한계 이상이 되면 플레이어의 레벨을 업해야 한다
         // 그러기 위해선 플레이어 정보가 담긴 Json 파일에 접근해서 수정해야 한다
@@ -127,7 +127,7 @@ public class Reward : Scene
         while (true)
         {
             Clear();
-            SetCursorPosition(45, 10);
+            SetCursorPosition(4, 5);
             Write("[앞으로 무얼 하시겠습니까?]\n");
             for (int i = 0; i < totalMenuOption; i++)
             {
@@ -135,7 +135,7 @@ public class Reward : Scene
                 {
                     ForegroundColor = ConsoleColor.Green;
                 }
-                SetCursorPosition(45, 12+i);
+                SetCursorPosition(4, 7+i);
                 Write($"{options[i]}");
                 ResetColor();
             }
