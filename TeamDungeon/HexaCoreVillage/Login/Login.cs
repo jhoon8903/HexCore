@@ -13,6 +13,8 @@ public class Login : Scene
     public static List<Item> ItemBox = new List<Item>();
     public static Player _player = null;
 
+    private bool _isFlagLoadScene = false;
+
     /* Audio Resources */
     private string _newWorldBGM = Managers.Resource.GetSoundResource(ResourceKeys.newWorldBGM);
     private string _startBGM = Managers.Resource.GetSoundResource(ResourceKeys.startBGM);
@@ -358,6 +360,7 @@ public class Login : Scene
         }
         SetInvenItem();
         SaveData();
+        _isFlagLoadScene = true;
         Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
     }
     private void LoadGame()
@@ -373,6 +376,8 @@ public class Login : Scene
         {
             NewGame();
         }
+
+        if (_isFlagLoadScene) return;
         _player = JsonConvert.DeserializeObject<Player>(loadData);
 
         while (true)
