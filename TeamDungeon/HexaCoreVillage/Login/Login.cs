@@ -10,26 +10,15 @@ public class Login : Scene
 {
     public override SCENE_NAME SceneName => SCENE_NAME.LOGIN;
 
-    // by 정훈
-    // 다른 PC에서는 절대경로 설정시 File을 찾을 수 없어 상대경로 표시를 위한 변수를 별도로 작성했습니다.
-    // 하지만 맥에서는 작동하지 않습니다.
-    //  'winmm.dll' 의존성이 문제 입니다. 
     static string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
     static string relativePathToAudio = Path.GetFullPath(Path.Combine(baseDirectory, "..", "..", "..", "..", "..", "TeamDungeon", "HexaCoreVillage"));
-    static string startBGMPath = Path.Combine(relativePathToAudio, "startBGM.wav");
-    static string newWorldBGMPath = Path.Combine(relativePathToAudio, "newWorldBGM.wav");
     private static string UtilityPath = Path.Combine(relativePathToAudio, "Utility");
-
-    // static AudioFileReader startBGM = new AudioFileReader(startBGMPath);
-    // static LoopStream startLoop = new LoopStream(startBGM);
-    // static AudioFileReader newWorldBGM = new AudioFileReader(newWorldBGMPath);
-    // static LoopStream newWorldLoop = new LoopStream(newWorldBGM);
-    // static WaveOutEvent audioMgr = new WaveOutEvent();
 
     public static List<Item> ItemBox = new List<Item>();
     private static Player _player = null;
     public override void Start()
     {
+        SetItemBox();
         CursorVisible = false;
         AudioController(Managers.Resource.GetSoundResource(ResourceKeys.startBGM),PlayOption.Play);
     }
@@ -48,8 +37,7 @@ public class Login : Scene
         {
             Clear();
             Renderer.Instance.DrawConsoleBorder();
-            //SetItemBox();
-            SetCursorPosition(1, 35);
+            SetCursorPosition(0, 35);
 
             for (int i = 0; i < options.Length; i++)
             {
@@ -318,21 +306,26 @@ public class Login : Scene
         }
         SetInvenItem();
         SaveData();
-        Managers.Scene.LoadScene(SCENE_NAME.BATTLE);
+        Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
     }
 
     private void LoadGame()
     {
-        string loadData = File.ReadAllText(UtilityPath + "/savePlayer.json");         //캐릭터 정보 불러오기
+        string loadData = Managers.Resource.GetTextResource(ResourceKeys.SavePlayer);         //캐릭터 정보 불러오기
         _player = JsonConvert.DeserializeObject<Player>(loadData);
 
         while (true)
         {
             Clear();
             Renderer.Instance.DrawConsoleBorder();
-            SetCursorPosition(1, 1);
+            SetCursorPosition(0, 1);
             WriteInForm("사용하던 아이디를 입력해 주세요.",ConsoleColor.White);
+            WriteInForm("나가기 - ESC", ConsoleColor.White);
             SetCursorPosition(1, 38);
+            if(ConsoleKey.Escape == ReadKey().Key)
+            {
+                LoginScene();
+            }
             if (_player.ID == ReadLine())
             {
                 SetCursorPosition(CursorLeft, CursorTop+1);
@@ -344,8 +337,9 @@ public class Login : Scene
             WriteInForm("데이터가 일치하지 않습니다.", ConsoleColor.Blue);
             Thread.Sleep(1500);
         }
-        AudioController(newWorldBGMPath,PlayOption.Change);
-        Managers.Scene.LoadScene(SCENE_NAME.BATTLE);
+        AudioController(Managers.Resource.GetSoundResource(ResourceKeys.startBGM), PlayOption.Stop);
+        AudioController(Managers.Resource.GetSoundResource(ResourceKeys.newWorldBGM), PlayOption.LoopStart);
+        Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
 
     }
 
@@ -372,8 +366,8 @@ public class Login : Scene
         SetCursorPosition(0, 35);
         WriteInForm("어라..? 근데 왜 이렇게 어지럽....", ConsoleColor.White);
         Thread.Sleep(3000);
-
-        AudioController(newWorldBGMPath,PlayOption.Change);
+        AudioController(Managers.Resource.GetSoundResource(ResourceKeys.startBGM), PlayOption.Stop);
+        AudioController(Managers.Resource.GetSoundResource(ResourceKeys.newWorldBGM), PlayOption.LoopStart);
         //사운드 변환
         Clear();
         Renderer.Instance.DrawConsoleBorder();
@@ -421,8 +415,7 @@ public class Login : Scene
 
     private void SetItemBox()
     {
-        using StreamReader json = new(UtilityPath+"/ItemList.json", Encoding.UTF8);     //버그 저장한거 보고 따라함;
-        string file = json.ReadToEnd();
+        string file = Managers.Resource.GetTextResource(ResourceKeys.ItemList);
         ItemBox = JsonConvert.DeserializeObject<List<Item>>(file);
     }
 
@@ -437,7 +430,8 @@ public class Login : Scene
 
     public override void Stop()
     {
-        throw new NotImplementedException();
+        Clear();
+        AudioController(Managers.Resource.GetSoundResource(ResourceKeys.newWorldBGM), PlayOption.LoopStop);
     }
 }
 

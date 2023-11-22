@@ -14,6 +14,8 @@ namespace HexaCoreVillage.Utility
         // BGMS
         newWorldBGM,
         startBGM,
+        BattleBGM,
+        EffectSound
     }
 
 
