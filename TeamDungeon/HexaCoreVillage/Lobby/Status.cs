@@ -13,6 +13,7 @@ public class Status : Scene
     private List<Item> itemList = new List<Item>();
     bool isInventoryScene = false;
     Item itemInform = new Item();
+ 
     public override void Start()
     {
         Console.Clear();
@@ -97,11 +98,7 @@ public class Status : Scene
             }
         }
 
-        //모든 case마다 로직이 같다. 
-        // 아이템이 장착되지 않았다면 장착하고 -> 플레이서 스탯 올려주기
-        // 아이템이 장착되어있다면 장착 해제하고 -> 플레이서 스탯 내려주기
         //아이템 장착,해제 기능구현
-        //만약 플레이어 인벤토리에 있는 아이템과 같은 이름이 있다면
         if (_player.Inventory[selectedOption].IsEquipment==false)    //아이템이 장착되어 있지 않다면
         {
             foreach (var item in itemList)  //아이템 리스트에서 플레이어가 가지고 있는 아이템 정보 찾기
@@ -125,6 +122,7 @@ public class Status : Scene
                             break;
                     }
                     _player.Inventory[selectedOption].IsEquipment = true;
+                    Utility.Data.SavePlayerData(_player);
                 }
 
             }
@@ -152,6 +150,7 @@ public class Status : Scene
                             break;
                     }
                     _player.Inventory[selectedOption].IsEquipment = false;
+                    Utility.Data.SavePlayerData(_player);
                 }
 
             }
@@ -165,13 +164,11 @@ public class Status : Scene
         string[] options = { "INVENTORY", "LOBBY" };
         string[] plusOpt = { "아이템 장착 관리를 위한 인벤토리", "로비로 돌아갑니다." };
 
-
         PrintPlayer();
         DrawLine();
         if (isInventoryScene)
             InventoryScene();
         PrintStatusMenu();
-   
 
         while (true)
         {
@@ -294,56 +291,53 @@ public class Status : Scene
         int itemStart_x = 8;    //아이템 시작 x 좌표
         int itemStart_y = 24;   //아이템 시작 y 좌표
 
-        SetCursorPosition(42, 3);
-        Write("LV");
         SetCursorPosition(42, 5);
-        Write("이름\n");
+        Write("LV");
         SetCursorPosition(42, 7);
-        Write("ID\n");
+        Write("이름\n");
         SetCursorPosition(42, 9);
-        Write("직업\n");
+        Write("ID\n");
         SetCursorPosition(42, 11);
+        Write("직업\n");
+        SetCursorPosition(42, 13);
         Write("골드");
 
         BackgroundColor = ConsoleColor.DarkGray;
-        SetCursorPosition(47, 3);
-        Write($"{PadCenterForMixedText($"{_player.Level.ToString("00")}", 30)}");
         SetCursorPosition(47, 5);
-        Write($"{PadCenterForMixedText($"{_player.NickName}", 30)}");
+        Write($"{PadCenterForMixedText($"{_player.Level.ToString("00")}", 30)}");
         SetCursorPosition(47, 7);
-        Write($"{PadCenterForMixedText($"{_player.ID}", 30)}");
+        Write($"{PadCenterForMixedText($"{_player.NickName}", 30)}");
         SetCursorPosition(47, 9);
-        Write($"{PadCenterForMixedText($"{_player.Job}", 30)}");
+        Write($"{PadCenterForMixedText($"{_player.ID}", 30)}");
         SetCursorPosition(47, 11);
+        Write($"{PadCenterForMixedText($"{_player.Job}", 30)}");
+        SetCursorPosition(47, 13);
         Write($"{PadCenterForMixedText($"{_player.Gold}G", 30)}");
         ResetColor();
 
-        SetCursorPosition(87, 3);
+        SetCursorPosition(87, 5);
         Write($"{PadRightForMixedText($"경험치  {_player.Exp}/100", 30)}");  ///100 => 해당 레벨의 최대값
         PrintBar(100, _player.Exp);
 
-        SetCursorPosition(87, 5);
+        SetCursorPosition(87, 7);
         Write($"{PadRightForMixedText($"체력  {_player.CurrentHp}/{_player.HP}  ", 30)}");
         PrintBar(_player.HP, _player.CurrentHp);
 
-        SetCursorPosition(87, 7);
+        SetCursorPosition(87, 9);
         Write($"{PadRightForMixedText($"멘탈  {_player.CurrentMental}/{_player.CurrentMental}  ", 30)}");
         PrintBar(_player.Mental, _player.CurrentMental);
 
-        SetCursorPosition(123, 9);
-        Write("♣기본정보♣");
+        SetCursorPosition(133, 11);
+        Write("♣기본정보♣");    
 
-        SetCursorPosition(87, 11);
+        SetCursorPosition(87, 13);
         Write($"{PadRightForMixedText($"타이핑 속력(ATK)  {_player.TypingSpeed+_player.BonusDmg}/100  ", 30)}");
         PrintBar(100, _player.TypingSpeed+_player.BonusDmg);
 
-        SetCursorPosition(87, 13);
+        SetCursorPosition(87, 15);
         Write($"{PadRightForMixedText($"C# 언어 능력(DEF)  {_player.C+_player.BonusDef}/100  ", 30)}");
         PrintBar(100, _player.C+_player.BonusDef);
 
-        SetCursorPosition(87, 15);
-        Write($"{PadRightForMixedText($"C# 언어 능력(DEF)  {_player.C}/100  ", 30)}");
-        PrintBar(100, _player.C);
 
         //여기서부터 아이템
         SetCursorPosition(82, 22);
@@ -370,6 +364,7 @@ public class Status : Scene
             itemStart_y += 3;   //한번 출력할 때마다 y좌표 3내려서 출력
         }
     }
+    //아이템 리스트 중에 있는 아이템 정보 가져오는 함수
     private Item GetItemInform(string itemName)
     {
         foreach (Item item in itemList)
@@ -393,7 +388,7 @@ public class Status : Scene
             result = "SP";
         return result;
     }
-
+    
     //문자열을 가운데 정렬 해주는 함수
     public static string PadCenterForMixedText(string str, int totalLength)
     {
