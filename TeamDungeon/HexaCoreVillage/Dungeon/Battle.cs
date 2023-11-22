@@ -56,6 +56,7 @@ namespace HexaCoreVillage.Dungeon
             LoadBugs();
             LoadLoggingText();
             AudioPlayer.AudioController(Managers.Resource.GetSoundResource(ResourceKeys.BattleBGM), AudioPlayer.PlayOption.LoopStart);
+            AudioPlayer.AudioVolume(3);
         }
         
         /// <summary>

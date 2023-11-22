@@ -15,6 +15,7 @@ public class Reward : Scene
 
     public override void Start()
     {
+        
         Clear();
         // 초기화 해주는 부분,
         // 아래 부분 따로 메서드 선언 후 분리,
@@ -38,8 +39,10 @@ public class Reward : Scene
 
     private void SaveData()
     {
+        var playerDataPath = Path.Combine(Managers.Resource.GetResourceFolderPath(), Literals.PlayerDataPath);
+
         string playerData = JsonConvert.SerializeObject(player, Formatting.Indented);        //캐릭터 정보 저장
-        File.WriteAllText(CurrentDirectory + ".\\savePlayer.json", playerData);
+        File.WriteAllText(playerDataPath, playerData);
 
         //string dungeonData =                  //던전 정보도 저장할 예정.
     }
@@ -132,7 +135,9 @@ public class Reward : Scene
         while (true)
         {
             Clear();
-            SetCursorPosition(4, 5);
+            SetCursorPosition(4, 6);
+            Write("[현재 해결해야 하는 버그들은 사라졌습니다]");
+            SetCursorPosition(4, 7);
             Write("[앞으로 무얼 하시겠습니까?]\n");
             for (int i = 0; i < totalMenuOption; i++)
             {
@@ -140,8 +145,8 @@ public class Reward : Scene
                 {
                     ForegroundColor = ConsoleColor.Green;
                 }
-                SetCursorPosition(4, 7+i);
-                Write($"{options[i]}");
+                SetCursorPosition(4, 9+i);
+                Write($"{i+1}. {options[i]}");
                 ResetColor();
             }
             Renderer.Instance.DrawConsoleBorder();
