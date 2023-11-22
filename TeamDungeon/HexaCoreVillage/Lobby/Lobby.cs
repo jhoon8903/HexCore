@@ -11,7 +11,6 @@ public class Lobby : Scene
     public enum LobbySelectMenu
     {
         Status,
-        Inventory,
         Store,
         Dungeon,
         Rest,
@@ -34,6 +33,9 @@ public class Lobby : Scene
     /* Lobby Selector */
     private LobbySelectMenu _menuSelector = LobbySelectMenu.Status;
 
+    /* Sound Resource */
+    private string _newWorldBGM = Managers.Resource.GetSoundResource(ResourceKeys.newWorldBGM);
+
     #endregion
 
 
@@ -44,8 +46,10 @@ public class Lobby : Scene
         // Cursor Setting
         CursorVisible = false;
 
-        // Border Draw
+        // Draw
         Renderer.Instance.DrawConsoleBorder();
+        this.DrawMenuBox();
+        this.DrawandPrintContextBox();
 
         // Init Title Text
         InitAsciiTitleText();
@@ -57,7 +61,7 @@ public class Lobby : Scene
         InitTimer();
 
         //BGM start
-        AudioPlayer.AudioController(Managers.Resource.GetSoundResource(ResourceKeys.newWorldBGM), AudioPlayer.PlayOption.LoopStart);
+        AudioPlayer.AudioController(_newWorldBGM, AudioPlayer.PlayOption.LoopStart);
     }
 
     public override void Update()
@@ -110,8 +114,9 @@ public class Lobby : Scene
     {
         while (!KeyAvailable)
             this.PrintMenuItems();
+
         if (KeyAvailable)
-            Managers.UI.ClearRows(StartPosY, Managers.UI.EndPosY);
+            Managers.UI.ClearRowsColSelect(StartPosY, 32, 60, 116);
 
         this.InputSelectMenuItem();
     }
@@ -120,8 +125,7 @@ public class Lobby : Scene
     {
         string[] menuItemTexts =
         {
-            "개발자 스펙 - (스테이터스)",
-            "개발자 기기 현황 - (인벤토리)",
+            "개발자 스펙/기기 - (스탯/인벤)",
             "헥사 IT 스토어 - (상점)",
             "디버깅 미궁 - (던전)",
             "월차 내러 가기 - (휴식)",
@@ -131,6 +135,7 @@ public class Lobby : Scene
 
         lock(_lock)
         {
+            Managers.UI.PrintMsgAlignCenter("< H E X A   M E N U >", StartPosY - 3, ConsoleColor.Blue);
             for(int idx = 0; idx < menuItemTexts.Length; ++idx)
             {
                 ConsoleColor color = ConsoleColor.Gray;
@@ -141,7 +146,7 @@ public class Lobby : Scene
                     color = ConsoleColor.Blue;
                 }
 
-                Managers.UI.PrintMsgAlignCenter(menuItemTexts[idx], StartPosY + (idx * 3), color);
+                Managers.UI.PrintMsgAlignCenter(menuItemTexts[idx], (StartPosY+2) + (idx * 3), color);
             }
         }
     }
@@ -178,9 +183,6 @@ public class Lobby : Scene
             case LobbySelectMenu.Status:
                 Managers.Scene.LoadScene(SCENE_NAME.STATUS);
                 break;
-            case LobbySelectMenu.Inventory:
-                //Managers.Scene.LoadScene(SCENE_NAME.INVEN);
-                break;
             case LobbySelectMenu.Store:
                 Managers.Scene.LoadScene(SCENE_NAME.STORE);
                 break;
@@ -194,6 +196,7 @@ public class Lobby : Scene
                 break;
             case LobbySelectMenu.Exit:
                 Clear();
+                Stop();
                 Thread.Sleep(1000);
                 Environment.Exit(0);
                 break;
@@ -202,7 +205,25 @@ public class Lobby : Scene
 
     private void DrawMenuBox()
     {
+        int startPosX, startPosY;
 
+        startPosX = Renderer.FixedXColumn / 3;
+        startPosY = StartPosY - 2;
+        Managers.UI.DrawBox(startPosX, startPosY, 60, 22, ConsoleColor.Blue);
+    }
+
+    /// <summary>
+    /// # 사용 설명을 출력
+    /// </summary>
+    private void DrawandPrintContextBox()
+    {
+        int startPosX = Renderer.FixedXColumn / 6;
+        int startPosY = Renderer.FixedYRows - 4;
+        int width = Renderer.FixedXColumn - (startPosX * 2);
+        COORD[] columnPos = Managers.UI.DrawColumnBox(startPosX, startPosY, width, 2, 2, ConsoleColor.Yellow);
+
+        Managers.UI.PrintMsgCoordbyColor("[사용방법]  [이동 - ↑↓ | ⓦⓢ]  [선택 - Space | Enter]", columnPos[0].X, columnPos[0].Y, ConsoleColor.Yellow);
+        Managers.UI.PrintMsgCoordbyColor("[Copyright] ⓒ HexaCore Dungeon. All right reseved.", columnPos[1].X, columnPos[1].Y, ConsoleColor.Yellow);
     }
     #endregion
 

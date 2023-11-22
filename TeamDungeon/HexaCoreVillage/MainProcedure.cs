@@ -16,6 +16,7 @@ public static class MainProcedure
         Managers.Scene.LoadScene(SCENE_NAME.BATTLE);
 
 
+
         Run();
     }
 

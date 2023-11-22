@@ -82,6 +82,7 @@ namespace HexaCoreVillage.Utility
         public static void SetupApplicationExitHandling()
         {
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
+            AppDomain.CurrentDomain.UnhandledException += OnProcessExit;
         }
 
         private static void OnProcessExit(object sender, EventArgs e)

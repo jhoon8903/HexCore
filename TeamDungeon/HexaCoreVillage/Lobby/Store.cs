@@ -10,7 +10,10 @@ public class Store : Scene
     public override SCENE_NAME SceneName => SCENE_NAME.STORE;
 
     static string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+<<<<<<< Updated upstream
     static string ItemListPath = Path.GetFullPath(Path.Combine(baseDirectory, "..", "..", "..", "..", "..", "TeamDungeon", "HexaCoreVillage", "Utility", "ItemList.json"));
+=======
+>>>>>>> Stashed changes
     private static List<Item> items = new List<Item>();
     private static List<Item>? itemdata;
     private static Player  player = new Player();
@@ -27,6 +30,18 @@ public class Store : Scene
     public override void Update()
     {
 
+<<<<<<< Updated upstream
+=======
+    public override void Stop()
+    {
+        throw new NotImplementedException();
+    }
+
+    private static void LoadItem()
+    {
+        string json = Managers.Resource.GetTextResource(ResourceKeys.ItemList);
+        itemdata = JsonConvert.DeserializeObject<List<Item>>(json);
+>>>>>>> Stashed changes
     }
 
     // 상점 입장했을 때
@@ -179,6 +194,7 @@ public class Store : Scene
         }
         while (true)
         {
+<<<<<<< Updated upstream
             Clear();
 
             WriteLine("▣ 상점 - 아이템 구매 ▣");
@@ -189,6 +205,8 @@ public class Store : Scene
             WriteLine();
             WriteLine("[ 아이템 목록 ]");
 
+=======
+>>>>>>> Stashed changes
             // 아이템리스트를 불러오면 방향키로 이동하면서 선택
             for (int i = 0; i <diviList.Count; i++)
             {
@@ -196,12 +214,70 @@ public class Store : Scene
                 if (i == selectOtion)
                 {
                     ForegroundColor = ConsoleColor.Blue;
+<<<<<<< Updated upstream
                     WriteLine($"->  {diviList[i].ItemName}     {diviList[i].Type}     {diviList[i].ItemOption}     {diviList[i].Desc}    {diviList[i].Price}");
+=======
+                    SetCursorPosition(50, 12 + i);
+                    Write($"-  {diviList[i].ItemName}");
+                    SetCursorPosition(70, 12 + i);
+                    Write($"{diviList[i].Type}");
+                    SetCursorPosition(90, 12 + i);
+                    Write($"{diviList[i].ItemOption}");
+                    SetCursorPosition(110, 12 + i);
+                    Write($"{diviList[i].Price}");
+                    if (player.Inventory.Count > 0)
+                    {
+                        for (int j = 0; j < player.Inventory.Count; j++)
+                        {
+                            if (player.Inventory[j].ItemName == diviList[i].ItemName)
+                            {
+                                SetCursorPosition(130, 12 + i);
+                                Write($"구매 완료");
+                            }
+                            else
+                            {
+                                SetCursorPosition(130, 12 + i);
+                                Write($" ");
+                            }
+                        }
+                    }
+
+>>>>>>> Stashed changes
                     ResetColor();
                 }
                 else
                 {
+<<<<<<< Updated upstream
                     WriteLine($"  {diviList[i].ItemName}     {diviList[i].Type}     {diviList[i].ItemOption}     {diviList[i].Desc}    {diviList[i].Price}");
+=======
+                    SetCursorPosition(50, 12 + i);
+                    Write($"-  {diviList[i].ItemName}");
+                    SetCursorPosition(70, 12 + i);
+                    Write($"{diviList[i].Type}");
+                    SetCursorPosition(90, 12 + i);
+                    Write($"{diviList[i].ItemOption}");
+                    SetCursorPosition(110, 12 + i);
+                    Write($"{diviList[i].Price}");
+                    SetCursorPosition(130, 12 + i);
+                    Write(new string(' ', 10));
+                    if (player.Inventory.Count > 0)
+                    {
+                        for (int j = 0; j < player.Inventory.Count; j++)
+                        {
+                            if (player.Inventory[j].ItemName == diviList[i].ItemName)
+                            {
+                                SetCursorPosition(130, 12 + i);
+                                Write($"구매 완료");
+                            }
+                            else
+                            {
+                                SetCursorPosition(130, 12 + i);
+                                Write($" ");
+                            }
+                        }
+                    }
+                    // --------------------
+>>>>>>> Stashed changes
                 }
             }
             WriteLine("----------------------------------------------------------------");
@@ -221,6 +297,15 @@ public class Store : Scene
             }
             else if (selectKey.Key == ConsoleKey.Enter)
             {
+                //for (int i = 0; i < player.Inventory.Count; i++)
+                //{
+                //    if (diviList[selectOtion].ItemName == player.Inventory[i].ItemName)
+                //    {
+                //        player.Inventory[i].IsBuying = true;
+                //        SetCursorPosition(50, 24);
+                //        WriteLine("중복 구매는 불가능 합니다.");
+                //    }
+                //}
                 if (player.Gold >= diviList[selectOtion].Price)
                 {
                     player.Gold -= diviList[selectOtion].Price;
@@ -286,12 +371,48 @@ public class Store : Scene
                     if (i == selectOtion)
                     {
                         ForegroundColor = ConsoleColor.Blue;
+<<<<<<< Updated upstream
                         WriteLine($"->  {player.Inventory[i].ItemName}");
+=======
+                        SetCursorPosition(50, 12 + i);
+                        Write($"-  {player.Inventory[i].ItemName}");
+                        for (int j = 0; j < itemdata.Count; j++)
+                        {
+                            if (player.Inventory[i].ItemName == itemdata[j].ItemName)
+                            {
+                                SetCursorPosition(70, 12 + i);
+                                Write($"{itemdata[j].Type}");
+                                SetCursorPosition(90, 12 + i);
+                                Write($"{itemdata[j].ItemOption}");
+                                SetCursorPosition(110, 12 + i);
+                                Write($"{itemdata[j].Price}");
+                            }
+                        }
+>>>>>>> Stashed changes
                         ResetColor();
+                        SetCursorPosition(50, 24);
+                        Write($"{itemdata[i].Desc}");
                     }
                     else
                     {
+<<<<<<< Updated upstream
                         WriteLine($"-  {player.Inventory[i].ItemName}");
+=======
+                        SetCursorPosition(50, 12 + i);
+                        Write($"-  {player.Inventory[i].ItemName}");
+                        for (int j = 0; j < itemdata.Count; j++)
+                        {
+                            if (player.Inventory[i].ItemName == itemdata[j].ItemName)
+                            {
+                                SetCursorPosition(70, 12 + i);
+                                Write($"{itemdata[j].Type}");
+                                SetCursorPosition(90, 12 + i);
+                                Write($"{itemdata[j].ItemOption}");
+                                SetCursorPosition(110, 12 + i);
+                                Write($"{itemdata[j].Price}");
+                            }
+                        }
+>>>>>>> Stashed changes
                     }
                 }
             }
@@ -318,6 +439,13 @@ public class Store : Scene
                 {
                     // 소지금 = 소지금 + 아이템 판매 가격
                     // 인벤 - 선택아이템 Remove
+                    for (int j = 0; j < itemdata.Count; j++)
+                    {
+                        if (player.Inventory[selectOtion].ItemName == itemdata[j].ItemName)
+                        {
+                            player.Gold += itemdata[j].Price;
+                        }
+                    }
                     player.Inventory.Remove(player.Inventory[selectOtion]);
                     WriteLine("판매가 완료되었습니다.");
                 }
