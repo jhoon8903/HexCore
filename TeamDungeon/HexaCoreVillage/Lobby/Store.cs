@@ -13,7 +13,6 @@ public class Store : Scene
     public override SCENE_NAME SceneName => SCENE_NAME.STORE;
 
     static string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-    static string ItemListPath = Path.GetFullPath(Path.Combine(baseDirectory, "..", "..", "..", "..", "..", "TeamDungeon", "HexaCoreVillage", "Resources", "ItemList.json"));
     private static List<Item> items = new List<Item>();
     private static List<Item>? itemdata;
     private static Player player = new Player();
@@ -29,16 +28,21 @@ public class Store : Scene
     public override void Update()
     {
         DisplayStore();
+        Gold();
         StoreScene();
         StoreBuyScene();
         StoreSellScene();
     }
 
+    public override void Stop()
+    {
+        throw new NotImplementedException();
+    }
+
     private static void LoadItem()
     {
-        StreamReader json = new(ItemListPath);
-        string jsonString = json.ReadToEnd();
-        itemdata = JsonConvert.DeserializeObject<List<Item>>(jsonString);
+        string json = Managers.Resource.GetTextResource(ResourceKeys.ItemList);
+        itemdata = JsonConvert.DeserializeObject<List<Item>>(json);
     }
 
     // 상점 입장했을 때
@@ -50,6 +54,7 @@ public class Store : Scene
 
         while (true)
         {
+            Gold();
             for (int i = 0; i < storeOption.Length; i++)
             {
                 SetCursorPosition(55 + (i * 40), 6);
@@ -70,6 +75,12 @@ public class Store : Scene
                 SetCursorPosition(30, i);
                 Write(new string(' ', 12));
             }
+
+            // 골드 표시
+            SetCursorPosition(30, 26);
+            Write(new string(' ', 10));
+            SetCursorPosition(30, 26);
+            Write($"{player.Gold} G");
 
             ConsoleKeyInfo selectKey = ReadKey();
             if (selectKey.Key == ConsoleKey.LeftArrow)
@@ -124,13 +135,6 @@ public class Store : Scene
                 }
             }
 
-            // 골드 표시
-            SetCursorPosition(30, 26);
-            Write(new string(' ', 10));
-            SetCursorPosition(30, 26);
-            Write($"{player.Gold} G");
-
-
             ConsoleKeyInfo selectKey = ReadKey();
             if (selectKey.Key == ConsoleKey.UpArrow)
             {
@@ -181,7 +185,6 @@ public class Store : Scene
     private static void StoreBuyScene(string typeSelect = "")
     {
         List<Item> diviList = new List<Item>();
-        string buy_complete = "";
         int selectOtion = 0;
         string[] storeOption = { };
 
@@ -195,20 +198,6 @@ public class Store : Scene
         }
         while (true)
         {
-            if (player.Inventory.Count > 0)
-            {
-                for (int i = 0; i < player.Inventory.Count; i++)
-                {
-                    if (player.Inventory[i].IsEquipment == true)
-                    {
-                        buy_complete = "구매 완료";
-                    }
-                    else
-                    {
-                        buy_complete = "";
-                    }
-                }
-            }
 
             // 아이템리스트를 불러오면 방향키로 이동하면서 선택
             for (int i = 0; i < diviList.Count; i++)
@@ -227,7 +216,19 @@ public class Store : Scene
                     SetCursorPosition(110, 12 + i);
                     Write($"{diviList[i].Price}");
                     SetCursorPosition(130, 12 + i);
-                    Write($"{buy_complete}");
+                    for (int j = 0; j < player.Inventory.Count; j++)
+                    {
+                        if (player.Inventory[j].ItemName == diviList[i].ItemName)
+                        {
+                            SetCursorPosition(130, 12 + i);
+                            Write($"구매 완료");
+                        }
+                        else
+                        {
+                            SetCursorPosition(130, 12 + i);
+                            Write($" ");
+                        }
+                    }
                     ResetColor();
                     SetCursorPosition(50, 24);
                     Write(new string(' ', 100));
@@ -245,8 +246,19 @@ public class Store : Scene
                     Write($"{diviList[i].ItemOption}");
                     SetCursorPosition(110, 12 + i);
                     Write($"{diviList[i].Price}");
-                    SetCursorPosition(130, 12 + i);
-                    Write($"{buy_complete}");
+                    for (int j = 0; j < player.Inventory.Count; j++)
+                    {
+                        if (player.Inventory[j].ItemName == diviList[i].ItemName)
+                        {
+                            SetCursorPosition(130, 12 + i);
+                            Write($"구매 완료");
+                        }
+                        else
+                        {
+                            SetCursorPosition(130, 12 + i);
+                            Write($" ");
+                        }
+                    }
                 }
             }
 
@@ -273,6 +285,7 @@ public class Store : Scene
                     Write(new string(" "), 60);
                     SetCursorPosition(50, 24);
                     WriteLine($"{diviList[selectOtion].ItemName}을(를) 구매하셨습니다.");
+                    Gold();
                 }
                 else if (player.Gold < diviList[selectOtion].Price)
                 {
@@ -324,21 +337,32 @@ public class Store : Scene
                         ForegroundColor = ConsoleColor.Blue;
                         SetCursorPosition(50, 12 + i);
                         Write($"-  {player.Inventory[i].ItemName}");
-                        //SetCursorPosition(70, 12 + i);
-                        //Write($"{diviList[i].Type}");
-                        //SetCursorPosition(90, 12 + i);
-                        //Write($"{diviList[i].ItemOption}");
-                        //SetCursorPosition(110, 12 + i);
-                        //Write($"{diviList[i].Price}");
-                        //ResetColor();
-                        //SetCursorPosition(50, 24);
-                        //Write($"{diviList[i].Desc}");
+                        for (int j = 0; j < itemdata.Count; j++)
+                        {
+                            if (player.Inventory[i].ItemName == itemdata[j].ItemName)
+                            {
+                                SetCursorPosition(70, 12 + i);
+                                Write($"{itemdata[i].Type}");
+                                SetCursorPosition(90, 12 + i);
+                                Write($"{itemdata[i].ItemOption}");
+                                SetCursorPosition(110, 12 + i);
+                                Write($"{itemdata[i].Price}");
+                            }
+                        }
                         ResetColor();
+                        SetCursorPosition(50, 24);
+                        Write($"{itemdata[i].Desc}");
                     }
                     else
                     {
                         SetCursorPosition(50, 12 + i);
                         Write($"-  {player.Inventory[i].ItemName}");
+                        SetCursorPosition(70, 12 + i);
+                        Write($"{itemdata[i].Type}");
+                        SetCursorPosition(90, 12 + i);
+                        Write($"{itemdata[i].ItemOption}");
+                        SetCursorPosition(110, 12 + i);
+                        Write($"{itemdata[i].Price}");
                     }
                 }
             }
@@ -366,6 +390,14 @@ public class Store : Scene
                 {
                     // 소지금 = 소지금 + 아이템 판매 가격
                     // 인벤 - 선택아이템 Remove
+                    for (int j = 0; j < itemdata.Count; j++)
+                    {
+                        if (player.Inventory[selectOtion].ItemName == itemdata[j].ItemName)
+                        {
+                            player.Gold += itemdata[j].Price;
+                            Gold();
+                        }
+                    }
                     player.Inventory.Remove(player.Inventory[selectOtion]);
                     SetCursorPosition(50, 24);
                     WriteLine("판매가 완료되었습니다.");
@@ -570,6 +602,15 @@ public class Store : Scene
         //ResetColor();
     }
     #endregion
+
+    public static void Gold()
+    {
+        // 골드 표시
+        SetCursorPosition(30, 26);
+        Write(new string(' ', 10));
+        SetCursorPosition(30, 26);
+        Write($"{player.Gold} G");
+    }
 
     // 정훈님 코드 참고
     // y기준 - start -> end 꺄지 범위를 설정해주면 ' '로 덮어주는 듯
