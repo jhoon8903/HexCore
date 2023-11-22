@@ -17,7 +17,7 @@ public class Store : Scene
     private static Player _player = Login.Login._player;
     private static Item item = new Item();
 
-    private static bool _isLoadScene = false;
+    private bool _isLoadScene = false;
 
     public override void Start()
     {
@@ -50,7 +50,7 @@ public class Store : Scene
     }
 
     // 상점 입장했을 때
-    private static void DisplayStore()
+    private void DisplayStore()
     {
         int selectOtion = 0;
         string[] storeOption = Enum.GetNames(typeof(StartStore));
@@ -112,7 +112,7 @@ public class Store : Scene
 
 
     // Store에 입장했을 때 출력
-    private static void StoreScene()
+    private void StoreScene()
     {
         string typeSelect = "";
         int selectOtion = 0;
@@ -183,7 +183,7 @@ public class Store : Scene
         }
     }
 
-    private static void StoreBuyScene(string typeSelect = "")
+    private void StoreBuyScene(string typeSelect = "")
     {
         List<Item> diviList = new List<Item>();
         int selectOtion = 0;
@@ -316,7 +316,7 @@ public class Store : Scene
         }
     }
 
-    private static void StoreSellScene()
+    private void StoreSellScene()
     {
 
         int selectOption = 0;
@@ -442,7 +442,7 @@ public class Store : Scene
         }
     }
 
-    private static void CreativeUI()
+    private void CreativeUI()
     {
         Clear();
         Renderer.Instance.DrawConsoleBorder();
@@ -620,13 +620,13 @@ public class Store : Scene
     }
     #endregion
 
-    private static bool _isEscape = false;
-    public static void EscapeOut()
+    private bool _isEscape = false;
+    public void EscapeOut()
     {
         _isEscape = true;
         DisplayStore();
     }
-    public static void ListClear()
+    public void ListClear()
     {
         ClearRange(12, 19);
         ClearRange(24, 29);
