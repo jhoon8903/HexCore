@@ -1,19 +1,62 @@
 
-using System.Drawing;
+using HexaCoreVillage.Utility;
 
 namespace HexaCoreVillage.Manager;
 
 public class Manager_UserInterface
 {
+    #region Member Variables
+    private const int posX = 2;
+    private const int posY = 1;
+
+    public readonly int StartPosX = posX;
+    public readonly int StartPosY = posY;
+    public readonly int EndPosX = Renderer.FixedXColumn - posX;
+    public readonly int EndPosY = Renderer.FixedYRows - posY;
+    public readonly int areaX = Renderer.FixedXColumn - (posX * 2);
+    public readonly int areaY = Renderer.FixedYRows - (posY * 2);
+
+    private readonly object _lock = new object();
+
+    #endregion
+
+
+
     #region Draw Methods
     public void DrawProgress(string message, int width, int length)
     {
 
     }
 
-    public void DrawAsciiMessage()
+    public int DrawAsciiMessage(ResourceKeys key, int startPosY = 2)
     {
-        string textOrigin; 
+        string asciiArtResource = Managers.Resource.GetTextResource(key);
+        string[] asciiArtSplitMessage = asciiArtResource.Split(new[] { "\n" }, StringSplitOptions.None);
+
+        int idx;
+        for(idx = 0; idx < asciiArtSplitMessage.Length; ++idx)
+        {
+            ConsoleColor color = ConsoleColor.Gray;
+            if (idx < 3) color = ConsoleColor.Yellow;
+            else if (idx >= 3 && idx < 6) color = ConsoleColor.Cyan;
+            else color = ConsoleColor.Blue;
+
+            PrintMsgAlignCenter(asciiArtSplitMessage[idx], idx + startPosY, color);
+        }
+
+        return idx;
+    }
+
+    public void DrawBox(int startPosX, int startPosY, int width, int height, ConsoleColor color = ConsoleColor.Green)
+    {
+        string topView = "┌" + new string('─', width - 2) + "┐";
+        string bottomBiew = "└" + new string('─', width - 2) + "┘";
+
+        PrintMsgCoordbyColor(topView, startPosX, startPosY, color);
+        for(int col = startPosY; col <= height; ++col)
+        {
+            //PrintMsgCoordbyColor()
+        }
     }
     #endregion
 
@@ -26,10 +69,13 @@ public class Manager_UserInterface
     public void PrintMsgAlignCenter(string message, int posY, 
         ConsoleColor fontColor = ConsoleColor.Gray, ConsoleColor bgColor = ConsoleColor.Black)
     {
-        int padding = (Renderer.FixedXColumn - GetMessageUTFLength(message)) / 2;
+        lock (_lock)
+        {
+            int padding = (Renderer.FixedXColumn - GetMessageUTFLength(message)) / 2;
 
-        SetPos(padding, posY);
-        PrintMsgToColor(message, fontColor, bgColor);
+            SetPos(padding, posY);
+            PrintMsgToColor(message, fontColor, bgColor);
+        }
     }
 
     /// <summary>
@@ -39,11 +85,14 @@ public class Manager_UserInterface
     public void PrintMsgAlignCenterByCenter(string message,
         ConsoleColor fontColor = ConsoleColor.Gray, ConsoleColor bgColor = ConsoleColor.Black)
     {
-        int wPadding = (Renderer.FixedXColumn - GetMessageUTFLength(message)) / 2;
-        int hPadding = (Renderer.FixedYRows / 2);
+        lock (_lock)
+        {
+            int wPadding = (Renderer.FixedXColumn - GetMessageUTFLength(message)) / 2;
+            int hPadding = (Renderer.FixedYRows / 2);
 
-        SetPos(wPadding, hPadding);
-        PrintMsgToColor(message, fontColor, bgColor);
+            SetPos(wPadding, hPadding);
+            PrintMsgToColor(message, fontColor, bgColor);
+        }
     }
 
     /// <summary>
@@ -52,8 +101,45 @@ public class Manager_UserInterface
     public void PrintMsgCoordbyColor(string message, int posX, int posY,
         ConsoleColor fontColor = ConsoleColor.Gray, ConsoleColor bgColor = ConsoleColor.Black)
     {
-        SetPos(posX, posY);
-        PrintMsgToColor(message, fontColor, bgColor);
+        lock (_lock)
+        {
+            SetPos(posX, posY);
+            PrintMsgToColor(message, fontColor, bgColor);
+        }
+    }
+    #endregion
+
+
+
+    #region Clear Methods
+    public void ClearRow(int row)
+    {
+        lock (_lock)
+        {
+            SetPos(StartPosX, row);
+            PrintMsg(new string(' ', areaX));
+        }
+    }
+
+    public void ClearRows(int from, int to)
+    {
+        lock (_lock)
+        {
+            for (int row = from; row <= to; ++row)
+            {
+                SetPos(StartPosX, row);
+                PrintMsg(new string(' ', areaX));
+            }
+        }
+    }
+
+    public void ClearRowColSelect(int row, int colStart, int colEnd)
+    {
+        lock (_lock)
+        {
+            SetPos(row, colStart);
+            PrintMsg(new string(' ', colEnd - colStart));
+        }
     }
     #endregion
 
@@ -102,9 +188,10 @@ public class Manager_UserInterface
         BackgroundColor = color;
     }
     // Set Cursor Position
-    public static void SetPos(int posX, int posY)
+    public void SetPos(int posX, int posY)
     {
-        SetCursorPosition(posX, posY);
+        lock(_lock)
+            SetCursorPosition(posX, posY);
     }
     public static void PrintMsg(string message)
     {

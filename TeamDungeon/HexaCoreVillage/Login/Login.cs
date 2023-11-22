@@ -27,12 +27,11 @@ public class Login : Scene
     // static WaveOutEvent audioMgr = new WaveOutEvent();
 
     public static List<Item> ItemBox = new List<Item>();
-    public static Player _player = null;
+    private static Player _player = null;
     public override void Start()
     {
         CursorVisible = false;
-        AudioController(startBGMPath,PlayOption.Play);
-        SetItemBox();
+        AudioController(Managers.Resource.GetSoundResource(ResourceKeys.startBGM),PlayOption.Play);
     }
 
     public override void Update()
@@ -49,7 +48,8 @@ public class Login : Scene
         {
             Clear();
             Renderer.Instance.DrawConsoleBorder();
-            SetCursorPosition(0, 33);
+            //SetItemBox();
+            SetCursorPosition(1, 35);
 
             for (int i = 0; i < options.Length; i++)
             {
@@ -323,14 +323,14 @@ public class Login : Scene
 
     private void LoadGame()
     {
-        string loadData = Managers.Resource.GetTextResource(ResourceKeys.SavePlayer);         //캐릭터 정보 불러오기
-        _player = JsonConvert.DeserializeObject<Player>(loadData)!;
+        string loadData = File.ReadAllText(UtilityPath + "/savePlayer.json");         //캐릭터 정보 불러오기
+        _player = JsonConvert.DeserializeObject<Player>(loadData);
 
         while (true)
         {
             Clear();
             Renderer.Instance.DrawConsoleBorder();
-            SetCursorPosition(0, 1);
+            SetCursorPosition(1, 1);
             WriteInForm("사용하던 아이디를 입력해 주세요.",ConsoleColor.White);
             SetCursorPosition(1, 38);
             if (_player.ID == ReadLine())
@@ -345,7 +345,7 @@ public class Login : Scene
             Thread.Sleep(1500);
         }
         AudioController(newWorldBGMPath,PlayOption.Change);
-        Managers.Scene.LoadScene(SCENE_NAME.STATUS);
+        Managers.Scene.LoadScene(SCENE_NAME.BATTLE);
 
     }
 
@@ -353,7 +353,7 @@ public class Login : Scene
     {
         Clear();
         Renderer.Instance.DrawConsoleBorder();
-        SetCursorPosition(0, 33);
+        SetCursorPosition(0, 35);
         WriteInForm("오늘따라 옛날 생각이 난다.", ConsoleColor.White);
         Thread.Sleep(1500);
         WriteInForm("언제였더라? 돌아보면 시간이 이렇게도 빠르다.", ConsoleColor.White);
@@ -361,7 +361,7 @@ public class Login : Scene
 
         Clear();
         Renderer.Instance.DrawConsoleBorder();
-        SetCursorPosition(0, 33);
+        SetCursorPosition(0, 35);
         WriteInForm("동기들과 내배캠을 수료할 때만 해도 이런저런 걱정이 많았었는데", ConsoleColor.White);
         Thread.Sleep(1500);
         WriteInForm("금방 이렇게 번듯한 회사에 취업하게 될 줄이야..",ConsoleColor.White);
@@ -369,22 +369,21 @@ public class Login : Scene
 
         Clear();
         Renderer.Instance.DrawConsoleBorder();
-        SetCursorPosition(0, 33);
+        SetCursorPosition(0, 35);
         WriteInForm("어라..? 근데 왜 이렇게 어지럽....", ConsoleColor.White);
         Thread.Sleep(3000);
 
-        AudioController(startBGMPath, PlayOption.Stop);
-        AudioController(newWorldBGMPath,PlayOption.LoopStart);
+        AudioController(newWorldBGMPath,PlayOption.Change);
         //사운드 변환
         Clear();
         Renderer.Instance.DrawConsoleBorder();
-        SetCursorPosition(0, 33);
+        SetCursorPosition(0, 35);
         WriteInForm("잘 살아가던 당신은 알 수 없는 이유로 이상한 세계로 이동해버렸다!", ConsoleColor.Red);
         Thread.Sleep(3000);
 
         Clear();
         Renderer.Instance.DrawConsoleBorder();
-        SetCursorPosition(0, 33);
+        SetCursorPosition(0, 35);
         WriteInForm("이곳은 놀랍게도 몬스터가 존재하는 세상.", ConsoleColor.Red);
         Thread.Sleep(1500);
         WriteInForm("몬스터를 쓰러트리기 위해서는 코딩으로만 공격할 수 있다고 한다?!", ConsoleColor.Red);
@@ -392,7 +391,7 @@ public class Login : Scene
 
         Clear();
         Renderer.Instance.DrawConsoleBorder();
-        SetCursorPosition(0, 33);
+        SetCursorPosition(0, 35);
         WriteInForm("승리를 위한 코딩!", ConsoleColor.Red);
         Thread.Sleep(1500);
         WriteInForm("생존을 위한 디버깅!", ConsoleColor.Red);
@@ -400,7 +399,7 @@ public class Login : Scene
 
         Clear();
         Renderer.Instance.DrawConsoleBorder();
-        SetCursorPosition(0, 33);
+        SetCursorPosition(0, 35);
         WriteInForm("이 험난한 세상에서, 당신은 살아갈 수 있을 것인가...",ConsoleColor.Red);
         Thread.Sleep(3000);
     }
@@ -434,6 +433,11 @@ public class Login : Scene
         _player.Inventory.Add(new InventoryItem(ItemBox[2].ItemName, false, false, 1));
         _player.Inventory.Add(new InventoryItem(ItemBox[3].ItemName, false, false, 1));
         _player.Inventory.Add(new InventoryItem(ItemBox[4].ItemName, false, false, 1));
+    }
+
+    public override void Stop()
+    {
+        throw new NotImplementedException();
     }
 }
 

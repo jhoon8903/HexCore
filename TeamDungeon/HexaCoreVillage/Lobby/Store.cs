@@ -340,6 +340,11 @@ public class Store : Scene
                 break;
         }
     }
+
+    public override void Stop()
+    {
+        throw new NotImplementedException();
+    }
 }
 
 enum StoreSelect
