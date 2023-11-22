@@ -17,6 +17,8 @@ public class Store : Scene
     private static Player _player = Login.Login._player;
     private static Item item = new Item();
 
+    private static bool _isLoadScene = false;
+
     public override void Start()
     {
         Clear();
@@ -30,6 +32,7 @@ public class Store : Scene
     {
         if (_isEscape) return;
         DisplayStore();
+        if (_isLoadScene) return;
         StoreScene();
         StoreBuyScene();
         StoreSellScene();
@@ -55,6 +58,7 @@ public class Store : Scene
 
         while (true)
         {
+            if (_isLoadScene) return;
             Gold();
             for (int i = 0; i < storeOption.Length; i++)
             {
@@ -100,6 +104,7 @@ public class Store : Scene
                 StoreSellScene();
                 break;
             case StartStore.Exit:
+                _isLoadScene = true;
                 Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
                 break;
         }
@@ -375,7 +380,7 @@ public class Store : Scene
             }
             else if (selectKey.Key == ConsoleKey.DownArrow)
             {
-                selectOtion = (selectOtion == storeOption.Length - 1) ? 0 : selectOtion + 1;
+                selectOtion = (selectOtion == storeOption.Length - 1) ? 0 : 1;
             }
             else if(selectKey.Key == ConsoleKey.Escape)
             {
