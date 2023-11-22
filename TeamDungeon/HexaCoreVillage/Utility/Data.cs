@@ -7,5 +7,4 @@ public static class Data
     public static bool BattleSuccess { get; set; }
     public static int BugCount { get; set; }
     #endregion
-
 }

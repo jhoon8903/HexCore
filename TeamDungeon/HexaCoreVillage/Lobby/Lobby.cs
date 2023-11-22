@@ -57,11 +57,14 @@ public class Lobby : Scene
         // Init Variables
         InitalizeVariables();
 
-        // Init Timer
-        InitTimer();
+        // Init Thread
+        InitThread();
 
-        //BGM start
+        // BGM start
         AudioPlayer.AudioController(_newWorldBGM, AudioPlayer.PlayOption.LoopStart);
+
+        // LoadToResourcePlayerData - 새로 플레이어 생성됐을 시 리소스 매니저가 지니고 있는 리소스 갱신
+        Managers.Resource.LoadResourcePlayerData();
     }
 
     public override void Update()
@@ -100,7 +103,7 @@ public class Lobby : Scene
         };
     }
 
-    private void InitTimer()
+    private void InitThread()
     {
         _titleUpdateThread = new Thread(TitleUpdateLoop);
         _titleUpdateThread.Start();
@@ -192,7 +195,7 @@ public class Lobby : Scene
             case LobbySelectMenu.Rest:
                 break;
             case LobbySelectMenu.GoTitle:
-                Managers.Scene.LoadScene(SCENE_NAME.TITLE);
+                Managers.Scene.LoadScene(SCENE_NAME.LOGIN);
                 break;
             case LobbySelectMenu.Exit:
                 Clear();

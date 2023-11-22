@@ -24,6 +24,7 @@ public class Manager_Scene
     #region Main Methods
     public void LoadScene(SCENE_NAME sceneKey)
     {
+        CursorVisible = false;
         // 추후 리소스 관리쪽으로 넘어갔을 때를 위한 처리 (아직은 기능 없음)
         if (_currentScene != null)
         {
@@ -37,7 +38,6 @@ public class Manager_Scene
         // switch Lambda, _currentScene에 SCENE_NAME에 해당하는 SCENE으로 동적 할당
         _currentScene = sceneKey switch
         {
-            SCENE_NAME.TITLE => new TitleScene(),
             SCENE_NAME.LOGIN => new LoginScene(),
             SCENE_NAME.LOBBY => new LobbyScene(),
             SCENE_NAME.STATUS => new StatusScene(),
