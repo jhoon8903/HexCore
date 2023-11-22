@@ -27,12 +27,11 @@ public class Login : Scene
     // static WaveOutEvent audioMgr = new WaveOutEvent();
 
     public static List<Item> ItemBox = new List<Item>();
-    private static Player _player = null;
+    public static Player _player = null;
 
     /* Audio Resources */
     private string _newWorldBGM = Managers.Resource.GetSoundResource(ResourceKeys.newWorldBGM);
     private string _startBGM = Managers.Resource.GetSoundResource(ResourceKeys.startBGM);
-
 
     public override void Start()
     {
