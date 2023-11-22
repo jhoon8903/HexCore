@@ -11,7 +11,7 @@ public class Login : Scene
     public override SCENE_NAME SceneName => SCENE_NAME.LOGIN;
 
     public static List<Item> ItemBox = new List<Item>();
-    private static Player _player = null;
+    public static Player _player = null;
 
     /* Audio Resources */
     private string _newWorldBGM = Managers.Resource.GetSoundResource(ResourceKeys.newWorldBGM);
