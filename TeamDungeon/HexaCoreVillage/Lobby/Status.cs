@@ -1,6 +1,7 @@
 using HexaCoreVillage.Utility;
 using HexaCoreVillage.Framework;
 using Newtonsoft.Json.Converters;
+using System.ComponentModel;
 
 namespace HexaCoreVillage.Lobby;
 
@@ -13,11 +14,23 @@ public class Status : Scene
     {
         Console.Clear();
         Console.CursorVisible = false;
+        SetPlayerItem();
     }
 
     public override void Update()
     {
         StatusScene();
+    }
+    //아이템 장착 잘 되는지 test용
+    private void SetPlayerItem()
+    {
+        List<InventoryItem> items = new List<InventoryItem>();
+        items.Add(new InventoryItem("로지텍 마우스",false,false,0));
+        items.Add(new InventoryItem("지슈라 마우스", false, false, 0));
+        items.Add(new InventoryItem("로지텍 키보드", false, false, 0));
+        items.Add(new InventoryItem("스틸 키보드", false, false, 0));
+        items.Add(new InventoryItem("벤큐 모니터", false, false, 0));
+        _player.Inventory = items;
     }
 
 
@@ -25,11 +38,9 @@ public class Status : Scene
     {
         int itemStart_x = 8;    //아이템 시작 x 좌표
         int itemStart_y = 24;   //아이템 시작 y 좌표
-        int idx = 0;
+        int idx = 1;
         int selectedOption = 0;
 
-        Clear();
-        Write("테스트나 좀 해보자");
         foreach (var item in _player.Inventory)
         {
             //여기다가 아이템 별로 출력하면 되고 만약 y값이 정해진 label 보다 크면 안 x좌표 처음부터 y좌표 처음부터
@@ -48,21 +59,30 @@ public class Status : Scene
 
         while (true)
         {
+            itemStart_x = 8;
+            itemStart_y = 24;
             SetCursorPosition(itemStart_x, itemStart_y);
             for (int i = 0; i < _player.Inventory.Count; i++)
             {
+
+                if (i == 4)                 
+                {
+                    //아이템 목록이 4개가 아이템 오른쪽 창으로 넘기기
+                    itemStart_x = 99;
+                    itemStart_y = 24;
+                }
+
                 if (i == selectedOption)
                 {
                     ForegroundColor = ConsoleColor.Green;
-                    SetCursorPosition(CursorLeft + 3, CursorTop);
-                    Write($"-> {_player.Inventory[i]}");
-                    SetCursorPosition(CursorLeft + 3, CursorTop);
+                    SetCursorPosition(itemStart_x, itemStart_y+3*(i%4));
+                    Write($"-> {_player.Inventory[i].ItemName}");
                     ResetColor();
                 }
                 else
                 {
-                    SetCursorPosition(CursorLeft + 1, CursorTop);
-                    WriteLine($"   {_player.Inventory[i]}");
+                    SetCursorPosition(itemStart_x, itemStart_y + 3 * (i % 4));
+                    WriteLine($"   {_player.Inventory[i].ItemName}");
                 }
             }
 
@@ -85,6 +105,12 @@ public class Status : Scene
         // 아이템이 장착되지 않았다면 장착하고 -> 플레이서 스탯 올려주기
         // 아이템이 장착되어있다면 장착 해제하고 -> 플레이서 스탯 내려주기
         //아이템 장착,해제 기능구현
+        //Clear();
+        //Write($"{_player.Inventory[selectedOption].ItemName}");
+        _player.HP = 50;
+        isInventoryScene = false;
+        StatusScene();
+
     }
 
     private void StatusScene()
@@ -163,6 +189,7 @@ public class Status : Scene
 
         Console.ResetColor();
     }
+    //플레이어 모습 아스키 코드 그림
     private void PrintPlayer()
     {
         string[] asciPlayer =
@@ -214,6 +241,7 @@ public class Status : Scene
         }
 
     }
+    //플레이어 상태창 출력 함수
     private void PrintStatusMenu()
     {
         int itemStart_x = 8;    //아이템 시작 x 좌표
@@ -291,33 +319,6 @@ public class Status : Scene
             ResetColor();
             itemStart_y += 3;   //한번 출력할 때마다 y좌표 3내려서 출력
         }
-        //player에 아이템 없어서 임시로 넣어둔 틀입니다.
-        SetCursorPosition(8, 24);
-        Write("◆ 아이템 출력 아이템 설명 아이템 능력치");
-
-        SetCursorPosition(8, 27);
-        Write("◆ 아이템 출력 아이템 설명 아이템 능력치");
-
-        SetCursorPosition(8, 30);
-        Write("◆ 아이템 출력 아이템 설명 아이템 능력치");
-
-        SetCursorPosition(8, 33);
-        Write("◆ 아이템 출력 아이템 설명 아이템 능력치");
-
-
-
-        SetCursorPosition(99, 24);
-        Write("◆ 아이템 출력 아이템 설명 아이템 능력치");
-
-        SetCursorPosition(99, 27);
-        Write("◆ 아이템 출력 아이템 설명 아이템 능력치");
-
-        SetCursorPosition(99, 30);
-        Write("◆ 아이템 출력 아이템 설명 아이템 능력치");
-
-        SetCursorPosition(99, 33);
-        Write("◆ 아이템 출력 아이템 설명 아이템 능력치");
-
     }
     //문자열을 가운데 정렬 해주는 함수
     public static string PadCenterForMixedText(string str, int totalLength)
