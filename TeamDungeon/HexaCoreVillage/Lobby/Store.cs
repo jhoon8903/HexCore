@@ -4,7 +4,7 @@ using HexaCoreVillage.Utility;
 using static HexaCoreVillage.Utility.DividerLineUtility;
 using Newtonsoft.Json;
 using System.Drawing;
-
+using System.Security.Cryptography.X509Certificates;
 
 namespace HexaCoreVillage.Lobby;
 
@@ -12,23 +12,24 @@ public class Store : Scene
 {
     public override SCENE_NAME SceneName => SCENE_NAME.STORE;
 
-    static string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
     private static List<Item> items = new List<Item>();
     private static List<Item>? itemdata;
-    private static Player player = new Player();
+    private static Player _player = Login.Login._player;
     private static Item item = new Item();
 
     public override void Start()
     {
+        Clear();
         CursorVisible = false;
         LoadItem();
         CreativeUI();
+        _isEscape = false;
     }
 
     public override void Update()
     {
+        if (_isEscape) return;
         DisplayStore();
-        Gold();
         StoreScene();
         StoreBuyScene();
         StoreSellScene();
@@ -36,7 +37,7 @@ public class Store : Scene
 
     public override void Stop()
     {
-        throw new NotImplementedException();
+        Clear();
     }
 
     private static void LoadItem()
@@ -69,18 +70,12 @@ public class Store : Scene
                     Write($"{storeOption[i]}");
                 }
             }
-
-            for (int i = 12; i < 19; i++)
-            {
-                SetCursorPosition(30, i);
-                Write(new string(' ', 12));
-            }
+            //아이템 목록 클리어
+            diviClear();
+            ListClear();
 
             // 골드 표시
-            SetCursorPosition(30, 26);
-            Write(new string(' ', 10));
-            SetCursorPosition(30, 26);
-            Write($"{player.Gold} G");
+            Gold();
 
             ConsoleKeyInfo selectKey = ReadKey();
             if (selectKey.Key == ConsoleKey.LeftArrow)
@@ -134,6 +129,7 @@ public class Store : Scene
                     WriteLine(storeOption[i]);
                 }
             }
+            ListClear();
 
             ConsoleKeyInfo selectKey = ReadKey();
             if (selectKey.Key == ConsoleKey.UpArrow)
@@ -188,6 +184,7 @@ public class Store : Scene
         int selectOtion = 0;
         string[] storeOption = { };
 
+        ListClear();
         for (int i = 0; i < itemdata.Count; i++)
         {
             if (typeSelect == itemdata[i].Type.ToString())
@@ -206,7 +203,6 @@ public class Store : Scene
                 if (i == selectOtion)
                 {
                     ForegroundColor = ConsoleColor.Blue;
-                    // Write($"-  {diviList[i].ItemName}     {diviList[i].Type}     {diviList[i].ItemOption}     {diviList[i].Price}");
                     SetCursorPosition(50, 12 + i);
                     Write($"-  {diviList[i].ItemName}");
                     SetCursorPosition(70, 12 + i);
@@ -216,17 +212,17 @@ public class Store : Scene
                     SetCursorPosition(110, 12 + i);
                     Write($"{diviList[i].Price}");
                     SetCursorPosition(130, 12 + i);
-                    for (int j = 0; j < player.Inventory.Count; j++)
+                    for (int j = 0; j < _player.Inventory.Count; j++)
                     {
-                        if (player.Inventory[j].ItemName == diviList[i].ItemName)
+                        if (_player.Inventory[j].ItemName == diviList[i].ItemName)
                         {
                             SetCursorPosition(130, 12 + i);
-                            Write($"구매 완료");
+                            Write($"O");
                         }
                         else
                         {
                             SetCursorPosition(130, 12 + i);
-                            Write($" ");
+                            Write($"X");
                         }
                     }
                     ResetColor();
@@ -237,7 +233,6 @@ public class Store : Scene
                 }
                 else
                 {
-                    //WriteLine($"-  {diviList[i].ItemName}     {diviList[i].Type}     {diviList[i].ItemOption}     {diviList[i].Price}");
                     SetCursorPosition(50, 12 + i);
                     Write($"-  {diviList[i].ItemName}");
                     SetCursorPosition(70, 12 + i);
@@ -246,21 +241,22 @@ public class Store : Scene
                     Write($"{diviList[i].ItemOption}");
                     SetCursorPosition(110, 12 + i);
                     Write($"{diviList[i].Price}");
-                    for (int j = 0; j < player.Inventory.Count; j++)
+                    for (int j = 0; j < _player.Inventory.Count; j++)
                     {
-                        if (player.Inventory[j].ItemName == diviList[i].ItemName)
+                        if (_player.Inventory[j].ItemName == diviList[i].ItemName)
                         {
                             SetCursorPosition(130, 12 + i);
-                            Write($"구매 완료");
+                            Write($"O");
                         }
                         else
                         {
                             SetCursorPosition(130, 12 + i);
-                            Write($" ");
+                            Write($"X");
                         }
                     }
                 }
             }
+            
 
             ConsoleKeyInfo selectKey = ReadKey();
             if (selectKey.Key == ConsoleKey.UpArrow)
@@ -273,21 +269,23 @@ public class Store : Scene
             }
             else if (selectKey.Key == ConsoleKey.Escape)
             {
-                StoreScene();
+                DisplayStore();
+                break;
             }
             else if (selectKey.Key == ConsoleKey.Enter)
             {
-                if (player.Gold >= diviList[selectOtion].Price)
+                if (_player.Gold >= diviList[selectOtion].Price)
                 {
-                    player.Gold -= diviList[selectOtion].Price;
-                    player.Inventory.Add(new(diviList[selectOtion].ItemName, false, true, 1));
+                    _player.Gold -= diviList[selectOtion].Price;
+                    _player.Inventory.Add(new(diviList[selectOtion].ItemName, false, true, 1));
                     SetCursorPosition(50, 24);
                     Write(new string(" "), 60);
                     SetCursorPosition(50, 24);
                     WriteLine($"{diviList[selectOtion].ItemName}을(를) 구매하셨습니다.");
                     Gold();
+                    Data.SavePlayerData(_player);
                 }
-                else if (player.Gold < diviList[selectOtion].Price)
+                else if (_player.Gold < diviList[selectOtion].Price)
                 {
                     SetCursorPosition(50, 26);
                     WriteLine("소지금이 부족합니다.");
@@ -299,8 +297,6 @@ public class Store : Scene
                 SetCursorPosition(50, 27);
                 WriteLine("아무 키나 누르면 상점으로 돌아갑니다.");
                 ReadKey();
-                ClearRange(12, 19);
-                ClearRange(24, 29);
                 StoreScene();
                 break;
             }
@@ -310,6 +306,7 @@ public class Store : Scene
         {
             case StoreSelect.Exit:
                 StoreScene();
+                ListClear();
                 break;
         }
     }
@@ -320,26 +317,24 @@ public class Store : Scene
         int selectOtion = 0;
         string[] storeOption = { };
 
-        for (int i = 0; i < player.Inventory.Count; i++)
-        {
-            storeOption = player.Inventory[i].ItemName.Split(",");
-        }
-
         while (true)
         {
-
-            if (player.Inventory.Count > 0)
+            for (int i = 0; i < _player.Inventory.Count; i++)
             {
-                for (int i = 0; i < player.Inventory.Count; i++)
+                storeOption = _player.Inventory[i].ItemName.Split(",");
+            }
+            if (_player.Inventory.Count > 0)
+            {
+                for (int i = 0; i < _player.Inventory.Count; i++)
                 {
                     if (i == selectOtion)
                     {
                         ForegroundColor = ConsoleColor.Blue;
                         SetCursorPosition(50, 12 + i);
-                        Write($"-  {player.Inventory[i].ItemName}");
+                        Write($"-  {_player.Inventory[i].ItemName}");
                         for (int j = 0; j < itemdata.Count; j++)
                         {
-                            if (player.Inventory[i].ItemName == itemdata[j].ItemName)
+                            if (_player.Inventory[i].ItemName == itemdata[j].ItemName)
                             {
                                 SetCursorPosition(70, 12 + i);
                                 Write($"{itemdata[i].Type}");
@@ -356,7 +351,7 @@ public class Store : Scene
                     else
                     {
                         SetCursorPosition(50, 12 + i);
-                        Write($"-  {player.Inventory[i].ItemName}");
+                        Write($"-  {_player.Inventory[i].ItemName}");
                         SetCursorPosition(70, 12 + i);
                         Write($"{itemdata[i].Type}");
                         SetCursorPosition(90, 12 + i);
@@ -382,25 +377,31 @@ public class Store : Scene
             {
                 selectOtion = (selectOtion == storeOption.Length - 1) ? 0 : selectOtion + 1;
             }
+            else if(selectKey.Key == ConsoleKey.Escape)
+            {
+                EscapeOut();
+                break;
+            }
             else if (selectKey.Key == ConsoleKey.Enter)
             {
                 // 소지금 = 소지금 + 아이템 판매 가격
                 // 인벤 - 선택아이템 Remove
-                if (player.Inventory.Count > 0)
+                if (_player.Inventory.Count > 0)
                 {
                     // 소지금 = 소지금 + 아이템 판매 가격
                     // 인벤 - 선택아이템 Remove
                     for (int j = 0; j < itemdata.Count; j++)
                     {
-                        if (player.Inventory[selectOtion].ItemName == itemdata[j].ItemName)
+                        if (_player.Inventory[selectOtion].ItemName == itemdata[j].ItemName)
                         {
-                            player.Gold += itemdata[j].Price;
+                            _player.Gold += itemdata[j].Price;
                             Gold();
                         }
                     }
-                    player.Inventory.Remove(player.Inventory[selectOtion]);
+                    _player.Inventory.Remove(_player.Inventory[selectOtion]);
                     SetCursorPosition(50, 24);
                     WriteLine("판매가 완료되었습니다.");
+                    Data.SavePlayerData(_player);
                 }
                 else
                 {
@@ -414,8 +415,7 @@ public class Store : Scene
                 SetCursorPosition(50, 25);
                 WriteLine("아무 키나 누르면 상점으로 돌아갑니다.");
                 ReadKey();
-                ClearRange(12, 19);
-                ClearRange(24, 29);
+                ListClear();
                 DisplayStore();
                 break;
             }
@@ -423,6 +423,8 @@ public class Store : Scene
         switch ((StoreSelect)selectOtion)
         {
             case StoreSelect.Exit:
+                StoreScene();
+                ListClear();
                 break;
         }
     }
@@ -493,6 +495,7 @@ public class Store : Scene
             ResetColor();
         }
 
+       
         #region
         // UI하는 게 어려워서 그냥 노가다로 하겠습니다.
 
@@ -603,13 +606,32 @@ public class Store : Scene
     }
     #endregion
 
+    private static bool _isEscape = false;
+    public static void EscapeOut()
+    {
+        _isEscape = true;
+        DisplayStore();
+    }
+    public static void ListClear()
+    {
+        ClearRange(12, 19);
+        ClearRange(24, 29);
+    }
+    public static void diviClear()
+    {
+        for (int i = 12; i < 19; i++)
+        {
+            SetCursorPosition(30, i);
+            Write(new string(' ', 12));
+        }
+    }
     public static void Gold()
     {
         // 골드 표시
         SetCursorPosition(30, 26);
         Write(new string(' ', 10));
         SetCursorPosition(30, 26);
-        Write($"{player.Gold} G");
+        Write($"{_player.Gold} G");
     }
 
     // 정훈님 코드 참고
