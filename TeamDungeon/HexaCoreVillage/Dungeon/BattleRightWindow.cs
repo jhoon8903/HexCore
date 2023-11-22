@@ -148,9 +148,9 @@ namespace HexaCoreVillage.Dungeon
           
             // 체력 바 그리기
             SetCursorPosition(50, 31);
-            Write($"[ 체력 : {CurrentHp:D3} / {Battle.LoginPlayer!.HP:D3} ]  ");
+            Write($"[ 체력 : {CurrentHp:D3} / {LoginPlayer!.HP:D3} ]  ");
             int staminaBlocks = CurrentHp;
-            for (int i = 0; i < Battle.LoginPlayer.HP; i++)
+            for (int i = 0; i < LoginPlayer.HP; i++)
             {
                 BackgroundColor = i < staminaBlocks ? 
                     staminaBlocks > 60 ? ConsoleColor.DarkGreen :
@@ -163,9 +163,9 @@ namespace HexaCoreVillage.Dungeon
 
             // 멘탈 바 그리기
             SetCursorPosition(50, 32);
-            Write($"[ 멘탈 : {CurrentHp:D3} / {Battle.LoginPlayer.Mental:D3} ]  ");
+            Write($"[ 멘탈 : {CurrentMental:D3} / {LoginPlayer.Mental:D3} ]  ");
             int mentalBlock = CurrentMental;
-            for (int i = 0; i < Battle.LoginPlayer.Mental; i++)
+            for (int i = 0; i < LoginPlayer.Mental; i++)
             {
                 BackgroundColor = i < mentalBlock ? 
                     mentalBlock > 60 ? ConsoleColor.Cyan :
@@ -178,7 +178,7 @@ namespace HexaCoreVillage.Dungeon
 
             // 디버깅 추가 확률
             SetCursorPosition(50, 34);
-            Write($"[ 디버깅 추가 성능 : {Battle.LoginPlayer.BonusDmg} ]  [ 언어 추가 이해력 : {Battle.LoginPlayer.BonusDef} ]");
+            Write($"[ 디버깅 추가 성능 : {LoginPlayer.BonusDmg} ]  [ 언어 추가 이해력 : {LoginPlayer.BonusDef} ]");
           
             // 멘트
             SetCursorPosition(50, 36);
