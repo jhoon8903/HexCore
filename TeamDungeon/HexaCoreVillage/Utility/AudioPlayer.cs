@@ -4,34 +4,73 @@ namespace HexaCoreVillage.Utility
 {
     public class AudioPlayer
     {
-        public enum PlayOption { Play, Pause, Resume, Stop, Change}
+        public enum PlayOption { Play, Pause, Resume, Stop, Change, LoopStart, LoopStop}
         private static readonly IPlayer _audioPlayer = new NetCoreAudio.Player();
+        private static bool _loop = false;
+        private static string? _currentFilePath;
+
         
         /// <summary>
         ///  오디오 플레이어 메서드
         /// </summary>
         /// <param name="filePath">Audio File Path</param>
-        /// <param name="playOption">Play : 재생, Pause : 일시정지, Resume : 재실행, Stop : 중지, Change : 파일 바꾸기</param>
-        public static void AudioController(string filePath, PlayOption playOption)
+        /// <param name="playOption">Play : 재생, Pause : 일시정지, Resume : 재실행, Stop : 중지, Change : 파일 바꾸기, LoopStart : 반복 실행, LoopStop : 반복실행취소</param>
+        public static void AudioController(string? filePath, PlayOption playOption)
         {
+            _currentFilePath = filePath;
+
             switch (playOption)
             {
                 case PlayOption.Play:
-                    _audioPlayer.Play(filePath);
-                    break;
+                    PlayAudio();  
+                    return; 
                 case PlayOption.Pause:
                     _audioPlayer.Pause();
-                    break;
+                    return;
                 case PlayOption.Resume:
                     _audioPlayer.Resume();
-                    break;
+                    return;
                 case PlayOption.Stop:
-                    _audioPlayer.Stop();
-                    break;
+                    StopAudio();
+                    return;
                 case PlayOption.Change:
-                    _audioPlayer.Stop();
-                    _audioPlayer.Play(filePath);
-                    break;
+                    ChangeAudio(filePath);
+                    return;
+                case PlayOption.LoopStart:
+                    _loop = true;
+                    PlayAudio();
+                    return;
+                case PlayOption.LoopStop:
+                    _loop = false;
+                    StopAudio();
+                    return;
+            }
+        }
+
+        private static void PlayAudio()
+        {
+            _audioPlayer.PlaybackFinished+= OnPlayFinished;
+            _audioPlayer.Play(_currentFilePath);
+        }
+
+        private static void StopAudio()
+        {
+            _loop = false;
+            _audioPlayer.Stop();
+            _audioPlayer.PlaybackFinished -= OnPlayFinished;
+        }
+
+        private static void ChangeAudio(string? filePath)
+        {
+            _audioPlayer.Stop();
+            _audioPlayer.Play(filePath);
+        }
+
+        private static void OnPlayFinished(object sender, EventArgs eventArgs)
+        {
+            if (_loop)
+            {
+                PlayAudio();
             }
         }
     }
