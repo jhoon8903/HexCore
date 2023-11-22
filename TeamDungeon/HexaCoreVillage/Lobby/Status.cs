@@ -9,8 +9,7 @@ namespace HexaCoreVillage.Lobby;
 public class Status : Scene
 {
     public override SCENE_NAME SceneName => SCENE_NAME.STATUS;
-    private Player _player = new Player();
-    //Login.Login._player;
+    private Player _player = Login.Login._player;
     private List<Item> itemList = new List<Item>();
     bool isInventoryScene = false;
     public override void Start()

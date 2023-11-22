@@ -33,7 +33,6 @@ public class Login : Scene
     private string _newWorldBGM = Managers.Resource.GetSoundResource(ResourceKeys.newWorldBGM);
     private string _startBGM = Managers.Resource.GetSoundResource(ResourceKeys.startBGM);
 
-
     public override void Start()
     {
         CursorVisible = false;
