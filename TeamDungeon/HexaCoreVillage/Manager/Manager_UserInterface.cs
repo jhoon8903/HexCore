@@ -98,8 +98,12 @@ public class Manager_UserInterface
     /// <summary>
     /// 중앙 정렬하여 출력하는 메서드
     /// </summary>
+    public void PrintMsgAlignCenter(string message, int posY, ConsoleColor fontColor = ConsoleColor.Gray)
+    {
+        PrintMsgAlignCenter(message, posY, fontColor, BackgroundColor);
+    }
     public void PrintMsgAlignCenter(string message, int posY, 
-        ConsoleColor fontColor = ConsoleColor.Gray, ConsoleColor bgColor = ConsoleColor.Black)
+        ConsoleColor fontColor, ConsoleColor bgColor)
     {
         lock (_lock)
         {
@@ -114,8 +118,12 @@ public class Manager_UserInterface
     /// X : 중앙, Y도 중앙
     /// 즉 화면 정중앙에 출력하는 메서드
     /// </summary>
+    public void PrintMsgAlignCenterByCenter(string message, ConsoleColor fontColor = ConsoleColor.Gray)
+    {
+        PrintMsgAlignCenterByCenter(message, fontColor, BackgroundColor);
+    }
     public void PrintMsgAlignCenterByCenter(string message,
-        ConsoleColor fontColor = ConsoleColor.Gray, ConsoleColor bgColor = ConsoleColor.Black)
+        ConsoleColor fontColor, ConsoleColor bgColor)
     {
         lock (_lock)
         {
@@ -130,8 +138,12 @@ public class Manager_UserInterface
     /// <summary>
     /// 원하는 위치에 출력하는 메서드
     /// </summary>
+    public void PrintMsgCoordbyColor(string message, int posX, int posY, ConsoleColor fontColor = ConsoleColor.Gray)
+    {
+        PrintMsgCoordbyColor(message, posX, posY, fontColor, BackgroundColor);
+    }
     public void PrintMsgCoordbyColor(string message, int posX, int posY,
-        ConsoleColor fontColor = ConsoleColor.Gray, ConsoleColor bgColor = ConsoleColor.Black)
+        ConsoleColor fontColor, ConsoleColor bgColor)
     {
         lock (_lock)
         {
@@ -208,7 +220,7 @@ public class Manager_UserInterface
     /// <summary>
     /// 문자열에 색상을 더해주는 함수
     /// </summary>
-    public void PrintMsgToColor(string message, ConsoleColor fontColor, ConsoleColor bgColor = ConsoleColor.Black)
+    public void PrintMsgToColor(string message, ConsoleColor fontColor, ConsoleColor bgColor)
     {
         ForegroundColor = fontColor;
         BackgroundColor = bgColor;
