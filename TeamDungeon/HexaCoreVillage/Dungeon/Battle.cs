@@ -360,7 +360,7 @@ namespace HexaCoreVillage.Dungeon
 
         public override void Stop()
         {
-            
+            AudioPlayer.AudioController(Managers.Resource.GetSoundResource(ResourceKeys.BattleBGM), AudioPlayer.PlayOption.Stop);
         }
         #endregion
     }
