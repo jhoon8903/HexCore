@@ -9,14 +9,16 @@ namespace HexaCoreVillage.Lobby;
 public class Status : Scene
 {
     public override SCENE_NAME SceneName => SCENE_NAME.STATUS;
-    private Player _player = Login.Login._player;
+    private Player _player = new Player();
     private List<Item> itemList = new List<Item>();
     bool isInventoryScene = false;
+    Item itemInform = new Item();
     public override void Start()
     {
         Console.Clear();
         Console.CursorVisible = false;
         SetItem();
+        PlayerSetItem();
     }
 
     public override void Update()
@@ -30,16 +32,14 @@ public class Status : Scene
         itemList = JsonConvert.DeserializeObject<List<Item>>(Json); //게임 내 사용할 수 있는 모든 ITEM
     }
 
-    private Item GetItemInform(string itemName)
+    private void PlayerSetItem()
     {
-        foreach(Item item in itemList)
-        {
-            if (itemName == item.ItemName)
-                return item;
-        }
-        return null;
+        _player.Inventory.Add(new InventoryItem("로지텍 마우스", false, false, 0));
+        _player.Inventory.Add(new InventoryItem("지슈라 마우스", false, false, 0));
+        _player.Inventory.Add(new InventoryItem("로지텍 키보드", false, false, 0));
+        _player.Inventory.Add(new InventoryItem("스틸 키보드", false, false, 0));
+        _player.Inventory.Add(new InventoryItem("벤큐 모니터", false, false, 0));
     }
-
 
     private void InventoryScene()
     {
@@ -54,22 +54,6 @@ public class Status : Scene
             StatusScene();
         }
 
-        foreach (var item in _player.Inventory)
-        {
-            //여기다가 아이템 별로 출력하면 되고 만약 y값이 정해진 label 보다 크면 안 x좌표 처음부터 y좌표 처음부터
-            if (itemStart_y > 33)
-            {
-                itemStart_x = 99;
-                itemStart_y = 24;
-            }
-            SetCursorPosition(itemStart_x, itemStart_y);
-            if (item.IsEquipment == true)
-                Console.ForegroundColor = ConsoleColor.Green;
-            Write($"{idx++}. {item.ItemName} : 아이템 능력치 표시 아이템 설명 표시");
-            ResetColor();
-            itemStart_y += 3;   //한번 출력할 때마다 y좌표 3내려서 출력
-        }
-
         while (true)
         {
             itemStart_x = 8;
@@ -77,6 +61,13 @@ public class Status : Scene
             SetCursorPosition(itemStart_x, itemStart_y);
             for (int i = 0; i < _player.Inventory.Count; i++)
             {
+                foreach(var item in _player.Inventory)
+                {
+                    if (_player.Inventory[i].ItemName == item.ItemName)
+                    {
+                        itemInform = GetItemInform(item.ItemName);
+                    }
+                }
 
                 if (i == 4)
                 {
@@ -89,16 +80,18 @@ public class Status : Scene
                 {
                     ForegroundColor = ConsoleColor.Green;
                     SetCursorPosition(itemStart_x, itemStart_y + 3 * (i % 4));
-                    Write($"-> {_player.Inventory[i].ItemName}");
+                    Write($"-> {_player.Inventory[i].ItemName} : {GetItemStatsType(itemInform.Type)} +{itemInform.ItemOption} - {itemInform.Desc}");
                     ResetColor();
                 }
                 else
                 {
+                    if (_player.Inventory[i].IsEquipment==true)
+                        ForegroundColor= ConsoleColor.Green;
                     SetCursorPosition(itemStart_x, itemStart_y + 3 * (i % 4));
-                    WriteLine($"   {_player.Inventory[i].ItemName}");
+                    Write($"-> {_player.Inventory[i].ItemName} : {GetItemStatsType(itemInform.Type)} +{itemInform.ItemOption} - {itemInform.Desc}");
+                    ResetColor();
                 }
             }
-
             ConsoleKeyInfo keyInfo = ReadKey();
             if (keyInfo.Key == ConsoleKey.UpArrow)
             {
@@ -175,7 +168,7 @@ public class Status : Scene
                 else
                 {
                     SetCursorPosition(CursorLeft + 1, CursorTop);
-                    WriteLine($"   {options[i]}                                     ");
+                    WriteLine($"   {options[i]}                                      ");
                 }
             }
 
@@ -277,7 +270,6 @@ public class Status : Scene
     {
         int itemStart_x = 8;    //아이템 시작 x 좌표
         int itemStart_y = 24;   //아이템 시작 y 좌표
-        Item itemInform = new Item();
 
         SetCursorPosition(42, 3);
         Write("LV");
@@ -345,16 +337,24 @@ public class Status : Scene
                 itemStart_y = 24;
             }
             SetCursorPosition(itemStart_x, itemStart_y);
-            if (item.IsEquipment == true)
-            {
-                 Console.ForegroundColor = ConsoleColor.Green;
-                 itemInform = GetItemInform(item.ItemName);
-            }
+            itemInform = GetItemInform(item.ItemName);
 
+            if (item.IsEquipment == true)
+                 Console.ForegroundColor = ConsoleColor.Green;
+            //ㅋ
             Write($"◆ {itemInform.ItemName} : {GetItemStatsType(itemInform.Type)} +{itemInform.ItemOption} - {itemInform.Desc}");
             ResetColor();
             itemStart_y += 3;   //한번 출력할 때마다 y좌표 3내려서 출력
         }
+    }
+    private Item GetItemInform(string itemName)
+    {
+        foreach (Item item in itemList)
+        {
+            if (itemName == item.ItemName)
+                return item;
+        }
+        return null;
     }
     //아이템 스탯 타입 가져오는 함수
     private string GetItemStatsType(ItemType type)
@@ -423,7 +423,7 @@ public class Status : Scene
 
     public override void Stop()
     {
-
+        Clear();
     }
 }
 enum SelectOption
