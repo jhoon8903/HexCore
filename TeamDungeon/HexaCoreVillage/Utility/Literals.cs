@@ -17,6 +17,18 @@ namespace HexaCoreVillage.Utility
         BattleBGM
     }
 
+    public struct COORD
+    {
+        public int X;
+        public int Y;
+
+        public COORD(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+    }
+
 
     /// <summary>
     /// # 리터럴 상수들을 모아놓은 클래스
