@@ -10,7 +10,7 @@ public class Title : Scene
     {
         Managers.Scene.LoadScene(SCENE_NAME.LOGIN);
         // 초기화
-        Renderer.Instance.DrawConsoleBorder();
+        // Renderer.Instance.DrawConsoleBorder();
 
     }
 
