@@ -55,6 +55,9 @@ public class Lobby : Scene
 
         // Init Timer
         InitTimer();
+
+        //BGM start
+        AudioPlayer.AudioController(Managers.Resource.GetSoundResource(ResourceKeys.newWorldBGM), AudioPlayer.PlayOption.LoopStart);
     }
 
     public override void Update()
