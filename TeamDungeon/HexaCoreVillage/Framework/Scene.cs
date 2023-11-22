@@ -12,6 +12,8 @@ public abstract class Scene
     // Initalize Method
     public abstract void Start();
     public abstract void Update();
+
+    public abstract void Stop();
 }
 
 // 추 후 Utility 같은 정적 클래스로 뺄 예정
