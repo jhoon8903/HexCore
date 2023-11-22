@@ -1,7 +1,10 @@
 
 using HexaCoreVillage.Framework;
 using HexaCoreVillage.Utility;
+using static HexaCoreVillage.Utility.DividerLineUtility;
 using Newtonsoft.Json;
+using System.Drawing;
+
 
 namespace HexaCoreVillage.Lobby;
 
@@ -10,28 +13,27 @@ public class Store : Scene
     public override SCENE_NAME SceneName => SCENE_NAME.STORE;
 
     static string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-<<<<<<< Updated upstream
-    static string ItemListPath = Path.GetFullPath(Path.Combine(baseDirectory, "..", "..", "..", "..", "..", "TeamDungeon", "HexaCoreVillage", "Utility", "ItemList.json"));
-=======
->>>>>>> Stashed changes
     private static List<Item> items = new List<Item>();
     private static List<Item>? itemdata;
-    private static Player  player = new Player();
+    private static Player player = new Player();
     private static Item item = new Item();
 
     public override void Start()
     {
-       StreamReader json = new(ItemListPath);
-        string jsonString = json.ReadToEnd();
-        itemdata = JsonConvert.DeserializeObject<List<Item>>(jsonString);
-        DisplayStore();
+        CursorVisible = false;
+        LoadItem();
+        CreativeUI();
     }
 
     public override void Update()
     {
+        DisplayStore();
+        Gold();
+        StoreScene();
+        StoreBuyScene();
+        StoreSellScene();
+    }
 
-<<<<<<< Updated upstream
-=======
     public override void Stop()
     {
         throw new NotImplementedException();
@@ -41,60 +43,71 @@ public class Store : Scene
     {
         string json = Managers.Resource.GetTextResource(ResourceKeys.ItemList);
         itemdata = JsonConvert.DeserializeObject<List<Item>>(json);
->>>>>>> Stashed changes
     }
 
     // 상점 입장했을 때
     private static void DisplayStore()
     {
         int selectOtion = 0;
-        string[] storeOption = {"구매", "판매", "나가기"};
+        string[] storeOption = Enum.GetNames(typeof(StartStore));
+
 
         while (true)
         {
-            Clear();
-
-            WriteLine("상점에 오신 것을 환영합니다.");
-            WriteLine("구매 or 판매를 선택해주세요.");
+            Gold();
             for (int i = 0; i < storeOption.Length; i++)
             {
+                SetCursorPosition(55 + (i * 40), 6);
                 if (i == selectOtion)
                 {
                     ForegroundColor = ConsoleColor.Blue;
-                    Write($"->  {storeOption[i]}     ");
+                    Write($"{storeOption[i]}");
                     ResetColor();
                 }
                 else
                 {
-                    Write($"  {storeOption[i]}     ");
+                    Write($"{storeOption[i]}");
                 }
             }
-                ConsoleKeyInfo selectKey = ReadKey();
-                if (selectKey.Key == ConsoleKey.LeftArrow)
-                {
-                    selectOtion = (selectOtion == 0) ? storeOption.Length - 1 : selectOtion - 1;
-                }
-                else if (selectKey.Key == ConsoleKey.RightArrow)
-                {
-                    selectOtion = (selectOtion == storeOption.Length-1) ? 0 : selectOtion + 1;
-                }
-                else if (selectKey.Key == ConsoleKey.Enter)
-                {
-                    break;
-                }
-            }
-            switch ((StoreSelect)selectOtion)
+
+            for (int i = 12; i < 19; i++)
             {
-                case StoreSelect.StoreBuyScene:
-                    StoreScene();
-                    break;
-                case StoreSelect.StoreSellScene:
-                    StoreSellScene();
-                    break;
-                case StoreSelect.Exit:
-                WriteLine("로비로!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                    break;
+                SetCursorPosition(30, i);
+                Write(new string(' ', 12));
             }
+
+            // 골드 표시
+            SetCursorPosition(30, 26);
+            Write(new string(' ', 10));
+            SetCursorPosition(30, 26);
+            Write($"{player.Gold} G");
+
+            ConsoleKeyInfo selectKey = ReadKey();
+            if (selectKey.Key == ConsoleKey.LeftArrow)
+            {
+                selectOtion = (selectOtion == 0) ? storeOption.Length - 1 : selectOtion - 1;
+            }
+            else if (selectKey.Key == ConsoleKey.RightArrow)
+            {
+                selectOtion = (selectOtion == storeOption.Length - 1) ? 0 : selectOtion + 1;
+            }
+            else if (selectKey.Key == ConsoleKey.Enter)
+            {
+                break;
+            }
+        }
+        switch ((StartStore)selectOtion)
+        {
+            case StartStore.Buy:
+                StoreScene();
+                break;
+            case StartStore.Sell:
+                StoreSellScene();
+                break;
+            case StartStore.Exit:
+                Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
+                break;
+        }
     }
 
 
@@ -103,39 +116,25 @@ public class Store : Scene
     {
         string typeSelect = "";
         int selectOtion = 0;
-        string[] storeOption = { "Keyboard", "Mouse", "Monitor", "Notebook", "HeadSet", "EnergyDrink", "Exit" };
+        string[] storeOption = Enum.GetNames(typeof(ItemTypeSelet));
+
         while (true)
         {
-            Clear();
-
-            WriteLine("▣ 상점 ▣");
-            WriteLine("필요한 아이템을 얻을 수 있는 상태입니다.");
-            WriteLine();
-            WriteLine("[ 보유 골드 ]");
-            WriteLine($"{player.Gold} G");
-            WriteLine();
-            WriteLine("[ 아이템 목록 ]");
-            WriteLine("----------------------------------------------------------------");
-            for (int i = 0; i < itemdata.Count; i++)
-            {
-                WriteLine($"-  {itemdata[i].ItemName}     {itemdata[i].Type}     {itemdata[i].ItemOption}     {itemdata[i].Desc}");
-                WriteLine("----------------------------------------------------------------");
-            }
-            WriteLine();
-
             for (int i = 0; i < storeOption.Length; i++)
             {
+                SetCursorPosition(30, 12 + i);
                 if (i == selectOtion)
                 {
                     ForegroundColor = ConsoleColor.Blue;
-                    WriteLine("->" + storeOption[i]);
+                    WriteLine(storeOption[i]);
                     ResetColor();
                 }
                 else
                 {
-                    WriteLine(" " + storeOption[i]);
+                    WriteLine(storeOption[i]);
                 }
             }
+
             ConsoleKeyInfo selectKey = ReadKey();
             if (selectKey.Key == ConsoleKey.UpArrow)
             {
@@ -148,6 +147,11 @@ public class Store : Scene
             else if (selectKey.Key == ConsoleKey.Enter)
             {
                 typeSelect = storeOption[selectOtion];
+                break;
+            }
+            else if (selectKey.Key == ConsoleKey.Escape)
+            {
+                DisplayStore();
                 break;
             }
         }
@@ -178,15 +182,15 @@ public class Store : Scene
         }
     }
 
-    private static void StoreBuyScene(string typeSelect="")
+    private static void StoreBuyScene(string typeSelect = "")
     {
         List<Item> diviList = new List<Item>();
         int selectOtion = 0;
         string[] storeOption = { };
 
-        for(int i = 0; i < itemdata.Count; i++)
+        for (int i = 0; i < itemdata.Count; i++)
         {
-            if(typeSelect == itemdata[i].Type.ToString())
+            if (typeSelect == itemdata[i].Type.ToString())
             {
                 storeOption = itemdata[i].ItemName.Split(',');
                 diviList.Add(itemdata[i]);
@@ -194,62 +198,15 @@ public class Store : Scene
         }
         while (true)
         {
-<<<<<<< Updated upstream
-            Clear();
 
-            WriteLine("▣ 상점 - 아이템 구매 ▣");
-            WriteLine("필요한 아이템을 얻을 수 있는 상태입니다.");
-            WriteLine();
-            WriteLine("[ 보유 골드 ]");
-            WriteLine($"{player.Gold} G");
-            WriteLine();
-            WriteLine("[ 아이템 목록 ]");
-
-=======
->>>>>>> Stashed changes
             // 아이템리스트를 불러오면 방향키로 이동하면서 선택
-            for (int i = 0; i <diviList.Count; i++)
+            for (int i = 0; i < diviList.Count; i++)
             {
-                WriteLine("----------------------------------------------------------------");
+                SetCursorPosition(50, 12 + i);
                 if (i == selectOtion)
                 {
                     ForegroundColor = ConsoleColor.Blue;
-<<<<<<< Updated upstream
-                    WriteLine($"->  {diviList[i].ItemName}     {diviList[i].Type}     {diviList[i].ItemOption}     {diviList[i].Desc}    {diviList[i].Price}");
-=======
-                    SetCursorPosition(50, 12 + i);
-                    Write($"-  {diviList[i].ItemName}");
-                    SetCursorPosition(70, 12 + i);
-                    Write($"{diviList[i].Type}");
-                    SetCursorPosition(90, 12 + i);
-                    Write($"{diviList[i].ItemOption}");
-                    SetCursorPosition(110, 12 + i);
-                    Write($"{diviList[i].Price}");
-                    if (player.Inventory.Count > 0)
-                    {
-                        for (int j = 0; j < player.Inventory.Count; j++)
-                        {
-                            if (player.Inventory[j].ItemName == diviList[i].ItemName)
-                            {
-                                SetCursorPosition(130, 12 + i);
-                                Write($"구매 완료");
-                            }
-                            else
-                            {
-                                SetCursorPosition(130, 12 + i);
-                                Write($" ");
-                            }
-                        }
-                    }
-
->>>>>>> Stashed changes
-                    ResetColor();
-                }
-                else
-                {
-<<<<<<< Updated upstream
-                    WriteLine($"  {diviList[i].ItemName}     {diviList[i].Type}     {diviList[i].ItemOption}     {diviList[i].Desc}    {diviList[i].Price}");
-=======
+                    // Write($"-  {diviList[i].ItemName}     {diviList[i].Type}     {diviList[i].ItemOption}     {diviList[i].Price}");
                     SetCursorPosition(50, 12 + i);
                     Write($"-  {diviList[i].ItemName}");
                     SetCursorPosition(70, 12 + i);
@@ -259,37 +216,60 @@ public class Store : Scene
                     SetCursorPosition(110, 12 + i);
                     Write($"{diviList[i].Price}");
                     SetCursorPosition(130, 12 + i);
-                    Write(new string(' ', 10));
-                    if (player.Inventory.Count > 0)
+                    for (int j = 0; j < player.Inventory.Count; j++)
                     {
-                        for (int j = 0; j < player.Inventory.Count; j++)
+                        if (player.Inventory[j].ItemName == diviList[i].ItemName)
                         {
-                            if (player.Inventory[j].ItemName == diviList[i].ItemName)
-                            {
-                                SetCursorPosition(130, 12 + i);
-                                Write($"구매 완료");
-                            }
-                            else
-                            {
-                                SetCursorPosition(130, 12 + i);
-                                Write($" ");
-                            }
+                            SetCursorPosition(130, 12 + i);
+                            Write($"구매 완료");
+                        }
+                        else
+                        {
+                            SetCursorPosition(130, 12 + i);
+                            Write($" ");
                         }
                     }
-                    // --------------------
->>>>>>> Stashed changes
+                    ResetColor();
+                    SetCursorPosition(50, 24);
+                    Write(new string(' ', 100));
+                    SetCursorPosition(50, 24);
+                    Write($"{diviList[i].Desc}");
+                }
+                else
+                {
+                    //WriteLine($"-  {diviList[i].ItemName}     {diviList[i].Type}     {diviList[i].ItemOption}     {diviList[i].Price}");
+                    SetCursorPosition(50, 12 + i);
+                    Write($"-  {diviList[i].ItemName}");
+                    SetCursorPosition(70, 12 + i);
+                    Write($"{diviList[i].Type}");
+                    SetCursorPosition(90, 12 + i);
+                    Write($"{diviList[i].ItemOption}");
+                    SetCursorPosition(110, 12 + i);
+                    Write($"{diviList[i].Price}");
+                    for (int j = 0; j < player.Inventory.Count; j++)
+                    {
+                        if (player.Inventory[j].ItemName == diviList[i].ItemName)
+                        {
+                            SetCursorPosition(130, 12 + i);
+                            Write($"구매 완료");
+                        }
+                        else
+                        {
+                            SetCursorPosition(130, 12 + i);
+                            Write($" ");
+                        }
+                    }
                 }
             }
-            WriteLine("----------------------------------------------------------------");
 
             ConsoleKeyInfo selectKey = ReadKey();
             if (selectKey.Key == ConsoleKey.UpArrow)
             {
-                selectOtion = (selectOtion == 0) ? storeOption.Length  - 1 : selectOtion - 1;
+                selectOtion = (selectOtion == 0) ? storeOption.Length - 1 : selectOtion - 1;
             }
             else if (selectKey.Key == ConsoleKey.DownArrow)
             {
-                selectOtion = (selectOtion == storeOption.Length ) ? 0 : selectOtion + 1;
+                selectOtion = (selectOtion == storeOption.Length) ? 0 : selectOtion + 1;
             }
             else if (selectKey.Key == ConsoleKey.Escape)
             {
@@ -297,33 +277,30 @@ public class Store : Scene
             }
             else if (selectKey.Key == ConsoleKey.Enter)
             {
-                //for (int i = 0; i < player.Inventory.Count; i++)
-                //{
-                //    if (diviList[selectOtion].ItemName == player.Inventory[i].ItemName)
-                //    {
-                //        player.Inventory[i].IsBuying = true;
-                //        SetCursorPosition(50, 24);
-                //        WriteLine("중복 구매는 불가능 합니다.");
-                //    }
-                //}
                 if (player.Gold >= diviList[selectOtion].Price)
                 {
                     player.Gold -= diviList[selectOtion].Price;
                     player.Inventory.Add(new(diviList[selectOtion].ItemName, false, true, 1));
+                    SetCursorPosition(50, 24);
+                    Write(new string(" "), 60);
+                    SetCursorPosition(50, 24);
                     WriteLine($"{diviList[selectOtion].ItemName}을(를) 구매하셨습니다.");
+                    Gold();
                 }
-                else if(player.Gold < diviList[selectOtion].Price)
+                else if (player.Gold < diviList[selectOtion].Price)
                 {
+                    SetCursorPosition(50, 26);
                     WriteLine("소지금이 부족합니다.");
                 }
                 else
                 {
                     WriteLine("잘못된 입력입니다.");
                 }
-                WriteLine();
-                WriteLine($"현재 소지금 : {player.Gold}");
+                SetCursorPosition(50, 27);
                 WriteLine("아무 키나 누르면 상점으로 돌아갑니다.");
                 ReadKey();
+                ClearRange(12, 19);
+                ClearRange(24, 29);
                 StoreScene();
                 break;
             }
@@ -339,31 +316,18 @@ public class Store : Scene
 
     private static void StoreSellScene()
     {
-        // 아이템 판매 만들 곳
-        // 인벤토리 데이터를 불러와야하는데 아직 데이터가 없어서 불러오지 못함
-        // 인벤토리가 만들어지면 그 때 할 예정
-        // UI자체는 상점 혹은 만들어지는 인벤과 비슷할 예정이기 때문에 순서는 뒤로 두었습니다.
 
         int selectOtion = 0;
         string[] storeOption = { };
 
-        for(int i = 0; i < player.Inventory.Count; i++)
+        for (int i = 0; i < player.Inventory.Count; i++)
         {
             storeOption = player.Inventory[i].ItemName.Split(",");
         }
 
         while (true)
         {
-            Clear();
 
-            WriteLine("▣ 상점 - 아이템 판매▣");
-            WriteLine("사용하지 않는 아이템을 판매하는 곳입니다.");
-            WriteLine();
-            WriteLine("[ 보유 골드 ]");
-            WriteLine($"{player.Gold} G");
-            WriteLine();
-            WriteLine("[ 아이템 목록 ]");
-            WriteLine("----------------------------------------------------------------");
             if (player.Inventory.Count > 0)
             {
                 for (int i = 0; i < player.Inventory.Count; i++)
@@ -371,9 +335,6 @@ public class Store : Scene
                     if (i == selectOtion)
                     {
                         ForegroundColor = ConsoleColor.Blue;
-<<<<<<< Updated upstream
-                        WriteLine($"->  {player.Inventory[i].ItemName}");
-=======
                         SetCursorPosition(50, 12 + i);
                         Write($"-  {player.Inventory[i].ItemName}");
                         for (int j = 0; j < itemdata.Count; j++)
@@ -381,44 +342,34 @@ public class Store : Scene
                             if (player.Inventory[i].ItemName == itemdata[j].ItemName)
                             {
                                 SetCursorPosition(70, 12 + i);
-                                Write($"{itemdata[j].Type}");
+                                Write($"{itemdata[i].Type}");
                                 SetCursorPosition(90, 12 + i);
-                                Write($"{itemdata[j].ItemOption}");
+                                Write($"{itemdata[i].ItemOption}");
                                 SetCursorPosition(110, 12 + i);
-                                Write($"{itemdata[j].Price}");
+                                Write($"{itemdata[i].Price}");
                             }
                         }
->>>>>>> Stashed changes
                         ResetColor();
                         SetCursorPosition(50, 24);
                         Write($"{itemdata[i].Desc}");
                     }
                     else
                     {
-<<<<<<< Updated upstream
-                        WriteLine($"-  {player.Inventory[i].ItemName}");
-=======
                         SetCursorPosition(50, 12 + i);
                         Write($"-  {player.Inventory[i].ItemName}");
-                        for (int j = 0; j < itemdata.Count; j++)
-                        {
-                            if (player.Inventory[i].ItemName == itemdata[j].ItemName)
-                            {
-                                SetCursorPosition(70, 12 + i);
-                                Write($"{itemdata[j].Type}");
-                                SetCursorPosition(90, 12 + i);
-                                Write($"{itemdata[j].ItemOption}");
-                                SetCursorPosition(110, 12 + i);
-                                Write($"{itemdata[j].Price}");
-                            }
-                        }
->>>>>>> Stashed changes
+                        SetCursorPosition(70, 12 + i);
+                        Write($"{itemdata[i].Type}");
+                        SetCursorPosition(90, 12 + i);
+                        Write($"{itemdata[i].ItemOption}");
+                        SetCursorPosition(110, 12 + i);
+                        Write($"{itemdata[i].Price}");
                     }
                 }
             }
             else
             {
-                WriteLine("소지하고 있는 아이템이 없습니다.");
+                SetCursorPosition(50, 12);
+                WriteLine("- 소지하고 있는 아이템이 없습니다.");
             }
             WriteLine();
 
@@ -444,20 +395,27 @@ public class Store : Scene
                         if (player.Inventory[selectOtion].ItemName == itemdata[j].ItemName)
                         {
                             player.Gold += itemdata[j].Price;
+                            Gold();
                         }
                     }
                     player.Inventory.Remove(player.Inventory[selectOtion]);
+                    SetCursorPosition(50, 24);
                     WriteLine("판매가 완료되었습니다.");
                 }
                 else
                 {
+                    SetCursorPosition(50, 24);
                     WriteLine("판매할 아이템이 없으므로 메인화면으로 넘어갑니다.");
                     ReadKey();
+                    ClearRange(12, 19);
+                    ClearRange(24, 29);
                     DisplayStore();
                 }
-                WriteLine($"현재 소지금 : {player.Gold}");
+                SetCursorPosition(50, 25);
                 WriteLine("아무 키나 누르면 상점으로 돌아갑니다.");
                 ReadKey();
+                ClearRange(12, 19);
+                ClearRange(24, 29);
                 DisplayStore();
                 break;
             }
@@ -468,13 +426,210 @@ public class Store : Scene
                 break;
         }
     }
-
-    public override void Stop()
+    private static void CreativeUI()
     {
-        throw new NotImplementedException();
+        Clear();
+        Renderer.Instance.DrawConsoleBorder();
+
+        SetCursorPosition(30, 6);
+        Write("STORE");
+
+        const int splitPosition1 = Renderer.FixedXColumn / 8;
+        for (int i = 0; i < Renderer.FixedYRows - 12; i++)
+        {
+            SetCursorPosition(splitPosition1, i + 3);
+            BackgroundColor = ConsoleColor.Yellow;
+            Write(" "); // 분할선 그리기
+            ResetColor();
+        }
+
+        const int splitPosition2 = Renderer.FixedXColumn / 4;
+        for (int i = 0; i < Renderer.FixedYRows - 12; i++)
+        {
+            SetCursorPosition(splitPosition2, i + 3);
+            BackgroundColor = ConsoleColor.Yellow;
+            Write(" ");
+            ResetColor();
+        }
+
+        const int splitPosition3 = Renderer.FixedXColumn - 28;
+        for (int i = 0; i < Renderer.FixedYRows - 12; i++)
+        {
+            SetCursorPosition(splitPosition3, i + 3);
+            BackgroundColor = ConsoleColor.Yellow;
+            Write(" ");
+            ResetColor();
+        }
+
+        SetCursorPosition(22, 3);
+        for (int i = 0; i < 130; i++)
+        {
+            BackgroundColor = ConsoleColor.Yellow;
+            Write(" ");
+            ResetColor();
+        }
+
+        SetCursorPosition(22, 9);
+        for (int i = 0; i < 130; i++)
+        {
+            BackgroundColor = ConsoleColor.Yellow;
+            Write(" ");
+            ResetColor();
+        }
+
+        SetCursorPosition(22, 21);
+        for (int i = 0; i < 130; i++)
+        {
+            BackgroundColor = ConsoleColor.Yellow;
+            Write(" ");
+            ResetColor();
+        }
+
+        SetCursorPosition(22, 30);
+        for (int i = 0; i < 130; i++)
+        {
+            BackgroundColor = ConsoleColor.Yellow;
+            Write(" ");
+            ResetColor();
+        }
+
+        #region
+        // UI하는 게 어려워서 그냥 노가다로 하겠습니다.
+
+        ///// <summary>
+        ///// 첫번째 칸 TITLE
+        ///// <summary>
+        //int row = 5;
+        //int width = 150;
+        //SetCursorPosition(10, 2);
+        //for (int i = 0; i <= width; i++)
+        //{
+        //    if (i == 0) Write("┌");
+        //    Write("─");
+        //    if (i == width) Write("┐");
+        //}
+        //for (int j = 1; j < row; j++)
+        //{
+        //    SetCursorPosition(10, j);
+        //    for (int i = 0; i <= width; i++)
+        //    {
+        //        if (i == 0) Write("│");
+        //        Write(" ");
+        //        if (i == width) Write("│");
+        //    }
+        //}
+
+        //SetCursorPosition(10, 5);
+        //for (int i = 0; i <= width; i++)
+        //{
+        //    if (i == 0) Write("├");
+        //    Write("─");
+        //    if (i == width) Write("┤");
+        //}
+
+        //WriteLine();
+        //SetCursorPosition(67, 3);
+        //Write("Store - 아이템을 사고 파는 상점입니다.");
+
+        ///// <summary>
+        ///// 두번째 칸 TITLE
+        ///// <summary>
+        //for (int j = 6; j < row * 2; j++)
+        //{
+        //    SetCursorPosition(10, j);
+        //    for (int i = 0; i <= width; i++)
+        //    {
+        //        if (i == 0) Write("│");
+        //        Write(" ");
+        //        if (i == width) Write("│");
+        //    }
+        //}
+
+        //SetCursorPosition(10, 10);
+        //for (int i = 0; i <= width; i++)
+        //{
+        //    if (i == 0) Write("├");
+        //    Write("─");
+        //    if (i == width) Write("┤");
+        //}
+
+        ///// <summary>
+        ///// 세번째 칸 TITLE
+        ///// <summary>
+
+        //for (int j = 11; j < row * 4; j++)
+        //{
+        //    SetCursorPosition(10, j);
+        //    for (int i = 0; i <= width; i++)
+        //    {
+        //        if (i == 0) Write("│");
+        //        Write(" ");
+        //        if (i == width) Write("│");
+        //    }
+        //}
+
+        //SetCursorPosition(10, 20);
+        //for (int i = 0; i <= width; i++)
+        //{
+        //    if (i == 0) Write("├");
+        //    Write("─");
+        //    if (i == width) Write("┤");
+        //}
+
+        ///// <summary>
+        ///// 네번째 칸 TITLE
+        ///// <summary>
+
+        //for (int j = 21; j < row * 6; j++)
+        //{
+        //    SetCursorPosition(10, j);
+        //    for (int i = 0; i <= width; i++)
+        //    {
+        //        if (i == 0) Write("│");
+        //        Write(" ");
+        //        if (i == width) Write("│");
+        //    }
+        //}
+
+        //SetCursorPosition(10, 30);
+        //for (int i = 0; i <= width; i++)
+        //{
+        //    if (i == 0) Write("└");
+        //    Write("─");
+        //    if (i == width) Write("┘");
+        //}
+        //WriteLine();
+        //ResetColor();
+    }
+    #endregion
+
+    public static void Gold()
+    {
+        // 골드 표시
+        SetCursorPosition(30, 26);
+        Write(new string(' ', 10));
+        SetCursorPosition(30, 26);
+        Write($"{player.Gold} G");
+    }
+
+    // 정훈님 코드 참고
+    // y기준 - start -> end 꺄지 범위를 설정해주면 ' '로 덮어주는 듯
+    public static void ClearRange(int start, int end)
+    {
+        for (int i = start; i < end; i++)
+        {
+            SetCursorPosition(50, i);
+            Write(new string(' ', 100));
+        }
     }
 }
 
+enum StartStore
+{
+    Buy,
+    Sell,
+    Exit
+}
 enum StoreSelect
 {
     StoreBuyScene,

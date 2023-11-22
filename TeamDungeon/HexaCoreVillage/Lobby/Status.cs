@@ -9,7 +9,7 @@ namespace HexaCoreVillage.Lobby;
 public class Status : Scene
 {
     public override SCENE_NAME SceneName => SCENE_NAME.STATUS;
-    private Player _player = new Player();
+    private Player _player = Login.Login._player;
     private List<Item> itemList = new List<Item>();
     bool isInventoryScene = false;
     Item itemInform = new Item();
@@ -18,7 +18,6 @@ public class Status : Scene
         Console.Clear();
         Console.CursorVisible = false;
         SetItem();
-        PlayerSetItem();
     }
 
     public override void Update()
@@ -32,14 +31,6 @@ public class Status : Scene
         itemList = JsonConvert.DeserializeObject<List<Item>>(Json); //게임 내 사용할 수 있는 모든 ITEM
     }
 
-    private void PlayerSetItem()
-    {
-        _player.Inventory.Add(new InventoryItem("로지텍 마우스", false, false, 0));
-        _player.Inventory.Add(new InventoryItem("지슈라 마우스", false, false, 0));
-        _player.Inventory.Add(new InventoryItem("로지텍 키보드", false, false, 0));
-        _player.Inventory.Add(new InventoryItem("스틸 키보드", false, false, 0));
-        _player.Inventory.Add(new InventoryItem("벤큐 모니터", false, false, 0));
-    }
 
     private void InventoryScene()
     {
@@ -51,7 +42,6 @@ public class Status : Scene
         if(_player.Inventory.Count==0)//만약 아이템이 없다면 그냥 status메뉴로 바로 이동
         {
             isInventoryScene = false;
-            StatusScene();
         }
 
         while (true)
@@ -110,17 +100,30 @@ public class Status : Scene
         //모든 case마다 로직이 같다. 
         // 아이템이 장착되지 않았다면 장착하고 -> 플레이서 스탯 올려주기
         // 아이템이 장착되어있다면 장착 해제하고 -> 플레이서 스탯 내려주기
-
         //아이템 장착,해제 기능구현
         //만약 플레이어 인벤토리에 있는 아이템과 같은 이름이 있다면
         if (_player.Inventory[selectedOption].IsEquipment==false)    //아이템이 장착되어 있지 않다면
         {
-            foreach (var item in itemList)
+            foreach (var item in itemList)  //아이템 리스트에서 플레이어가 가지고 있는 아이템 정보 찾기
             {
-                if (item.ItemName == _player.Inventory[selectedOption].ItemName) //아이템 이름이 같다면 
+                if (item.ItemName == _player.Inventory[selectedOption].ItemName) 
                 {
-                    //스탯 올려주고 player에서 어떻게 구현할거고 어떻게 표현할지 생각
-                    //장착한거 알려주고
+                    
+                    switch (GetItemStatsType(item.Type))
+                    {
+                        case "DEF":
+                            _player.BonusDef += item.ItemOption;
+                            break;
+                        case "ATK":
+                            _player.BonusDmg += item.ItemOption;
+                            break;
+                        case "HP":
+                            _player.CurrentHp += item.ItemOption;
+                            break;
+                        case "SP":
+                            _player.CurrentMental += item.ItemOption;
+                            break;
+                    }
                     _player.Inventory[selectedOption].IsEquipment = true;
                 }
 
@@ -128,13 +131,33 @@ public class Status : Scene
         }
         else        //아이템이 장착되어 있다면
         {
-            //스탯 내려주고
-            _player.Inventory[selectedOption].IsEquipment=false;
+            foreach (var item in itemList)  //아이템 리스트에서 플레이어가 가지고 있는 아이템 정보 찾기
+            {
+                if (item.ItemName == _player.Inventory[selectedOption].ItemName)
+                {
+
+                    switch (GetItemStatsType(item.Type))
+                    {
+                        case "DEF":
+                            _player.BonusDef -= item.ItemOption;
+                            break;
+                        case "ATK":
+                            _player.BonusDmg -= item.ItemOption;
+                            break;
+                        case "HP":
+                            _player.CurrentHp -= item.ItemOption;
+                            break;
+                        case "SP":
+                            _player.CurrentMental -= item.ItemOption;
+                            break;
+                    }
+                    _player.Inventory[selectedOption].IsEquipment = false;
+                }
+
+            }
         }
 
         isInventoryScene = false;
-        StatusScene();
-
     }
 
     private void StatusScene()
@@ -146,9 +169,10 @@ public class Status : Scene
 
         PrintPlayer();
         DrawLine();
-        PrintStatusMenu();
         if (isInventoryScene)
             InventoryScene();
+        PrintStatusMenu();
+   
 
         while (true)
         {
@@ -300,23 +324,23 @@ public class Status : Scene
         PrintBar(100, _player.Exp);
 
         SetCursorPosition(87, 5);
-        Write($"{PadRightForMixedText($"체력  {_player.HP}/100  ", 30)}");
-        PrintBar(100, _player.HP);
+        Write($"{PadRightForMixedText($"체력  {_player.CurrentHp}/{_player.HP}  ", 30)}");
+        PrintBar(_player.HP, _player.CurrentHp);
 
         SetCursorPosition(87, 7);
-        Write($"{PadRightForMixedText($"멘탈  {_player.Mental}/100  ", 30)}");
-        PrintBar(100, _player.Mental);
+        Write($"{PadRightForMixedText($"멘탈  {_player.CurrentMental}/{_player.CurrentMental}  ", 30)}");
+        PrintBar(_player.Mental, _player.CurrentMental);
 
         SetCursorPosition(123, 9);
         Write("♣기본정보♣");
 
         SetCursorPosition(87, 11);
-        Write($"{PadRightForMixedText($"타이핑 속력(ATK)  {_player.TypingSpeed}/100  ", 30)}");
-        PrintBar(100, _player.TypingSpeed);
+        Write($"{PadRightForMixedText($"타이핑 속력(ATK)  {_player.TypingSpeed+_player.BonusDmg}/100  ", 30)}");
+        PrintBar(100, _player.TypingSpeed+_player.BonusDmg);
 
         SetCursorPosition(87, 13);
-        Write($"{PadRightForMixedText($"C# 언어 능력(DEF)  {_player.C}/100  ", 30)}");
-        PrintBar(100, _player.C);
+        Write($"{PadRightForMixedText($"C# 언어 능력(DEF)  {_player.C+_player.BonusDef}/100  ", 30)}");
+        PrintBar(100, _player.C+_player.BonusDef);
 
         SetCursorPosition(87, 15);
         Write($"{PadRightForMixedText($"C# 언어 능력(DEF)  {_player.C}/100  ", 30)}");
@@ -341,7 +365,7 @@ public class Status : Scene
 
             if (item.IsEquipment == true)
                  Console.ForegroundColor = ConsoleColor.Green;
-            //ㅋ
+
             Write($"◆ {itemInform.ItemName} : {GetItemStatsType(itemInform.Type)} +{itemInform.ItemOption} - {itemInform.Desc}");
             ResetColor();
             itemStart_y += 3;   //한번 출력할 때마다 y좌표 3내려서 출력
@@ -377,7 +401,7 @@ public class Status : Scene
         string resultStr = "";
         string paddingStr = "";
         int currentLength = GetPrintableLegnth(str);
-        int padding = str.Length % 2 == 0 ? (totalLength - currentLength) / 2 : (totalLength - currentLength) / 2 + 1;
+        int padding = (str.Length % 2 == 0)  ? (totalLength - currentLength) / 2 : currentLength==str.Length ?  (totalLength - currentLength) / 2 + 1 : (totalLength - currentLength) / 2;
         paddingStr = new string(' ', padding);
         resultStr += currentLength != str.Length ? String.Format("{0}", str).PadLeft(totalLength - ((currentLength - str.Length) + (totalLength / 2) - (currentLength / 2))) : String.Format("{0}", str).PadLeft(totalLength - ((totalLength / 2) - (currentLength / 2)));
         resultStr += paddingStr;
