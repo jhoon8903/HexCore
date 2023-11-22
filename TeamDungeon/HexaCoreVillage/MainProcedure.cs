@@ -12,7 +12,7 @@ public static class MainProcedure
         Managers.Resource.LoadAllResources();
 
         // Title Scene Load.
-        Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
+        Managers.Scene.LoadScene(SCENE_NAME.TITLE);
 
         Run();
     }

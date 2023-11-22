@@ -237,4 +237,9 @@ public class Status : Scene
         Console.WriteLine(bar);
         Console.ResetColor();
     }
+
+    public override void Stop()
+    {
+        throw new NotImplementedException();
+    }
 }

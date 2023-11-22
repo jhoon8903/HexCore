@@ -31,7 +31,7 @@ public class Login : Scene
     public override void Start()
     {
         CursorVisible = false;
-        AudioController(startBGMPath,PlayOption.Play);
+        AudioController(Managers.Resource.GetSoundResource(ResourceKeys.startBGM),PlayOption.Play);
     }
 
     public override void Update()
@@ -433,6 +433,11 @@ public class Login : Scene
         _player.Inventory.Add(new InventoryItem(ItemBox[2].ItemName, false, false, 1));
         _player.Inventory.Add(new InventoryItem(ItemBox[3].ItemName, false, false, 1));
         _player.Inventory.Add(new InventoryItem(ItemBox[4].ItemName, false, false, 1));
+    }
+
+    public override void Stop()
+    {
+        throw new NotImplementedException();
     }
 }
 

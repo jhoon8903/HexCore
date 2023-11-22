@@ -14,6 +14,11 @@ public class Title : Scene
 
     }
 
+    public override void Stop()
+    {
+        
+    }
+
     public override void Update()
     {
         

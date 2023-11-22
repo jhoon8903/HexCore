@@ -15,8 +15,8 @@ public class Manager_Resource
     #region Member Variables
     // JSON, TXT 파일 보관
     private Dictionary<ResourceKeys, string>? _textResources;
-    // Sound 파일 보관
-    private Dictionary<ResourceKeys, AudioFileReader>? _soundResources;
+    // Sound 파일 경로 보관
+    private Dictionary<ResourceKeys, string>? _soundResources;
 
     private bool _isComplete;
 
@@ -35,7 +35,7 @@ public class Manager_Resource
     public Manager_Resource()
     {
         _textResources = new Dictionary<ResourceKeys, string>();
-        _soundResources = new Dictionary<ResourceKeys, AudioFileReader>();
+        _soundResources = new Dictionary<ResourceKeys, string>();
 
         _isComplete = false;
     }
@@ -82,7 +82,7 @@ public class Manager_Resource
         }
     }
 
-    public AudioFileReader GetSoundResource(ResourceKeys key)
+    public string GetSoundResource(ResourceKeys key)
     {
         if (_soundResources?.ContainsKey(key) == true)
             return _soundResources[key];
@@ -153,7 +153,7 @@ public class Manager_Resource
 
             if (fileName.Equals(keyName, StringComparison.OrdinalIgnoreCase) && _soundResources != null)
             {
-                AudioFileReader fileContent = new AudioFileReader(filePath);
+                string fileContent = filePath;
                 _soundResources[key] = fileContent;
                 break;
             }

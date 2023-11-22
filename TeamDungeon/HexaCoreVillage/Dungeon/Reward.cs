@@ -17,6 +17,11 @@ public class Reward : Scene
         Renderer.Instance.DrawConsoleBorder();
     }
 
+    public override void Stop()
+    {
+        throw new NotImplementedException();
+    }
+
     public override void Update()
     {
     }
