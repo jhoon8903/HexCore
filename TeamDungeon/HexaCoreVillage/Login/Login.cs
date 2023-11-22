@@ -336,25 +336,25 @@ public class Login : Scene
             Renderer.Instance.DrawConsoleBorder();
             SetCursorPosition(0, 1);
             WriteInForm("사용하던 아이디를 입력해 주세요.",ConsoleColor.White);
-            WriteInForm("나가기 - ESC", ConsoleColor.White);
             SetCursorPosition(1, 38);
-            if(ConsoleKey.Escape == ReadKey().Key)
-            {
-                LoginScene();
-            }
+            
             if (_player.ID == ReadLine())
             {
                 SetCursorPosition(CursorLeft, CursorTop+1);
                 WriteInForm("사용자를 확인하였습니다.",ConsoleColor.Blue);
                 Thread.Sleep(1500);
+                Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
                 break;
             }
             SetCursorPosition(CursorLeft, CursorTop + 1);
             WriteInForm("데이터가 일치하지 않습니다.", ConsoleColor.Blue);
             Thread.Sleep(1500);
+            WriteInForm("이전 화면으로 돌아가시겠습니까?", ConsoleColor.White);
+            if(ReadKey().Key == ConsoleKey.Enter)
+            {
+                break;
+            }
         }
-        AudioController(_newWorldBGM, PlayOption.Change);
-        Managers.Scene.LoadScene(SCENE_NAME.BATTLE);
 
     }
 
@@ -382,7 +382,7 @@ public class Login : Scene
         WriteInForm("어라..? 근데 왜 이렇게 어지럽....", ConsoleColor.White);
         Thread.Sleep(3000);
 
-        AudioController(_newWorldBGM, PlayOption.Change);
+        AudioController(_newWorldBGM, PlayOption.LoopStart);
         //사운드 변환
         Clear();
         Renderer.Instance.DrawConsoleBorder();
