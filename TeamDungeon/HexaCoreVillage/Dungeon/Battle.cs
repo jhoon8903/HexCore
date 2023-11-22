@@ -81,7 +81,7 @@ namespace HexaCoreVillage.Dungeon
         private static void LoadBugs()
         {
             using StreamReader json = new(BugFilePath, Encoding.UTF8);
-            string file = json.ReadToEnd();
+            string file = Managers.Resource.GetTextResource(ResourceKeys.BugList);
             _bugList = JsonConvert.DeserializeObject<List<Bug>>(file);
         } 
 
@@ -355,6 +355,11 @@ namespace HexaCoreVillage.Dungeon
                 SetCursorPosition(50, i);
                 Write(new string(' ', 120 ));
             }
+        }
+
+        public override void Stop()
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }

@@ -8,8 +8,9 @@ public static class MainProcedure
     {
         // Console Size [OS condition] Resetting
         Renderer.Instance.InitalizeRenderer();
-
+        // Load All Reosurces
         Managers.Resource.LoadAllResources();
+
         // Title Scene Load.
 
         Managers.Scene.LoadScene(SCENE_NAME.BATTLE);

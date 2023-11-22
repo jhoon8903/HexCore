@@ -26,7 +26,10 @@ public class Manager_Scene
     {
         // 추후 리소스 관리쪽으로 넘어갔을 때를 위한 처리 (아직은 기능 없음)
         if (_currentScene != null)
+        {
+            _currentScene.Stop();
             _currentScene = null;
+        }
 
         // switch Lambda, _currentScene에 SCENE_NAME에 해당하는 SCENE으로 동적 할당
         _currentScene = sceneKey switch

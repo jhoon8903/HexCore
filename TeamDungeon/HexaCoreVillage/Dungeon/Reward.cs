@@ -106,6 +106,11 @@ public class Reward : Scene
         // 이 문제는 캐릭터 설정 관련으로 준호씨나 연호씨한테 물어봐야 한다 
     }
 
+    public override void Stop()
+    {
+        throw new NotImplementedException();
+    }
+
     public override void Update()
     {
         ChooseScene();
