@@ -10,10 +10,8 @@ public class Store : Scene
     public override SCENE_NAME SceneName => SCENE_NAME.STORE;
 
     static string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-<<<<<<< Updated upstream
     static string ItemListPath = Path.GetFullPath(Path.Combine(baseDirectory, "..", "..", "..", "..", "..", "TeamDungeon", "HexaCoreVillage", "Utility", "ItemList.json"));
-=======
->>>>>>> Stashed changes
+
     private static List<Item> items = new List<Item>();
     private static List<Item>? itemdata;
     private static Player  player = new Player();
@@ -30,18 +28,16 @@ public class Store : Scene
     public override void Update()
     {
 
-<<<<<<< Updated upstream
-=======
+    }
     public override void Stop()
     {
-        throw new NotImplementedException();
+        
     }
 
     private static void LoadItem()
     {
         string json = Managers.Resource.GetTextResource(ResourceKeys.ItemList);
         itemdata = JsonConvert.DeserializeObject<List<Item>>(json);
->>>>>>> Stashed changes
     }
 
     // 상점 입장했을 때
@@ -194,7 +190,6 @@ public class Store : Scene
         }
         while (true)
         {
-<<<<<<< Updated upstream
             Clear();
 
             WriteLine("▣ 상점 - 아이템 구매 ▣");
@@ -205,8 +200,6 @@ public class Store : Scene
             WriteLine();
             WriteLine("[ 아이템 목록 ]");
 
-=======
->>>>>>> Stashed changes
             // 아이템리스트를 불러오면 방향키로 이동하면서 선택
             for (int i = 0; i <diviList.Count; i++)
             {
@@ -214,9 +207,9 @@ public class Store : Scene
                 if (i == selectOtion)
                 {
                     ForegroundColor = ConsoleColor.Blue;
-<<<<<<< Updated upstream
+
                     WriteLine($"->  {diviList[i].ItemName}     {diviList[i].Type}     {diviList[i].ItemOption}     {diviList[i].Desc}    {diviList[i].Price}");
-=======
+
                     SetCursorPosition(50, 12 + i);
                     Write($"-  {diviList[i].ItemName}");
                     SetCursorPosition(70, 12 + i);
@@ -242,14 +235,12 @@ public class Store : Scene
                         }
                     }
 
->>>>>>> Stashed changes
                     ResetColor();
                 }
                 else
                 {
-<<<<<<< Updated upstream
                     WriteLine($"  {diviList[i].ItemName}     {diviList[i].Type}     {diviList[i].ItemOption}     {diviList[i].Desc}    {diviList[i].Price}");
-=======
+
                     SetCursorPosition(50, 12 + i);
                     Write($"-  {diviList[i].ItemName}");
                     SetCursorPosition(70, 12 + i);
@@ -276,8 +267,7 @@ public class Store : Scene
                             }
                         }
                     }
-                    // --------------------
->>>>>>> Stashed changes
+
                 }
             }
             WriteLine("----------------------------------------------------------------");
@@ -371,9 +361,9 @@ public class Store : Scene
                     if (i == selectOtion)
                     {
                         ForegroundColor = ConsoleColor.Blue;
-<<<<<<< Updated upstream
+
                         WriteLine($"->  {player.Inventory[i].ItemName}");
-=======
+
                         SetCursorPosition(50, 12 + i);
                         Write($"-  {player.Inventory[i].ItemName}");
                         for (int j = 0; j < itemdata.Count; j++)
@@ -388,16 +378,16 @@ public class Store : Scene
                                 Write($"{itemdata[j].Price}");
                             }
                         }
->>>>>>> Stashed changes
+
                         ResetColor();
                         SetCursorPosition(50, 24);
                         Write($"{itemdata[i].Desc}");
                     }
                     else
                     {
-<<<<<<< Updated upstream
+
                         WriteLine($"-  {player.Inventory[i].ItemName}");
-=======
+
                         SetCursorPosition(50, 12 + i);
                         Write($"-  {player.Inventory[i].ItemName}");
                         for (int j = 0; j < itemdata.Count; j++)
@@ -412,7 +402,7 @@ public class Store : Scene
                                 Write($"{itemdata[j].Price}");
                             }
                         }
->>>>>>> Stashed changes
+
                     }
                 }
             }
@@ -467,11 +457,6 @@ public class Store : Scene
             case StoreSelect.Exit:
                 break;
         }
-    }
-
-    public override void Stop()
-    {
-        throw new NotImplementedException();
     }
 }
 

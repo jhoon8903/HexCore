@@ -57,11 +57,14 @@ public class Lobby : Scene
         // Init Variables
         InitalizeVariables();
 
-        // Init Timer
-        InitTimer();
+        // Init Thread
+        InitThread();
 
-        //BGM start
+        // BGM start
         AudioPlayer.AudioController(_newWorldBGM, AudioPlayer.PlayOption.LoopStart);
+
+        // LoadToResourcePlayerData - 리소스 매니저가 지니고 있는 json 갱신
+        Managers.Resource.LoadResourcePlayerData();
     }
 
     public override void Update()
@@ -100,7 +103,7 @@ public class Lobby : Scene
         };
     }
 
-    private void InitTimer()
+    private void InitThread()
     {
         _titleUpdateThread = new Thread(TitleUpdateLoop);
         _titleUpdateThread.Start();

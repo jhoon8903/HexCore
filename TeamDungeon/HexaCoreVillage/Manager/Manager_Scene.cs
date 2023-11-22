@@ -24,6 +24,7 @@ public class Manager_Scene
     #region Main Methods
     public void LoadScene(SCENE_NAME sceneKey)
     {
+        CursorVisible = false;
         // 추후 리소스 관리쪽으로 넘어갔을 때를 위한 처리 (아직은 기능 없음)
         if (_currentScene != null)
         {
