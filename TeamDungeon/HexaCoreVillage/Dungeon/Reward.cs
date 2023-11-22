@@ -72,6 +72,10 @@ public class Reward : Scene
         Renderer.Instance.DrawConsoleBorder();
     }
 
+
+    /// <summary>
+    /// 배틀 승리 시 골그 및 경험치 지급
+    /// </summary>
     private static void SuccessReward()
     {
         // 계획은 레벨에 따른 배틀 성공 리워드 수치 증가
@@ -80,11 +84,19 @@ public class Reward : Scene
         battleResult = "Debug Complete";
     }
 
+
+    /// <summary>
+    /// 배틀 패배 후 골드는 무시됩니다.
+    /// </summary>
     private static void FailReward()
     {
-        // 여기도 마찬가지로 
-        player.Gold -= random.Next(50, 100);
-        battleResult = "Debug Delayed";
+        // 여기도 마찬가지로
+        if(player.Gold < 50)
+        {
+            player.Gold -= player.Gold;
+        }
+        else player.Gold -= random.Next(50, 100);
+        battleResult = "Debug Failed";
     }
 
     private static void LevelUp()
@@ -117,9 +129,6 @@ public class Reward : Scene
     public override void Update()
     {
         ChooseScene();
-        // 기능적으로 계속 업데이트 해야 하는 부분
-        // 이 부분은 다른 분들 처럼 커서를 위 아래로 이동시키는 목록을 작성한다던가?,
-        // 아니면 그냥 Readline을 Start에 때려 박아서 원하는 술자를 입력한다던가?
     }
 
     /// <summary>
@@ -177,6 +186,4 @@ public class Reward : Scene
     // Battle 성공시 Data Class의 "bool BattleSuccess" 로  bool 값 넣어두도록 하겠습니다,
     // 해당 bool 값으로 성공 실패 정하시면 될 것 같아요 
     // Battle에서 끝나면 Start() 호출해서 실행하도록 하겠습니다.
-    // 경험치 맥스 값 확인, 연호 & 준호(경험),
-    // 키인포값 찾아보고 적용
 }
