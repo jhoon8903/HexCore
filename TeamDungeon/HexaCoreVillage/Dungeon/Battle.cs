@@ -351,7 +351,7 @@ namespace HexaCoreVillage.Dungeon
 
         public override void Stop()
         {
-            throw new NotImplementedException();
+            
         }
         #endregion
     }
