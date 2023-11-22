@@ -48,4 +48,19 @@ public class Manager_Scene
         _currentScene.Start();
     }
     #endregion
+
+    #region Fake Loading
+    private void FakeLoading()
+    {
+        int progressTotal = 10;
+
+        for(int i = 0; i < progressTotal; ++i)
+        {
+            Console.Clear();
+            ConsoleColor color;
+
+            float progress = (float)i / progressTotal;
+        }
+    }
+    #endregion
 }
