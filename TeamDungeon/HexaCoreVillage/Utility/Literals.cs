@@ -14,6 +14,7 @@ namespace HexaCoreVillage.Utility
         // BGMS
         newWorldBGM,
         startBGM,
+        BattleBGM
     }
 
 
@@ -23,5 +24,6 @@ namespace HexaCoreVillage.Utility
     public static class Literals
     {
         // ex. public const float PI = 3.141592f;
+        public const string PlayerDataPath = "SavePlayer.json";
     }
 }
