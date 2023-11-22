@@ -118,7 +118,11 @@ public class Status : Scene
                             _player.CurrentHp += item.ItemOption;
                             break;
                         case "SP":
-                            _player.CurrentMental += item.ItemOption;
+                            if (_player.Inventory[selectedOption].Quantity > 0)
+                            {
+                                _player.CurrentMental += item.ItemOption;
+                                _player.Inventory[selectedOption].Quantity--;
+                            }
                             break;
                     }
                     _player.Inventory[selectedOption].IsEquipment = true;
