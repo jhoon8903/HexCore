@@ -77,8 +77,9 @@ public class Manager_Resource
             return _textResources[key];
         else
         {
-            Console.WriteLine($"Text resources not found : {key.ToString()}");
-            throw new Exception($"해당하는 리소스{key.ToString()}가 존재하지 않습니다");
+            WriteLine($"Text resources not found : {key.ToString()}");
+            //throw new Exception($"해당하는 리소스{key.ToString()}가 존재하지 않습니다");
+            return string.Empty;
         }
     }
 
@@ -118,7 +119,7 @@ public class Manager_Resource
     /// <summary>
     /// # 리소스 폴더의 위치를 반환하는 메서드
     /// </summary>
-    private string GetResourceFolderPath()
+    public string GetResourceFolderPath()
     {
         // 현재 앱이 실행되는 위치에 디렉토리 즉 .Net폴더
         string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;

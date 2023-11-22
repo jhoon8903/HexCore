@@ -14,11 +14,11 @@ public class Login : Scene
     // 다른 PC에서는 절대경로 설정시 File을 찾을 수 없어 상대경로 표시를 위한 변수를 별도로 작성했습니다.
     // 하지만 맥에서는 작동하지 않습니다.
     //  'winmm.dll' 의존성이 문제 입니다. 
-    static string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-    static string relativePathToAudio = Path.GetFullPath(Path.Combine(baseDirectory, "..", "..", "..", "..", "..", "TeamDungeon", "HexaCoreVillage"));
-    static string startBGMPath = Path.Combine(relativePathToAudio, "startBGM.wav");
-    static string newWorldBGMPath = Path.Combine(relativePathToAudio, "newWorldBGM.wav");
-    private static string UtilityPath = Path.Combine(relativePathToAudio, "Utility");
+    //static string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+    //static string relativePathToAudio = Path.GetFullPath(Path.Combine(baseDirectory, "..", "..", "..", "..", "..", "TeamDungeon", "HexaCoreVillage"));
+    //static string startBGMPath = Path.Combine(relativePathToAudio, "startBGM.wav");
+    //static string newWorldBGMPath = Path.Combine(relativePathToAudio, "newWorldBGM.wav");
+    // private static string UtilityPath = Path.Combine(relativePathToAudio, "Utility");
 
     // static AudioFileReader startBGM = new AudioFileReader(startBGMPath);
     // static LoopStream startLoop = new LoopStream(startBGM);
@@ -28,6 +28,12 @@ public class Login : Scene
 
     public static List<Item> ItemBox = new List<Item>();
     private static Player _player = null;
+
+    /* Audio Resources */
+    private string _newWorldBGM = Managers.Resource.GetSoundResource(ResourceKeys.newWorldBGM);
+    private string _startBGM = Managers.Resource.GetSoundResource(ResourceKeys.startBGM);
+
+
     public override void Start()
     {
         CursorVisible = false;
@@ -323,7 +329,17 @@ public class Login : Scene
 
     private void LoadGame()
     {
-        string loadData = File.ReadAllText(UtilityPath + "/savePlayer.json");         //캐릭터 정보 불러오기
+
+        // string loadData = File.ReadAllText(UtilityPath + "/savePlayer.json");         //캐릭터 정보 불러오기
+
+        /* By. 희성
+         * 기존 내용을 리소스매니저가 대체하게 했습니다. */
+        string loadData = Managers.Resource.GetTextResource(ResourceKeys.SavePlayer);
+        // 데이터가 존재하지 않을경우
+        if (loadData == string.Empty)
+        {
+            NewGame();
+        }
         _player = JsonConvert.DeserializeObject<Player>(loadData);
 
         while (true)
@@ -344,7 +360,7 @@ public class Login : Scene
             WriteInForm("데이터가 일치하지 않습니다.", ConsoleColor.Blue);
             Thread.Sleep(1500);
         }
-        AudioController(newWorldBGMPath,PlayOption.Change);
+        AudioController(_newWorldBGM, PlayOption.Change);
         Managers.Scene.LoadScene(SCENE_NAME.BATTLE);
 
     }
@@ -373,7 +389,7 @@ public class Login : Scene
         WriteInForm("어라..? 근데 왜 이렇게 어지럽....", ConsoleColor.White);
         Thread.Sleep(3000);
 
-        AudioController(newWorldBGMPath,PlayOption.Change);
+        AudioController(_newWorldBGM, PlayOption.Change);
         //사운드 변환
         Clear();
         Renderer.Instance.DrawConsoleBorder();
@@ -413,16 +429,22 @@ public class Login : Scene
 
     private void SaveData()
     {
+        // By. 희성
+        // Literals.cs에 저장되야할 json파일의 이름이 지정되었습니다.
+        // 경로 지정 (리소스 폴더와 json파일의 이름을 합침)
+        var playerDataPath = Path.Combine(Managers.Resource.GetResourceFolderPath(), Literals.PlayerDataPath);
+
         string playerData = JsonConvert.SerializeObject(_player, Formatting.Indented);        //캐릭터 정보 저장
-        File.WriteAllText(UtilityPath+"/savePlayer.json", playerData);
+        File.WriteAllText(playerDataPath, playerData);
+
+        //File.WriteAllText(UtilityPath+"/savePlayer.json", playerData);
 
         //string dungeonData =                  //던전 정보도 저장할 예정.
     }
 
     private void SetItemBox()
     {
-        using StreamReader json = new(UtilityPath+"/ItemList.json", Encoding.UTF8);     //버그 저장한거 보고 따라함;
-        string file = json.ReadToEnd();
+        string file = Managers.Resource.GetTextResource(ResourceKeys.ItemList);
         ItemBox = JsonConvert.DeserializeObject<List<Item>>(file);
     }
 
