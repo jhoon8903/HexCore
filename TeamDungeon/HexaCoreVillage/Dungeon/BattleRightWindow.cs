@@ -204,6 +204,7 @@ namespace HexaCoreVillage.Dungeon
                 {
                     case ConsoleKey.Enter:
                         Data.BattleSuccess = false;
+                        _isLoadScene = true;
                         Managers.Scene.LoadScene(SCENE_NAME.REWARD);
                         return;
                     default:
@@ -231,6 +232,7 @@ namespace HexaCoreVillage.Dungeon
                 {
                     case ConsoleKey.Enter:
                         Data.BattleSuccess = true;
+                        _isLoadScene = true;
                         Managers.Scene.LoadScene(SCENE_NAME.REWARD);
                         return;
                     default:

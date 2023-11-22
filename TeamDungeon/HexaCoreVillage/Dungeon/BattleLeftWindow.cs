@@ -62,6 +62,7 @@ namespace HexaCoreVillage.Dungeon
 
             while (true)
             {
+                if (_isLoadScene) return;
                 SetCursorPosition(4,  12);
                 BackgroundColor = ConsoleColor.Green;
                 ForegroundColor = ConsoleColor.Black;

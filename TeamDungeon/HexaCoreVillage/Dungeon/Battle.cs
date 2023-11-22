@@ -25,7 +25,8 @@ namespace HexaCoreVillage.Dungeon
         #endregion
 
         #region Player Variable
-        public static Player? LoginPlayer { get; private set; }  // 더미 플레이어 데이터 
+
+        public static Player? LoginPlayer { get; private set; } // 더미 플레이어 데이터 
         public static int CurrentHp;    // 현재 플레이어 체력
         public static int CurrentMental;    // 현재 플레이어 멘탈
         #endregion
@@ -45,6 +46,9 @@ namespace HexaCoreVillage.Dungeon
 
         public static readonly Random Random = new Random();    // 난수 생성을 위한 Random
         public static int BattleCursorTop = 12; // SetCursorTop
+
+        // Scene Flag
+        public static bool _isLoadScene = false;
 
         # region Deserialize JSON
         /// <summary>
@@ -154,7 +158,7 @@ namespace HexaCoreVillage.Dungeon
             _selectedBugs = new List<Bug>();
             int bugsCount = LoginPlayer!.Level switch
             {
-                1 => Random.Next(1, 4),
+                1 => Random.Next(8, 9),
                 2 =>  Random.Next(1, 5),
                 3 =>  Random.Next(2, 5),
                 4 =>  Random.Next(3, 6),
@@ -325,7 +329,7 @@ namespace HexaCoreVillage.Dungeon
             BattleRightWindow.RightWindow();
             BattleLeftWindow.LeftWindow();
             Renderer.Instance.DrawConsoleBorder();
-            ReadLine(); // 콘솔 창이 즉시 닫히는 것을 방지
+            //ReadLine(); // 콘솔 창이 즉시 닫히는 것을 방지
         }
         #endregion
 
