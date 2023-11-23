@@ -15,6 +15,8 @@ public class Store : Scene
     private static List<Item>? itemdata;
     private static Player _player = Managers.GM.Player;
 
+    private readonly object _lock = new object();
+
     // private bool _isLoadScene = false;
 
     public override void Start()
@@ -61,28 +63,31 @@ public class Store : Scene
 
         while (_isRun)
         {
-            // if (_isLoadScene) return;
-            Gold();
-            for (int i = 0; i < storeOption.Length; i++)
+            lock (Managers.UI._lock)
             {
-                SetCursorPosition(55 + (i * 40), 6);
-                if (i == selectOtion)
+                // if (_isLoadScene) return;
+                Gold();
+                for (int i = 0; i < storeOption.Length; i++)
                 {
-                    ForegroundColor = ConsoleColor.Blue;
-                    Write($"{storeOption[i]}");
-                    ResetColor();
+                    SetCursorPosition(55 + (i * 40), 6);
+                    if (i == selectOtion)
+                    {
+                        ForegroundColor = ConsoleColor.Blue;
+                        Write($"{storeOption[i]}");
+                        ResetColor();
+                    }
+                    else
+                    {
+                        Write($"{storeOption[i]}");
+                    }
                 }
-                else
-                {
-                    Write($"{storeOption[i]}");
-                }
-            }
-            //아이템 목록 클리어
-            diviClear();
-            ListClear();
+                //아이템 목록 클리어
+                diviClear();
+                ListClear();
 
-            // 골드 표시
-            Gold();
+                // 골드 표시
+                Gold();
+            }
 
             ConsoleKeyInfo selectKey = ReadKey();
             if (selectKey.Key == ConsoleKey.LeftArrow)
@@ -125,7 +130,8 @@ public class Store : Scene
         {
             for (int i = 0; i < storeOption.Length; i++)
             {
-                SetCursorPosition(30, 12 + i);
+                lock (Managers.UI._lock)
+                    SetCursorPosition(30, 12 + i);
                 if (i == selectOtion)
                 {
                     ForegroundColor = ConsoleColor.Blue;
@@ -207,59 +213,62 @@ public class Store : Scene
             // 아이템리스트를 불러오면 방향키로 이동하면서 선택
             for (int i = 0; i < diviList.Count; i++)
             {
-                SetCursorPosition(50, 12 + i);
-                if (i == selectOtion)
+                lock (Managers.UI._lock)
                 {
-                    ForegroundColor = ConsoleColor.Blue;
                     SetCursorPosition(50, 12 + i);
-                    Write($"-  {diviList[i].ItemName}");
-                    SetCursorPosition(70, 12 + i);
-                    Write($"{diviList[i].Type}");
-                    SetCursorPosition(90, 12 + i);
-                    Write($"{diviList[i].ItemOption}");
-                    SetCursorPosition(110, 12 + i);
-                    Write($"{diviList[i].Price}");
-                    SetCursorPosition(130, 12 + i);
-                    for (int j = 0; j < _player.Inventory.Count; j++)
+                    if (i == selectOtion)
                     {
-                        if (_player.Inventory[j].ItemName == diviList[i].ItemName)
+                        ForegroundColor = ConsoleColor.Blue;
+                        SetCursorPosition(50, 12 + i);
+                        Write($"-  {diviList[i].ItemName}");
+                        SetCursorPosition(70, 12 + i);
+                        Write($"{diviList[i].Type}");
+                        SetCursorPosition(90, 12 + i);
+                        Write($"{diviList[i].ItemOption}");
+                        SetCursorPosition(110, 12 + i);
+                        Write($"{diviList[i].Price}");
+                        SetCursorPosition(130, 12 + i);
+                        for (int j = 0; j < _player.Inventory.Count; j++)
                         {
-                            SetCursorPosition(130, 12 + i);
-                            Write($"O");
+                            if (_player.Inventory[j].ItemName == diviList[i].ItemName)
+                            {
+                                SetCursorPosition(130, 12 + i);
+                                Write($"O");
+                            }
+                            else
+                            {
+                                SetCursorPosition(130, 12 + i);
+                                Write($"X");
+                            }
                         }
-                        else
-                        {
-                            SetCursorPosition(130, 12 + i);
-                            Write($"X");
-                        }
+                        ResetColor();
+                        SetCursorPosition(50, 24);
+                        Write(new string(' ', 100));
+                        SetCursorPosition(50, 24);
+                        Write($"{diviList[i].Desc}");
                     }
-                    ResetColor();
-                    SetCursorPosition(50, 24);
-                    Write(new string(' ', 100));
-                    SetCursorPosition(50, 24);
-                    Write($"{diviList[i].Desc}");
-                }
-                else
-                {
-                    SetCursorPosition(50, 12 + i);
-                    Write($"-  {diviList[i].ItemName}");
-                    SetCursorPosition(70, 12 + i);
-                    Write($"{diviList[i].Type}");
-                    SetCursorPosition(90, 12 + i);
-                    Write($"{diviList[i].ItemOption}");
-                    SetCursorPosition(110, 12 + i);
-                    Write($"{diviList[i].Price}");
-                    for (int j = 0; j < _player.Inventory.Count; j++)
+                    else
                     {
-                        if (_player.Inventory[j].ItemName == diviList[i].ItemName)
+                        SetCursorPosition(50, 12 + i);
+                        Write($"-  {diviList[i].ItemName}");
+                        SetCursorPosition(70, 12 + i);
+                        Write($"{diviList[i].Type}");
+                        SetCursorPosition(90, 12 + i);
+                        Write($"{diviList[i].ItemOption}");
+                        SetCursorPosition(110, 12 + i);
+                        Write($"{diviList[i].Price}");
+                        for (int j = 0; j < _player.Inventory.Count; j++)
                         {
-                            SetCursorPosition(130, 12 + i);
-                            Write($"O");
-                        }
-                        else
-                        {
-                            SetCursorPosition(130, 12 + i);
-                            Write($"X");
+                            if (_player.Inventory[j].ItemName == diviList[i].ItemName)
+                            {
+                                SetCursorPosition(130, 12 + i);
+                                Write($"O");
+                            }
+                            else
+                            {
+                                SetCursorPosition(130, 12 + i);
+                                Write($"X");
+                            }
                         }
                     }
                 }
@@ -282,31 +291,34 @@ public class Store : Scene
             }
             else if (selectKey.Key == ConsoleKey.Enter)
             {
-                if (_player.Gold >= diviList[selectOtion].Price)
+                lock (Managers.UI._lock)
                 {
-                    _player.Gold -= diviList[selectOtion].Price;
-                    _player.Inventory.Add(new(diviList[selectOtion].ItemName, false, true, 1));
-                    SetCursorPosition(50, 24);
-                    Write(new string(" "), 60);
-                    SetCursorPosition(50, 24);
-                    WriteLine($"{diviList[selectOtion].ItemName}을(를) 구매하셨습니다.");
-                    Gold();
-                    Data.SavePlayerData(_player);
+                    if (_player.Gold >= diviList[selectOtion].Price)
+                    {
+                        _player.Gold -= diviList[selectOtion].Price;
+                        _player.Inventory.Add(new(diviList[selectOtion].ItemName, false, true, 1));
+                        SetCursorPosition(50, 24);
+                        Write(new string(" "), 60);
+                        SetCursorPosition(50, 24);
+                        WriteLine($"{diviList[selectOtion].ItemName}을(를) 구매하셨습니다.");
+                        Gold();
+                        Data.SavePlayerData(_player);
+                    }
+                    else if (_player.Gold < diviList[selectOtion].Price)
+                    {
+                        SetCursorPosition(50, 26);
+                        WriteLine("소지금이 부족합니다.");
+                    }
+                    else
+                    {
+                        WriteLine("잘못된 입력입니다.");
+                    }
+                    SetCursorPosition(50, 27);
+                    WriteLine("아무 키나 누르면 상점으로 돌아갑니다.");
+                    ReadKey();
+                    StoreScene();
+                    break;
                 }
-                else if (_player.Gold < diviList[selectOtion].Price)
-                {
-                    SetCursorPosition(50, 26);
-                    WriteLine("소지금이 부족합니다.");
-                }
-                else
-                {
-                    WriteLine("잘못된 입력입니다.");
-                }
-                SetCursorPosition(50, 27);
-                WriteLine("아무 키나 누르면 상점으로 돌아갑니다.");
-                ReadKey();
-                StoreScene();
-                break;
             }
         }
 
@@ -336,42 +348,44 @@ public class Store : Scene
             {
                 for (int i = 0; i < _player.Inventory.Count; i++)
                 {
-
-                    if (i == selectOption)
+                    lock (_lock)
                     {
-                        ForegroundColor = ConsoleColor.Blue;
-                        SetCursorPosition(50, 12 + i);
-                        Write($"-  {_player.Inventory[i].ItemName}");
-                        for (int j = 0; j < itemdata.Count; j++)
+                        if (i == selectOption)
                         {
-                            if (_player.Inventory[i].ItemName == itemdata[j].ItemName)
+                            ForegroundColor = ConsoleColor.Blue;
+                            SetCursorPosition(50, 12 + i);
+                            Write($"-  {_player.Inventory[i].ItemName}");
+                            for (int j = 0; j < itemdata.Count; j++)
                             {
-                                SetCursorPosition(70, 12 + i);
-                                Write($"{itemdata[j].Type}");
-                                SetCursorPosition(90, 12 + i);
-                                Write($"{itemdata[j].ItemOption}");
-                                SetCursorPosition(110, 12 + i);
-                                Write($"{itemdata[j].Price}");
+                                if (_player.Inventory[i].ItemName == itemdata[j].ItemName)
+                                {
+                                    SetCursorPosition(70, 12 + i);
+                                    Write($"{itemdata[j].Type}");
+                                    SetCursorPosition(90, 12 + i);
+                                    Write($"{itemdata[j].ItemOption}");
+                                    SetCursorPosition(110, 12 + i);
+                                    Write($"{itemdata[j].Price}");
+                                }
                             }
+                            ResetColor();
+                            SetCursorPosition(50, 24);
+                            Write($"{itemdata[i].Desc}");
                         }
-                        ResetColor();
-                        SetCursorPosition(50, 24);
-                        Write($"{itemdata[i].Desc}");
-                    }
-                    else
-                    {
-                        SetCursorPosition(50, 12 + i);
-                        Write($"-  {_player.Inventory[i].ItemName}");
-                        for (int j = 0; j < itemdata.Count; j++)
+                        else
                         {
-                            if (_player.Inventory[i].ItemName == itemdata[j].ItemName)
+                            SetCursorPosition(50, 12 + i);
+                            Write($"-  {_player.Inventory[i].ItemName}");
+                            for (int j = 0; j < itemdata.Count; j++)
                             {
-                                SetCursorPosition(70, 12 + i);
-                                Write($"{itemdata[j].Type}");
-                                SetCursorPosition(90, 12 + i);
-                                Write($"{itemdata[j].ItemOption}");
-                                SetCursorPosition(110, 12 + i);
-                                Write($"{itemdata[j].Price}");
+                                if (_player.Inventory[i].ItemName == itemdata[j].ItemName)
+                                {
+                                    SetCursorPosition(70, 12 + i);
+                                    Write($"{itemdata[j].Type}");
+                                    SetCursorPosition(90, 12 + i);
+                                    Write($"{itemdata[j].ItemOption}");
+                                    SetCursorPosition(110, 12 + i);
+                                    Write($"{itemdata[j].Price}");
+                                }
                             }
                         }
                     }
@@ -379,7 +393,8 @@ public class Store : Scene
             }
             else
             {
-                SetCursorPosition(50, 12);
+                lock(_lock)
+                    SetCursorPosition(50, 12);
                 WriteLine("- 소지하고 있는 아이템이 없습니다.");
             }
             WriteLine();
@@ -415,12 +430,14 @@ public class Store : Scene
                         }
                     }
                     _player.Inventory.Remove(_player.Inventory[selectOption]);
+                    lock(_lock)
                     SetCursorPosition(50, 24);
                     WriteLine("판매가 완료되었습니다.");
                     Data.SavePlayerData(_player);
                 }
                 else
                 {
+                    lock(_lock)
                     SetCursorPosition(50, 24);
                     WriteLine("판매할 아이템이 없으므로 메인화면으로 넘어갑니다.");
                     ReadKey();
@@ -428,7 +445,8 @@ public class Store : Scene
                     ClearRange(24, 29);
                     DisplayStore();
                 }
-                SetCursorPosition(50, 25);
+                lock (_lock)
+                    SetCursorPosition(50, 25);
                 WriteLine("아무 키나 누르면 상점으로 돌아갑니다.");
                 ReadKey();
                 ListClear();
@@ -449,67 +467,69 @@ public class Store : Scene
     {
         Clear();
         Renderer.Instance.DrawConsoleBorder();
-
-        SetCursorPosition(30, 6);
-        Write("STORE");
-
-        const int splitPosition1 = Renderer.FixedXColumn / 8;
-        for (int i = 0; i < Renderer.FixedYRows - 12; i++)
+        lock (_lock)
         {
-            SetCursorPosition(splitPosition1, i + 3);
-            BackgroundColor = ConsoleColor.Yellow;
-            Write(" "); // 분할선 그리기
-            ResetColor();
-        }
+            SetCursorPosition(30, 6);
+            Write("STORE");
 
-        const int splitPosition2 = Renderer.FixedXColumn / 4;
-        for (int i = 0; i < Renderer.FixedYRows - 12; i++)
-        {
-            SetCursorPosition(splitPosition2, i + 3);
-            BackgroundColor = ConsoleColor.Yellow;
-            Write(" ");
-            ResetColor();
-        }
+            const int splitPosition1 = Renderer.FixedXColumn / 8;
+            for (int i = 0; i < Renderer.FixedYRows - 12; i++)
+            {
+                SetCursorPosition(splitPosition1, i + 3);
+                BackgroundColor = ConsoleColor.Yellow;
+                Write(" "); // 분할선 그리기
+                ResetColor();
+            }
 
-        const int splitPosition3 = Renderer.FixedXColumn - 28;
-        for (int i = 0; i < Renderer.FixedYRows - 12; i++)
-        {
-            SetCursorPosition(splitPosition3, i + 3);
-            BackgroundColor = ConsoleColor.Yellow;
-            Write(" ");
-            ResetColor();
-        }
+            const int splitPosition2 = Renderer.FixedXColumn / 4;
+            for (int i = 0; i < Renderer.FixedYRows - 12; i++)
+            {
+                SetCursorPosition(splitPosition2, i + 3);
+                BackgroundColor = ConsoleColor.Yellow;
+                Write(" ");
+                ResetColor();
+            }
 
-        SetCursorPosition(22, 3);
-        for (int i = 0; i < 130; i++)
-        {
-            BackgroundColor = ConsoleColor.Yellow;
-            Write(" ");
-            ResetColor();
-        }
+            const int splitPosition3 = Renderer.FixedXColumn - 28;
+            for (int i = 0; i < Renderer.FixedYRows - 12; i++)
+            {
+                SetCursorPosition(splitPosition3, i + 3);
+                BackgroundColor = ConsoleColor.Yellow;
+                Write(" ");
+                ResetColor();
+            }
 
-        SetCursorPosition(22, 9);
-        for (int i = 0; i < 130; i++)
-        {
-            BackgroundColor = ConsoleColor.Yellow;
-            Write(" ");
-            ResetColor();
-        }
+            SetCursorPosition(22, 3);
+            for (int i = 0; i < 130; i++)
+            {
+                BackgroundColor = ConsoleColor.Yellow;
+                Write(" ");
+                ResetColor();
+            }
 
-        SetCursorPosition(22, 21);
-        for (int i = 0; i < 130; i++)
-        {
-            BackgroundColor = ConsoleColor.Yellow;
-            Write(" ");
-            ResetColor();
-        }
+            SetCursorPosition(22, 9);
+            for (int i = 0; i < 130; i++)
+            {
+                BackgroundColor = ConsoleColor.Yellow;
+                Write(" ");
+                ResetColor();
+            }
 
-        SetCursorPosition(22, 30);
-        for (int i = 0; i < 130; i++)
-        {
-            BackgroundColor = ConsoleColor.Yellow;
-            Write(" ");
-            ResetColor();
+            SetCursorPosition(22, 21);
+            for (int i = 0; i < 130; i++)
+            {
+                BackgroundColor = ConsoleColor.Yellow;
+                Write(" ");
+                ResetColor();
+            }
+
+            SetCursorPosition(22, 30);
+            for (int i = 0; i < 130; i++)
+            {
+                BackgroundColor = ConsoleColor.Yellow;
+                Write(" ");
+                ResetColor();
+            }
         }
 
        
@@ -634,31 +654,38 @@ public class Store : Scene
         ClearRange(12, 19);
         ClearRange(24, 29);
     }
-    public static void diviClear()
+    public void diviClear()
     {
         for (int i = 12; i < 19; i++)
         {
-            SetCursorPosition(30, i);
+            lock (_lock)
+                SetCursorPosition(30, i);
             Write(new string(' ', 12));
         }
     }
-    public static void Gold()
+    public void Gold()
     {
         // 골드 표시
-        SetCursorPosition(30, 26);
-        Write(new string(' ', 10));
-        SetCursorPosition(30, 26);
-        Write($"{_player.Gold} G");
+        lock (_lock)
+        {
+            SetCursorPosition(30, 26);
+            Write(new string(' ', 10));
+            SetCursorPosition(30, 26);
+            Write($"{_player.Gold} G");
+        }
     }
 
     // 정훈님 코드 참고
     // y기준 - start -> end 꺄지 범위를 설정해주면 ' '로 덮어주는 듯
-    public static void ClearRange(int start, int end)
+    public void ClearRange(int start, int end)
     {
-        for (int i = start; i < end; i++)
+        lock (_lock)
         {
-            SetCursorPosition(50, i);
-            Write(new string(' ', 100));
+            for (int i = start; i < end; i++)
+            {
+                SetCursorPosition(50, i);
+                Write(new string(' ', 100));
+            }
         }
     }
 }

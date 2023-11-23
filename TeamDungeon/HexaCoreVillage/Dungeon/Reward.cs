@@ -1,5 +1,4 @@
 using HexaCoreVillage.Utility;
-using Newtonsoft.Json;
 
 namespace HexaCoreVillage.Dungeon;
 
@@ -14,13 +13,14 @@ public class Reward : Scene
 
     public override void Start()
     {
-        base.StartCommon();
+        StartCommon();
         Clear();
+
         // 초기화 해주는 부분,
         // 아래 부분 따로 메서드 선언 후 분리,
         // 눈에 띄지 않는 부분
         // 파일들 json 으로 저장하기 ?? 어떻게, login.cs의 SaveData()를 사용?
-        if (Data.BattleSuccess == true)
+        if (Data.BattleSuccess)
         {
             SuccessReward();            
         }
@@ -31,15 +31,21 @@ public class Reward : Scene
                 FailReward();                
             }
         }
-        if (player.Exp >= limitExp) LevelUp();
-        DisplayReward();
-        Data.SavePlayerData(player);
-        //SaveData();
     }
 
     private static void ShowReward()
     {
-        SetCurser
+        while (true)
+        {
+            ConsoleKeyInfo key = ReadKey();
+
+            SetCursorPosition(70, 20);
+            Write("결과를 확인하시려면 Enter를 입력 하세요");
+            if (key.Key == ConsoleKey.Enter)
+            {
+                return;
+            }
+        }
     }
 
     //private void SaveData()
@@ -54,27 +60,35 @@ public class Reward : Scene
 
     private static void DisplayReward()
     {
-        SetCursorPosition(4, 10);
-        WriteLine("[전투 결과입니다]");
-        SetCursorPosition(4, 12);
-        Write($"디버그 결과는 : {battleResult} 입니다!");
+        while (true)
+        {
+            Clear();
+            SetCursorPosition(4, 10);
+            WriteLine("[전투 결과입니다]");
+            SetCursorPosition(4, 12);
+            Write($"디버그 결과는 : {battleResult} 입니다!");
 
-        Renderer.Instance.DrawConsoleBorder();
 
-        WriteLine();
-        SetCursorPosition(4, 13);
-        WriteLine($"플레이어의 골드는 {player.Gold}G입니다.");
-        SetCursorPosition(4, 14);
-        WriteLine($"플레이어의 현재 상태는");
-        SetCursorPosition(4, 15);
-        WriteLine($"플레이어 HP : {Battle.CurrentHp}/{player.HP}");
-        SetCursorPosition(4, 16);
-        WriteLine($"플레이어 Metal : {Battle.CurrentMental}/{player.Mental}");
-        SetCursorPosition(4, 17);
-        WriteLine($"플레이어 Exp : {player.Exp}");
-        SetCursorPosition(4, 18);
-        WriteLine($"플레이어 레벨 : {player.Level}");
-        Renderer.Instance.DrawConsoleBorder();
+            WriteLine();
+            SetCursorPosition(4, 13);
+            WriteLine($"플레이어의 골드는 {player.Gold}G입니다.");
+            SetCursorPosition(4, 14);
+            WriteLine("플레이어의 현재 상태는");
+            SetCursorPosition(4, 15);
+            WriteLine($"플레이어 HP : {Battle.CurrentHp}/{player.HP}");
+            SetCursorPosition(4, 16);
+            WriteLine($"플레이어 Metal : {Battle.CurrentMental}/{player.Mental}");
+            SetCursorPosition(4, 17);
+            WriteLine($"플레이어 Exp : {player.Exp}");
+            SetCursorPosition(4, 18);
+            WriteLine($"플레이어 레벨 : {player.Level}");
+            Renderer.Instance.DrawConsoleBorder();
+            ConsoleKeyInfo key = ReadKey();
+            if (key.Key == ConsoleKey.Enter)
+            {
+                return;
+            }
+        }
     }
 
 
@@ -128,13 +142,18 @@ public class Reward : Scene
 
     public override void Stop()
     {
-        base.StopCommon();
+        StopCommon();
     }
 
     public override void Update()
     {
-        base.UpdateCommon();
+        UpdateCommon();
+        if (player.Exp >= limitExp) LevelUp();
+        ShowReward();
+        DisplayReward();
+        Data.SavePlayerData(player);
         ChooseScene();
+        //SaveData();
     }
 
     /// <summary>
