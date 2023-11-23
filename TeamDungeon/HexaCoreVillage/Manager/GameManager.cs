@@ -1,5 +1,6 @@
 
 using HexaCoreVillage.Utility;
+using Newtonsoft.Json;
 
 namespace HexaCoreVillage.Manager;
 
@@ -14,12 +15,34 @@ public class GameManager : Singleton<GameManager>
     private Manager_Scene _sceneManager = new();
     private Manager_Resource _resourceManager = new();
     private Manager_UserInterface _userInterfaceManager = new();
+
+    private Player _player;
     #endregion
 
     #region Properties
     public Manager_Scene Scene => _sceneManager;
     public Manager_Resource Resource => _resourceManager;
     public Manager_UserInterface UserInterface => _userInterfaceManager;
+
+    public Player Player => _player;
+    #endregion
+
+    #region Player
+    public void SettingPlayer(Player player)
+    {
+        _player = player;
+    }
+
+    public void SettingPlayer(string userID, string userName, Job userJob)
+    {
+        _player = new Player(userID, userName, userJob);
+    }
+
+    public void LoadPlayer(string loadData)
+    {
+        _player = new Player();
+        _player = JsonConvert.DeserializeObject<Player>(loadData);
+    }
     #endregion
 }
 

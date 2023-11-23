@@ -9,13 +9,14 @@ namespace HexaCoreVillage.Lobby;
 public class Status : Scene
 {
     public override SCENE_NAME SceneName => SCENE_NAME.STATUS;
-    private Player _player = Login.Login._player;
+    private Player _player = Managers.GM.Player;
     private List<Item> itemList = new List<Item>();
     bool isInventoryScene = false;
     Item itemInform = new Item();
  
     public override void Start()
     {
+        base.StartCommon();
         Console.Clear();
         Console.CursorVisible = false;
         SetItem();
@@ -23,6 +24,7 @@ public class Status : Scene
 
     public override void Update()
     {
+        base.UpdateCommon();
         StatusScene();
     }
     //게임 내 사용할 아이템 호출
@@ -45,7 +47,7 @@ public class Status : Scene
             isInventoryScene = false;
         }
 
-        while (true)
+        while (_isRun)
         {
             itemStart_x = 8;
             itemStart_y = 24;
@@ -174,7 +176,7 @@ public class Status : Scene
             InventoryScene();
         PrintStatusMenu();
 
-        while (true)
+        while (_isRun)
         {
             SetCursorPosition(0, 35);
             for (int i = 0; i < options.Length; i++)
@@ -445,6 +447,7 @@ public class Status : Scene
 
     public override void Stop()
     {
+        base.StopCommon();
         Clear();
     }
 }

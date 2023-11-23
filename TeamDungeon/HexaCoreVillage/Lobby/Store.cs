@@ -12,15 +12,15 @@ public class Store : Scene
 {
     public override SCENE_NAME SceneName => SCENE_NAME.STORE;
 
-    private static List<Item> items = new List<Item>();
     private static List<Item>? itemdata;
-    private static Player _player = Login.Login._player;
-    private static Item item = new Item();
+    private static Player _player = Managers.GM.Player;
 
-    private bool _isLoadScene = false;
+    // private bool _isLoadScene = false;
 
     public override void Start()
     {
+        base.StartCommon();
+
         Clear();
         CursorVisible = false;
         LoadItem();
@@ -30,9 +30,11 @@ public class Store : Scene
 
     public override void Update()
     {
+        base.UpdateCommon();
+
         if (_isEscape) return;
         DisplayStore();
-        if (_isLoadScene) return;
+        if (!_isRun) return;
         StoreScene();
         StoreBuyScene();
         StoreSellScene();
@@ -40,6 +42,7 @@ public class Store : Scene
 
     public override void Stop()
     {
+        base.StopCommon();
         Clear();
     }
 
@@ -56,9 +59,9 @@ public class Store : Scene
         string[] storeOption = Enum.GetNames(typeof(StartStore));
 
 
-        while (true)
+        while (_isRun)
         {
-            if (_isLoadScene) return;
+            // if (_isLoadScene) return;
             Gold();
             for (int i = 0; i < storeOption.Length; i++)
             {
@@ -104,7 +107,7 @@ public class Store : Scene
                 StoreSellScene();
                 break;
             case StartStore.Exit:
-                _isLoadScene = true;
+                // _isLoadScene = true;
                 Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
                 break;
         }
@@ -118,7 +121,7 @@ public class Store : Scene
         int selectOtion = 0;
         string[] storeOption = Enum.GetNames(typeof(ItemTypeSelet));
 
-        while (true)
+        while (_isRun)
         {
             for (int i = 0; i < storeOption.Length; i++)
             {
@@ -198,7 +201,7 @@ public class Store : Scene
                 diviList.Add(itemdata[i]);
             }
         }
-        while (true)
+        while (_isRun)
         {
 
             // 아이템리스트를 불러오면 방향키로 이동하면서 선택
@@ -327,7 +330,7 @@ public class Store : Scene
             storeOption[i] = _player.Inventory[i].ItemName;
         }
 
-        while (true)
+        while (_isRun)
         {
             if (_player.Inventory.Count > 0)
             {

@@ -23,11 +23,6 @@ public class Manager_UserInterface
 
 
     #region Draw Methods
-    public void DrawProgress(string message, int width, int length)
-    {
-        
-    }
-
     public int DrawAsciiMessage(ResourceKeys key, int startPosY = 2)
     {
         string asciiArtResource = Managers.Resource.GetTextResource(key);

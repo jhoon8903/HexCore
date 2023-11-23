@@ -48,7 +48,7 @@ namespace HexaCoreVillage.Dungeon
         public static int BattleCursorTop = 12; // SetCursorTop
 
         // Scene Flag
-        public static bool _isLoadScene = false;
+        // public static bool _isLoadScene = false;
 
         # region Deserialize JSON
         /// <summary>
@@ -56,6 +56,9 @@ namespace HexaCoreVillage.Dungeon
         /// </summary>
         public override void Start()
         {
+            base.StartCommon();
+            BattleRightWindow.InitBattleScene(this);
+            BattleLeftWindow.InitBattleScene(this);
             InitializePlayer();
             LoadBugs();
             LoadLoggingText();
@@ -68,7 +71,7 @@ namespace HexaCoreVillage.Dungeon
         /// </summary>
         private static void InitializePlayer()
         {
-            LoginPlayer = LoginScene._player;
+            LoginPlayer = Managers.GM.Player;
             Data.BattleSuccess = false;
             CurrentBugIndex = 0;
             CurrentHp = LoginPlayer.CurrentHp;
@@ -101,7 +104,8 @@ namespace HexaCoreVillage.Dungeon
         ///  상속 받아 반복 실행 되는 Update 
         /// </summary>
         public override void Update()
-        { 
+        {
+            base.UpdateCommon();
             Compiling();
             DebuggingList();
             if (DebuggingBugs != null)
@@ -123,10 +127,10 @@ namespace HexaCoreVillage.Dungeon
         ///  추후 케릭터의 Luk 스텟이나 별도의 조정이 있다면 수정 가능
         ///  기본값은 50% 확률
         /// </summary>
-        private static void Compiling()
+        private void Compiling()
         {
             CursorVisible = false;
-            while (true)
+            while (_isRun)
             {
 
                 // "....."이 10초 단위로 Loop 하면서 초기화 진행
@@ -190,7 +194,7 @@ namespace HexaCoreVillage.Dungeon
         /// <summary>
         ///  Console에 FoundBugs 중에서 고른 Bug 리스트의 첫 번재 버그를 출력
         /// </summary>
-        private static void DebuggingList()
+        private void DebuggingList()
         {
             DebuggingBugs = null;
             CursorVisible = false;
@@ -199,7 +203,7 @@ namespace HexaCoreVillage.Dungeon
             selectedBugs.AddRange(_selectedBugs.Where(b => b != selectedBug));
             int choiceOption = 0;
 
-            while (true)
+            while (_isRun)
             {
                 Clear();
                 WriteLine("\n\n\t[ 디버깅 - 버그 확인 ]\n");
@@ -256,13 +260,13 @@ namespace HexaCoreVillage.Dungeon
         /// <summary>
         ///  전투 도중 "컴파일 종료 선택 시 탈출 안내창 출력"
         /// </summary>
-        private static void Escape()
+        private void Escape()
         {
             CursorVisible = false;
             int menuIndex = 0;
             int totalOption = 2;
 
-            while (true)
+            while (_isRun)
             {
                 Clear();
                 BackgroundColor = ConsoleColor.Yellow;
@@ -360,7 +364,7 @@ namespace HexaCoreVillage.Dungeon
 
         public override void Stop()
         {
-            
+            base.StopCommon();
         }
         #endregion
     }

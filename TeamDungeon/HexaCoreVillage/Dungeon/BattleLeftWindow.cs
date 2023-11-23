@@ -6,6 +6,14 @@ namespace HexaCoreVillage.Dungeon
 { 
     public static class BattleLeftWindow
     {
+        public static Battle BattleScene;
+
+        public static void InitBattleScene(Battle battleScene)
+        {
+            if (battleScene != null)
+                BattleScene = battleScene;
+        }
+
         #region Left Procedure
         /// <summary>
         ///  Left 레이아웃 실행 메서드
@@ -60,9 +68,9 @@ namespace HexaCoreVillage.Dungeon
             int debuggingOption = 0;
             string[] options = Enum.GetNames(typeof(Debugging.SolutionTypes));
 
-            while (true)
+            while (BattleScene.GetIsRun())
             {
-                if (_isLoadScene) return;
+                // if (_isLoadScene) return;
                 SetCursorPosition(4,  12);
                 BackgroundColor = ConsoleColor.Green;
                 ForegroundColor = ConsoleColor.Black;

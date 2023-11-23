@@ -6,16 +6,15 @@ namespace HexaCoreVillage.Dungeon;
 public class Reward : Scene
 {
     public override SCENE_NAME SceneName => SCENE_NAME.REWARD;
-    private static Player player = Login.Login._player;
+    private static Player player = Managers.GM.Player;
     private static string battleResult = "";
     public static Random random = new Random();
-    string CurrentDirectory = Directory.GetCurrentDirectory();
     private static int limitExp = 100;
 
 
     public override void Start()
     {
-        
+        base.StartCommon();
         Clear();
         // 초기화 해주는 부분,
         // 아래 부분 따로 메서드 선언 후 분리,
@@ -124,25 +123,26 @@ public class Reward : Scene
 
     public override void Stop()
     {
-        
+        base.StopCommon();
     }
 
     public override void Update()
     {
+        base.UpdateCommon();
         ChooseScene();
     }
 
     /// <summary>
     /// 이 메서드는 리워드 적용 후 씬 고르기다.
     /// </summary>
-    private static void ChooseScene()
+    private void ChooseScene()
     {
         CursorVisible = false;
         int index = 0;
         int totalMenuOption = 2;
         string[] options = { "계속 디버깅하기", "로비로 돌아가기" };
 
-        while (true)
+        while (_isRun)
         {
             Clear();
             SetCursorPosition(4, 6);

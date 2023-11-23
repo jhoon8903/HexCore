@@ -6,6 +6,14 @@ namespace HexaCoreVillage.Dungeon
 {
     public static class BattleRightWindow
     {
+        public static Battle BattleScene;
+
+        public static void InitBattleScene(Battle battleScene)
+        {
+            if(battleScene != null)
+                BattleScene = battleScene;
+        }
+
         #region RightWindow Starter
         public static void RightWindow()
         {
@@ -192,7 +200,7 @@ namespace HexaCoreVillage.Dungeon
         /// </summary>
         private static void ClearLoggingAndDefeat()
         {
-            while (true)
+            while (BattleScene.GetIsRun())
             {
                 ClearLogging(12, 28);
                 SetCursorPosition(50,20);
@@ -204,7 +212,7 @@ namespace HexaCoreVillage.Dungeon
                 {
                     case ConsoleKey.Enter:
                         Data.BattleSuccess = false;
-                        _isLoadScene = true;
+                        //_isLoadScene = true;
                         Managers.Scene.LoadScene(SCENE_NAME.REWARD);
                         return;
                     default:
@@ -219,7 +227,7 @@ namespace HexaCoreVillage.Dungeon
         public static void DebuggingSuccess()
         {
             // 모든 버그를 디버깅 완료했을 경우
-            while (true)
+            while (BattleScene.GetIsRun())
             {
                 ClearLogging(12, 28);
                 ClearLine(10);
@@ -232,7 +240,7 @@ namespace HexaCoreVillage.Dungeon
                 {
                     case ConsoleKey.Enter:
                         Data.BattleSuccess = true;
-                        _isLoadScene = true;
+                        //_isLoadScene = true;
                         Managers.Scene.LoadScene(SCENE_NAME.REWARD);
                         return;
                     default:

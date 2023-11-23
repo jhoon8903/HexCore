@@ -19,24 +19,7 @@ namespace HexaCoreVillage.Utility
        public int BugPercentage { get; set; }
        public  List<InventoryItem> Inventory = new List<InventoryItem>();
 
-        public Player()
-        {
-            ID = "enos";
-            NickName = "주니어개발자";
-            Job = Job.AI;
-            Level = 1;
-            Exp = 0;
-            TypingSpeed = 10;
-            C = 10;
-            BonusDmg = 10;
-            BonusDef = 10;
-            HP = 100;
-            CurrentHp = 100;
-            Mental = 100;
-            CurrentMental = 100;
-            Gold = 1000;
-        }
-
+        public Player() { }
         public Player(string _ID, string _NickName, Job _Job)
         {
             ID = _ID;

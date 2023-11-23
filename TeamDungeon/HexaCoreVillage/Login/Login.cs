@@ -11,9 +11,9 @@ public class Login : Scene
     public override SCENE_NAME SceneName => SCENE_NAME.LOGIN;
 
     public static List<Item> ItemBox = new List<Item>();
-    public static Player _player = null;
+    private Player _player = null;
 
-    private bool _isFlagLoadScene = false;
+    // private bool _isFlagLoadScene = false;
 
     /* Audio Resources */
     private string _newWorldBGM = Managers.Resource.GetSoundResource(ResourceKeys.newWorldBGM);
@@ -22,16 +22,22 @@ public class Login : Scene
     #region Overriding Part
     public override void Start()
     {
+        base.StartCommon();
+
         SetItemBox();
         CursorVisible = false;
         AudioController(_startBGM,PlayOption.Play);
     }
     public override void Update()
     {
+        base.UpdateCommon();
+
         LoginScene();
     }
     public override void Stop()
     {
+        base.StopCommon();
+
         Clear();
         AudioController(Managers.Resource.GetSoundResource(ResourceKeys.newWorldBGM), PlayOption.LoopStop);
     }
@@ -43,7 +49,7 @@ public class Login : Scene
         int selectedOption = 0;
         string[] options = { "New Game", "Load Game", "Exit" };
         string[] plusOpt = { "새로운 아이디로 게임을 처음부터 시작합니다.(프롤로그 포함)", "전에 사용하던 아이디로 게임을 시작합니다.(프롤로그 스킵)", "게임 종료하기" };
-        while (true)
+        while (_isRun)
         {
             Clear();
             Renderer.Instance.DrawConsoleBorder();
@@ -171,14 +177,14 @@ public class Login : Scene
 
         List<ConsoleKey> userInput = new List<ConsoleKey>();
         Job userJob;
-        string? userName;
+        string userName = "";
 
         Prologue();
         while (KeyAvailable)
         {
             ReadKey(intercept: true);
         }
-        while (true)
+        while (_isRun)
         {
             Clear();
             Renderer.Instance.DrawConsoleBorder();
@@ -192,7 +198,7 @@ public class Login : Scene
                 break;
             }
         }
-        while (true)
+        while(_isRun)
         {
             Clear();
             Renderer.Instance.DrawConsoleBorder();
@@ -200,15 +206,15 @@ public class Login : Scene
             Managers.UI.PrintMsgAlignCenter("당신을 드러낼 코드네임을 정해주세요.", 3);
             SetCursorPosition(90, 35);
             CursorVisible = true;
-            string name= ReadLine();
-            if(name != "")
+            string? name = ReadLine();
+            if (name != "")
             {
                 userName = name;
                 break;
             }
         }
         
-        while (true)
+        while (_isRun)
         {
             Clear();
             Renderer.Instance.DrawConsoleBorder();
@@ -255,9 +261,10 @@ public class Login : Scene
         }
 
         userJob = (Job)selectedOption;
-        _player = new Player(userID, userName, userJob);
+        Managers.GM.SettingPlayer(userID, userName, userJob);
+        _player = Managers.GM.Player;
 
-        while (true)                //배경 설정
+        while (_isRun)                //배경 설정
         {
             Clear();
             Renderer.Instance.DrawConsoleBorder();
@@ -319,7 +326,7 @@ public class Login : Scene
         }
 
 
-        while (true)                //배경 설정
+        while (_isRun)                //배경 설정
         {
             Clear();
             Renderer.Instance.DrawConsoleBorder();
@@ -382,7 +389,7 @@ public class Login : Scene
         }
         SetInvenItem();
         SaveData();
-        _isFlagLoadScene = true;
+        //_isFlagLoadScene = true;
         Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
     }
     private void LoadGame()
@@ -397,13 +404,17 @@ public class Login : Scene
         if (loadData == string.Empty)
         {
             NewGame();
+            return;
         }
 
-        if (_isFlagLoadScene) return;
-        _player = JsonConvert.DeserializeObject<Player>(loadData);
+        // if (_isFlagLoadScene) return;
+        Managers.GM.LoadPlayer(loadData);
+
+        _player = Managers.GM.Player;
+
         TreatControlCAsInput = true;
 
-        while (true)
+        while (_isRun)
         {
             Clear();
             Renderer.Instance.DrawConsoleBorder();

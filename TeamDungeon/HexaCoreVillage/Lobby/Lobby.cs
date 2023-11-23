@@ -43,6 +43,8 @@ public class Lobby : Scene
     #region Flow Methods
     public override void Start()
     {
+        base.StartCommon();
+
         // Cursor Setting
         CursorVisible = false;
 
@@ -69,11 +71,14 @@ public class Lobby : Scene
 
     public override void Update()
     {
+        base.UpdateCommon();
+
         this.DrawUpdate();
     }
 
     public override void Stop()
     {
+        base.StopCommon();
         _isRunning = false;
         _titleUpdateThread.Join();
     }
