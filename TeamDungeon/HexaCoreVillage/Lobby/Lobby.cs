@@ -50,7 +50,6 @@ public class Lobby : Scene
 
         // Draw
         Renderer.Instance.DrawConsoleBorder();
-        this.DrawMenuBox();
         this.DrawandPrintContextBox();
 
         // Init Title Text
@@ -240,7 +239,9 @@ public class Lobby : Scene
     #region Thread Methods
     private void TitleUpdateLoop()
     {
-        while(_isRunning)
+        this.DrawMenuBox();
+
+        while (_isRunning)
         {
             DrawLobbyTitleTextbyThread();
             Thread.Sleep(DrawTitleInterval);
