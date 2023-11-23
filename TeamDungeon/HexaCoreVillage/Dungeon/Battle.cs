@@ -158,7 +158,7 @@ namespace HexaCoreVillage.Dungeon
             _selectedBugs = new List<Bug>();
             int bugsCount = LoginPlayer!.Level switch
             {
-                1 => Random.Next(8, 9),
+                1 => Random.Next(1, 4),
                 2 =>  Random.Next(1, 5),
                 3 =>  Random.Next(2, 5),
                 4 =>  Random.Next(3, 6),
