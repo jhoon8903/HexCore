@@ -10,7 +10,7 @@ public class Login : Scene
 {
     public override SCENE_NAME SceneName => SCENE_NAME.LOGIN;
 
-    public static List<Item> ItemBox = new List<Item>();
+    private static List<Item> _itemBox = new List<Item>();
     private Player _player = null;
 
     // private bool _isFlagLoadScene = false;
@@ -443,7 +443,8 @@ public class Login : Scene
     #endregion
 
     #region SET PART
-    public void SaveData()
+
+    private void SaveData()
     {
         // 경로 지정 (리소스 폴더와 json파일의 이름을 합침)
         var playerDataPath = Path.Combine(Managers.Resource.GetResourceFolderPath(), Literals.PlayerDataPath);
@@ -453,15 +454,15 @@ public class Login : Scene
     private void SetItemBox()
     {
         string file = Managers.Resource.GetTextResource(ResourceKeys.ItemList);
-        ItemBox = JsonConvert.DeserializeObject<List<Item>>(file);
+        _itemBox = JsonConvert.DeserializeObject<List<Item>>(file);
     }
     private void SetInvenItem()
     {
-        _player.Inventory.Add(new InventoryItem(ItemBox[0].ItemName, false, false, 1));
-        _player.Inventory.Add(new InventoryItem(ItemBox[1].ItemName, false, false, 1));
-        _player.Inventory.Add(new InventoryItem(ItemBox[2].ItemName, false, false, 1));
-        _player.Inventory.Add(new InventoryItem(ItemBox[3].ItemName, false, false, 1));
-        _player.Inventory.Add(new InventoryItem(ItemBox[4].ItemName, false, false, 1));
+        _player.Inventory.Add(new InventoryItem(_itemBox[0].ItemName, false, false, 1));
+        _player.Inventory.Add(new InventoryItem(_itemBox[1].ItemName, false, false, 1));
+        _player.Inventory.Add(new InventoryItem(_itemBox[2].ItemName, false, false, 1));
+        _player.Inventory.Add(new InventoryItem(_itemBox[3].ItemName, false, false, 1));
+        _player.Inventory.Add(new InventoryItem(_itemBox[4].ItemName, false, false, 1));
     }
     #endregion
 }

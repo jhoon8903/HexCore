@@ -5,10 +5,10 @@ namespace HexaCoreVillage.Dungeon;
 public class Reward : Scene
 {
     public override SCENE_NAME SceneName => SCENE_NAME.REWARD;
-    private static Player player = Managers.GM.Player;
-    private static string battleResult = "";
-    public static Random random = new Random();
-    private static int limitExp = 100;
+    private static readonly Player Player = Managers.GM.Player;
+    private static string _battleResult = "";
+    private static readonly Random Random = new Random();
+    private static int _limitExp = 100;
 
 
     public override void Start()
@@ -26,7 +26,7 @@ public class Reward : Scene
         }
         else
         {
-            if (player.Gold > 0)
+            if (Player.Gold > 0)
             {
                 FailReward();                
             }
@@ -66,22 +66,22 @@ public class Reward : Scene
             SetCursorPosition(4, 10);
             WriteLine("[전투 결과입니다]");
             SetCursorPosition(4, 12);
-            Write($"디버그 결과는 : {battleResult} 입니다!");
+            Write($"디버그 결과는 : {_battleResult} 입니다!");
 
 
             WriteLine();
             SetCursorPosition(4, 13);
-            WriteLine($"플레이어의 골드는 {player.Gold}G입니다.");
+            WriteLine($"플레이어의 골드는 {Player.Gold}G입니다.");
             SetCursorPosition(4, 14);
             WriteLine("플레이어의 현재 상태는");
             SetCursorPosition(4, 15);
-            WriteLine($"플레이어 HP : {Battle.CurrentHp}/{player.HP}");
+            WriteLine($"플레이어 HP : {Battle.CurrentHp}/{Player.HP}");
             SetCursorPosition(4, 16);
-            WriteLine($"플레이어 Metal : {Battle.CurrentMental}/{player.Mental}");
+            WriteLine($"플레이어 Metal : {Battle.CurrentMental}/{Player.Mental}");
             SetCursorPosition(4, 17);
-            WriteLine($"플레이어 Exp : {player.Exp}");
+            WriteLine($"플레이어 Exp : {Player.Exp}");
             SetCursorPosition(4, 18);
-            WriteLine($"플레이어 레벨 : {player.Level}");
+            WriteLine($"플레이어 레벨 : {Player.Level}");
             Renderer.Instance.DrawConsoleBorder();
             ConsoleKeyInfo key = ReadKey();
             if (key.Key == ConsoleKey.Enter)
@@ -98,9 +98,9 @@ public class Reward : Scene
     private static void SuccessReward()
     {
         // 계획은 레벨에 따른 배틀 성공 리워드 수치 증가
-        player.Gold += random.Next(100, 300) * player.Level; // 현재 주는 골드 수(랜덤 100 ~ 500) * 현제 레벨 * 처치 버그 수 
-        player.Exp += random.Next(50, 100) * Data.BugCount;   // 현재 주는 경험치 량(적게)*레벨 * 처지 버그 수
-        battleResult = "Debug Complete";
+        Player.Gold += Random.Next(100, 300) * Player.Level; // 현재 주는 골드 수(랜덤 100 ~ 500) * 현제 레벨 * 처치 버그 수 
+        Player.Exp += Random.Next(50, 100) * Data.BugCount;   // 현재 주는 경험치 량(적게)*레벨 * 처지 버그 수
+        _battleResult = "Debug Complete";
     }
 
 
@@ -110,12 +110,12 @@ public class Reward : Scene
     private static void FailReward()
     {
         // 여기도 마찬가지로
-        if(player.Gold < 50)
+        if(Player.Gold < 50)
         {
-            player.Gold -= player.Gold;
+            Player.Gold -= Player.Gold;
         }
-        else player.Gold -= random.Next(50, 100);
-        battleResult = "Debug Failed";
+        else Player.Gold -= Random.Next(50, 100);
+        _battleResult = "Debug Failed";
     }
 
     private static void LevelUp()
@@ -123,17 +123,17 @@ public class Reward : Scene
         SetCursorPosition(4, 5);
         WriteLine("!!! 레벨업 !!!");
         SetCursorPosition(4, 6);
-        Write($"현재 레벨 {player.Level}에서 ");
+        Write($"현재 레벨 {Player.Level}에서 ");
 
-        player.Exp -= limitExp;
-        limitExp = limitExp + (player.Level * 20);
-        player.Level += 1;
+        Player.Exp -= _limitExp;
+        _limitExp = _limitExp + (Player.Level * 20);
+        Player.Level += 1;
 
-        WriteLine($"레벨 {player.Level}로 올랐습니다.");
+        WriteLine($"레벨 {Player.Level}로 올랐습니다.");
         SetCursorPosition(4, 7);
-        WriteLine($"현제 다음 레벨업을 하기 위한 필요 경험치 수는 {limitExp - player.Exp} 가 필요합니다.");
+        WriteLine($"현제 다음 레벨업을 하기 위한 필요 경험치 수는 {_limitExp - Player.Exp} 가 필요합니다.");
         SetCursorPosition(4, 8);
-        WriteLine($"LimitExp : {limitExp}, currentExp: {player.Exp}");
+        WriteLine($"LimitExp : {_limitExp}, currentExp: {Player.Exp}");
         // 일정 경험치 한계 이상이 되면 플레이어의 레벨을 업해야 한다
         // 그러기 위해선 플레이어 정보가 담긴 Json 파일에 접근해서 수정해야 한다
         // 문제는 레벨을 포함한 다른 player 수치를 어떻게 담아야 하는가?
@@ -148,10 +148,10 @@ public class Reward : Scene
     public override void Update()
     {
         UpdateCommon();
-        if (player.Exp >= limitExp) LevelUp();
+        if (Player.Exp >= _limitExp) LevelUp();
         ShowReward();
         DisplayReward();
-        Data.SavePlayerData(player);
+        Data.SavePlayerData(Player);
         ChooseScene();
         //SaveData();
     }

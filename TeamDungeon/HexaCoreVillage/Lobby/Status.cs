@@ -10,9 +10,9 @@ public class Status : Scene
 {
     public override SCENE_NAME SceneName => SCENE_NAME.STATUS;
     private Player _player = Managers.GM.Player;
-    private List<Item> itemList = new List<Item>();
-    bool isInventoryScene = false;
-    Item itemInform = new Item();
+    private List<Item> _itemList = new List<Item>();
+    private bool _isInventoryScene = false;
+    private Item _itemInform = new Item();
  
     public override void Start()
     {
@@ -31,7 +31,7 @@ public class Status : Scene
     private void SetItem()
     {
         string Json = Managers.Resource.GetTextResource(ResourceKeys.ItemList);
-        itemList = JsonConvert.DeserializeObject<List<Item>>(Json); //게임 내 사용할 수 있는 모든 ITEM
+        _itemList = JsonConvert.DeserializeObject<List<Item>>(Json); //게임 내 사용할 수 있는 모든 ITEM
     }
 
 
@@ -44,7 +44,7 @@ public class Status : Scene
 
         if(_player.Inventory.Count==0)//만약 아이템이 없다면 그냥 status메뉴로 바로 이동
         {
-            isInventoryScene = false;
+            _isInventoryScene = false;
         }
 
         while (_isRun)
@@ -58,7 +58,7 @@ public class Status : Scene
                 {
                     if (_player.Inventory[i].ItemName == item.ItemName)
                     {
-                        itemInform = GetItemInform(item.ItemName);
+                        _itemInform = GetItemInform(item.ItemName);
                     }
                 }
 
@@ -73,7 +73,7 @@ public class Status : Scene
                 {
                     ForegroundColor = ConsoleColor.Green;
                     SetCursorPosition(itemStart_x, itemStart_y + 3 * (i % 4));
-                    Write($"-> {_player.Inventory[i].ItemName} : {GetItemStatsType(itemInform.Type)} +{itemInform.ItemOption} - {itemInform.Desc}");
+                    Write($"-> {_player.Inventory[i].ItemName} : {GetItemStatsType(_itemInform.Type)} +{_itemInform.ItemOption} - {_itemInform.Desc}");
                     ResetColor();
                 }
                 else
@@ -81,7 +81,7 @@ public class Status : Scene
                     if (_player.Inventory[i].IsEquipment==true)
                         ForegroundColor= ConsoleColor.Green;
                     SetCursorPosition(itemStart_x, itemStart_y + 3 * (i % 4));
-                    Write($"-> {_player.Inventory[i].ItemName} : {GetItemStatsType(itemInform.Type)} +{itemInform.ItemOption} - {itemInform.Desc}");
+                    Write($"-> {_player.Inventory[i].ItemName} : {GetItemStatsType(_itemInform.Type)} +{_itemInform.ItemOption} - {_itemInform.Desc}");
                     ResetColor();
                 }
             }
@@ -101,9 +101,9 @@ public class Status : Scene
         }
 
         //아이템 장착,해제 기능구현
-        if (_player.Inventory[selectedOption].IsEquipment==false)    //아이템이 장착되어 있지 않다면
+        if (!_player.Inventory[selectedOption].IsEquipment)    //아이템이 장착되어 있지 않다면
         {
-            foreach (var item in itemList)  //아이템 리스트에서 플레이어가 가지고 있는 아이템 정보 찾기
+            foreach (var item in _itemList)  //아이템 리스트에서 플레이어가 가지고 있는 아이템 정보 찾기
             {
                 if (item.ItemName == _player.Inventory[selectedOption].ItemName) 
                 {
@@ -135,7 +135,7 @@ public class Status : Scene
         }
         else        //아이템이 장착되어 있다면
         {
-            foreach (var item in itemList)  //아이템 리스트에서 플레이어가 가지고 있는 아이템 정보 찾기
+            foreach (var item in _itemList)  //아이템 리스트에서 플레이어가 가지고 있는 아이템 정보 찾기
             {
                 if (item.ItemName == _player.Inventory[selectedOption].ItemName)
                 {
@@ -161,7 +161,7 @@ public class Status : Scene
 
             }
         }
-        isInventoryScene = false;
+        _isInventoryScene = false;
     }
 
     private void StatusScene()
@@ -172,7 +172,7 @@ public class Status : Scene
 
         PrintPlayer();
         DrawLine();
-        if (isInventoryScene)
+        if (_isInventoryScene)
             InventoryScene();
         PrintStatusMenu();
 
@@ -216,7 +216,7 @@ public class Status : Scene
         switch ((SelectOption)selectedOption)
         {
             case SelectOption.Inventory:
-                isInventoryScene = true;
+                _isInventoryScene = true;
                 break;
             case SelectOption.Lobby:
                 Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
@@ -360,12 +360,12 @@ public class Status : Scene
                 itemStart_y = 24;
             }
             SetCursorPosition(itemStart_x, itemStart_y);
-            itemInform = GetItemInform(item.ItemName);
+            _itemInform = GetItemInform(item.ItemName);
 
-            if (item.IsEquipment == true)
+            if (item.IsEquipment)
                  Console.ForegroundColor = ConsoleColor.Green;
 
-            Write($"◆ {itemInform.ItemName} : {GetItemStatsType(itemInform.Type)} +{itemInform.ItemOption} - {itemInform.Desc}");
+            Write($"◆ {_itemInform.ItemName} : {GetItemStatsType(_itemInform.Type)} +{_itemInform.ItemOption} - {_itemInform.Desc}");
             ResetColor();
             itemStart_y += 3;   //한번 출력할 때마다 y좌표 3내려서 출력
         }
@@ -373,7 +373,7 @@ public class Status : Scene
     //아이템 리스트 중에 있는 아이템 정보 가져오는 함수
     private Item GetItemInform(string itemName)
     {
-        foreach (Item item in itemList)
+        foreach (Item item in _itemList)
         {
             if (itemName == item.ItemName)
                 return item;

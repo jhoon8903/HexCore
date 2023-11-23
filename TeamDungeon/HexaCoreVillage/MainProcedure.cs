@@ -13,11 +13,8 @@ public static class MainProcedure
         Renderer.Instance.InitalizeRenderer();
         // Load All Reosurces
         Managers.Resource.LoadAllResources();
-
         // Title Scene Load.
         Managers.Scene.LoadScene(SCENE_NAME.LOGIN);
-
-
         Run();
     }
 
@@ -26,7 +23,9 @@ public static class MainProcedure
     {
         /* 조건식이 게임이 종료되지 않았을 때로 바꿔야한다. */
         while (Managers.Scene.GetCurrentScene() != null)
+        {
             Managers.Scene.GetCurrentScene()?.Update();
+        }
     }
     #endregion
 }

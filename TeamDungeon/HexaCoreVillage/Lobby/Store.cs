@@ -21,7 +21,7 @@ public class Store : Scene
 
     public override void Start()
     {
-        base.StartCommon();
+        StartCommon();
 
         Clear();
         CursorVisible = false;
@@ -473,6 +473,7 @@ public class Store : Scene
             Write("STORE");
 
             const int splitPosition1 = Renderer.FixedXColumn / 8;
+            
             for (int i = 0; i < Renderer.FixedYRows - 12; i++)
             {
                 SetCursorPosition(splitPosition1, i + 3);
@@ -649,12 +650,14 @@ public class Store : Scene
         _isEscape = true;
         DisplayStore();
     }
-    public void ListClear()
+
+    private void ListClear()
     {
         ClearRange(12, 19);
         ClearRange(24, 29);
     }
-    public void diviClear()
+
+    private void diviClear()
     {
         for (int i = 12; i < 19; i++)
         {
