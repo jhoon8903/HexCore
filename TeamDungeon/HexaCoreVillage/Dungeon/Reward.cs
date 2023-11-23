@@ -37,6 +37,11 @@ public class Reward : Scene
         //SaveData();
     }
 
+    private static void ShowReward()
+    {
+        SetCurser
+    }
+
     //private void SaveData()
     //{
     //    var playerDataPath = Path.Combine(Managers.Resource.GetResourceFolderPath(), Literals.PlayerDataPath);
