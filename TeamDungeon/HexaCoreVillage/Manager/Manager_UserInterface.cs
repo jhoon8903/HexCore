@@ -16,7 +16,7 @@ public class Manager_UserInterface
     public readonly int areaX = Renderer.FixedXColumn - (posX * 2);
     public readonly int areaY = Renderer.FixedYRows - (posY * 2);
 
-    private readonly object _lock = new object();
+    public readonly object _lock = new object();
 
     #endregion
 
