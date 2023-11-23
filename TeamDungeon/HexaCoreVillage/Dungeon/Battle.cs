@@ -60,7 +60,7 @@ namespace HexaCoreVillage.Dungeon
             LoadBugs();
             LoadLoggingText();
             AudioPlayer.AudioController(Managers.Resource.GetSoundResource(ResourceKeys.BattleBGM), AudioPlayer.PlayOption.LoopStart);
-            AudioPlayer.AudioVolume(15);
+            AudioPlayer.AudioVolume(30);
         }
         
         /// <summary>
@@ -74,6 +74,7 @@ namespace HexaCoreVillage.Dungeon
             CurrentHp = LoginPlayer.CurrentHp;
             CurrentMental = LoginPlayer.CurrentMental;
             LoginPlayer.BugPercentage = 10;
+            _isLoadScene = false;
         }
 
         /// <summary>
@@ -84,6 +85,10 @@ namespace HexaCoreVillage.Dungeon
         {
             string file = Managers.Resource.GetTextResource(ResourceKeys.BugList);
             _bugList = JsonConvert.DeserializeObject<List<Bug>>(file);
+            foreach (var bug in _bugList)
+            {
+                bug.BugProgress = 0;
+            }
         } 
 
         /// <summary>
@@ -133,7 +138,7 @@ namespace HexaCoreVillage.Dungeon
                 for (int i = 0; i < 10; i++)
                 {
                     Clear();
-                    WriteLine("\n\n\t[ Running To Project ]\n");
+                    WriteLine("\n\n\t[ Running To Debug ]\n");
 
                     // 초당 1개씩 Dot을 추가
                     Write("\tCompiling" + new string('.', i));
@@ -192,7 +197,6 @@ namespace HexaCoreVillage.Dungeon
         /// </summary>
         private static void DebuggingList()
         {
-            DebuggingBugs = null;
             CursorVisible = false;
             Bug selectedBug = _selectedBugs![Random.Next(_selectedBugs.Count)];
             List<Bug> selectedBugs = new List<Bug> { selectedBug };
@@ -267,9 +271,12 @@ namespace HexaCoreVillage.Dungeon
                 Clear();
                 BackgroundColor = ConsoleColor.Yellow;
                 ForegroundColor = ConsoleColor.Black;
-                WriteLine("[ Warning ]");
+                SetCursorPosition(75, 18);
+                Write("[ Warning ]");
                 ResetColor();
-                WriteLine("\n[ 이대로 나가시면 스테미나가 감소합니다. ]\n");
+                SetCursorPosition(64,20 );
+                Write("[ 이대로 나가시면 스테미나가 감소합니다. ]");
+                SetCursorPosition(65, 22);
                 WriteLine("[ 정말 컴파일을 종료하시겠습니까? ]");
 
                 string[] options = { "디버깅 돌아가기", "메인화면으로 돌아가기" };
@@ -279,7 +286,8 @@ namespace HexaCoreVillage.Dungeon
                     {
                         ForegroundColor = ConsoleColor.Green;
                     } 
-                    WriteLine($"\n{options[i]}");
+                    SetCursorPosition(70, 24 + i);
+                    Write($"{options[i]}");
                     ResetColor();
                 }
                 Renderer.Instance.DrawConsoleBorder();
@@ -294,15 +302,11 @@ namespace HexaCoreVillage.Dungeon
                         menuIndex = (menuIndex + 1) % totalOption;
                         break;
                     case ConsoleKey.Enter:
-                        if (menuIndex == 0)
-                        {
-                            return;
-                        }
                         if (menuIndex == 1)
                         {
                             Managers.Scene.LoadScene(SCENE_NAME.LOBBY);
                         }
-                        return;
+                        break;     
                 }
             }
         }

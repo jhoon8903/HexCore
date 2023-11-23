@@ -148,31 +148,30 @@ namespace HexaCoreVillage.Dungeon
           
             // 체력 바 그리기
             SetCursorPosition(50, 31);
-            Write($"[ 체력 : {CurrentHp:D3} / {LoginPlayer!.HP:D3} ]  ");
-            int staminaBlocks = CurrentHp;
-            for (int i = 0; i < LoginPlayer.HP; i++)
+            int healthPercent = (int)((CurrentHp / (double)LoginPlayer.HP) * 100);
+            Write($"[ Health : {CurrentHp:D3} / {LoginPlayer.HP:D3} ] ");
+            for (int i = 0; i < 100; i++)
             {
-                BackgroundColor = i < staminaBlocks ? 
-                    staminaBlocks > 60 ? ConsoleColor.DarkGreen :
-                    staminaBlocks > 30 ? ConsoleColor.DarkYellow : 
-                    ConsoleColor.DarkRed : 
-                    ConsoleColor.Gray; // 미사용 부분은 회색으로 표시
-                Write(' '); // 공백으로 진행률 표시
+                BackgroundColor = i < healthPercent ?
+                    healthPercent > 60 ? ConsoleColor.DarkGreen :
+                    healthPercent > 30 ? ConsoleColor.DarkYellow :
+                    ConsoleColor.DarkRed :
+                    ConsoleColor.Gray; // Unused parts are displayed in gray
+                Write(' '); // Display progress with blank space
             }
             ResetColor();
 
-            // 멘탈 바 그리기
             SetCursorPosition(50, 32);
-            Write($"[ 멘탈 : {CurrentMental:D3} / {LoginPlayer.Mental:D3} ]  ");
-            int mentalBlock = CurrentMental;
-            for (int i = 0; i < LoginPlayer.Mental; i++)
+            int mentalPercent = (int)((CurrentMental / (double)LoginPlayer.Mental) * 100);
+            Write($"[ Mental : {CurrentMental:D3} / {LoginPlayer.Mental:D3} ] ");
+            for (int i = 0; i < 100; i++)
             {
-                BackgroundColor = i < mentalBlock ? 
-                    mentalBlock > 60 ? ConsoleColor.Cyan :
-                    mentalBlock > 30 ? ConsoleColor.Blue : 
-                    ConsoleColor.DarkRed : 
-                    ConsoleColor.Gray; // 미사용 부분은 회색으로 표시
-                Write(' '); // 공백으로 진행률 표시
+                BackgroundColor = i < mentalPercent ?
+                    mentalPercent > 60 ? ConsoleColor.Cyan :
+                    mentalPercent > 30 ? ConsoleColor.Blue :
+                    ConsoleColor.DarkRed :
+                    ConsoleColor.Gray; 
+                Write(' '); 
             }
             ResetColor();
 
